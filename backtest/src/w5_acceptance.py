@@ -326,11 +326,15 @@ def main():
             os.environ["FUNDED_CLIMB_RISK_PCT"] = _sv3
     _cl_wired = "base_risk = min(base_risk, _w5_climb_risk_pct())" in _live_src2
     _cl_bt = 'os.getenv("FUNDED_CLIMB_RISK_PCT"' in bt_src
-    _ok_cl = abs(_cl - 1.8) < 1e-9 and _cl_wired and _cl_bt
+    # Altijd met limiet: een omgeving die hem lager/hoger of uit zet, faalt ook.
+    _env_files = [p for p in (LIVE.parent / ".env.fiveers_live", LIVE.parent / "deploy" / "start_live.bat")
+                  if p.exists() and "FUNDED_CLIMB_RISK_PCT" in p.read_text(errors="replace")]
+    _env_ok = (_sv3 is None or abs(float(_sv3 or 0) - 1.8) < 1e-9) and not _env_files
+    _ok_cl = abs(_cl - 1.8) < 1e-9 and _cl_wired and _cl_bt and _env_ok
     print(f"  {'OK  ' if _ok_cl else 'FAIL'}  {'klimlimiet gefund <300k 1.8%':<44} "
-          f"{_cl} / gekoppeld {_cl_wired} / backtest {_cl_bt}")
+          f"{_cl} / gekoppeld {_cl_wired} / backtest {_cl_bt} / niet overschreven {_env_ok}")
     if not _ok_cl:
-        fails.append("klimlimiet: FUNDED_CLIMB_RISK_PCT moet live standaard 1.8 zijn en aan de risicoberekening hangen")
+        fails.append("klimlimiet: FUNDED_CLIMB_RISK_PCT moet live 1.8 zijn, aan de risicoberekening hangen en nergens overschreven worden")
 
     # 6 ── known deliberate divergences, reported not failed
     notes.append(
