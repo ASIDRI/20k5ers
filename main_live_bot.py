@@ -340,7 +340,8 @@ def _w5_climb_risk_pct():
     Every funded death in the random study (15/40) happened below 300k,
     where the account traded at full 2.7%. Same 20 random 3-year starts
     (w5_variants.py): 12/20 survive without the cap, 20/20 with 1.8%, and
-    the average payout rises from $17.6k to $27.4k per month.
+    the average payout rises from $17.6k to $27.4k per month. On the 5- and
+    8-year random starts: 9/10 and 9/10 survive (8/10 and 5/10 without).
     """
     return float(os.getenv("FUNDED_CLIMB_RISK_PCT", "1.8"))
 
