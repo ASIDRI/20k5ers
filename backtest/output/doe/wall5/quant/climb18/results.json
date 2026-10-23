@@ -1,0 +1,1879 @@
+{
+  "initial_balance": 500000,
+  "final_balance": 526334.73,
+  "net_pnl": 4495070.57,
+  "closed_trades_pnl": 4179106.36,
+  "total_commission": 108482.12,
+  "total_swap": 0.0,
+  "return_pct": 8990.14,
+  "total_trades": 12135,
+  "winners": 6378,
+  "losers": 5757,
+  "win_rate": 52.6,
+  "win_rate_final_leg": 50.0,
+  "mfe_r_median": 0.171,
+  "mfe_r_p75": 0.439,
+  "mae_r_median": 0.136,
+  "tp1_hits": 3985,
+  "tp1_hit_rate": 32.8,
+  "max_tdd_pct": 5.34,
+  "max_ddd_pct": 4.57,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 67,
+  "ddd_halts": 15,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 15,
+  "ddd_warnings": 37,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2015-01": {
+      "trades": 65,
+      "winners": 32,
+      "losers": 33,
+      "pnl": 6551.51,
+      "partial_closes": 39,
+      "win_rate": 49.2
+    },
+    "2015-02": {
+      "trades": 42,
+      "winners": 20,
+      "losers": 22,
+      "pnl": -2651.36,
+      "partial_closes": 14,
+      "win_rate": 47.6
+    },
+    "2015-03": {
+      "trades": 112,
+      "winners": 61,
+      "losers": 51,
+      "pnl": 4435.31,
+      "partial_closes": 42,
+      "win_rate": 54.5
+    },
+    "2015-04": {
+      "trades": 136,
+      "winners": 57,
+      "losers": 79,
+      "pnl": 8703.26,
+      "partial_closes": 57,
+      "win_rate": 41.9
+    },
+    "2015-05": {
+      "trades": 63,
+      "winners": 41,
+      "losers": 22,
+      "pnl": 13070.16,
+      "partial_closes": 31,
+      "win_rate": 65.1
+    },
+    "2015-06": {
+      "trades": 103,
+      "winners": 64,
+      "losers": 39,
+      "pnl": 42055.28,
+      "partial_closes": 41,
+      "win_rate": 62.1
+    },
+    "2015-07": {
+      "trades": 89,
+      "winners": 49,
+      "losers": 40,
+      "pnl": 10439.5,
+      "partial_closes": 43,
+      "win_rate": 55.1
+    },
+    "2015-08": {
+      "trades": 148,
+      "winners": 94,
+      "losers": 54,
+      "pnl": 47422.17,
+      "partial_closes": 72,
+      "win_rate": 63.5
+    },
+    "2015-09": {
+      "trades": 96,
+      "winners": 51,
+      "losers": 45,
+      "pnl": 13407.0,
+      "partial_closes": 44,
+      "win_rate": 53.1
+    },
+    "2015-10": {
+      "trades": 119,
+      "winners": 73,
+      "losers": 46,
+      "pnl": 32897.53,
+      "partial_closes": 51,
+      "win_rate": 61.3
+    },
+    "2015-11": {
+      "trades": 81,
+      "winners": 36,
+      "losers": 45,
+      "pnl": 5732.92,
+      "partial_closes": 19,
+      "win_rate": 44.4
+    },
+    "2015-12": {
+      "trades": 80,
+      "winners": 49,
+      "losers": 31,
+      "pnl": 40849.9,
+      "partial_closes": 42,
+      "win_rate": 61.3
+    },
+    "2016-01": {
+      "trades": 58,
+      "winners": 29,
+      "losers": 29,
+      "pnl": 21231.94,
+      "partial_closes": 29,
+      "win_rate": 50.0
+    },
+    "2016-02": {
+      "trades": 98,
+      "winners": 53,
+      "losers": 45,
+      "pnl": 33218.1,
+      "partial_closes": 37,
+      "win_rate": 54.1
+    },
+    "2016-03": {
+      "trades": 143,
+      "winners": 86,
+      "losers": 57,
+      "pnl": 33206.1,
+      "partial_closes": 43,
+      "win_rate": 60.1
+    },
+    "2016-04": {
+      "trades": 107,
+      "winners": 61,
+      "losers": 46,
+      "pnl": 62616.47,
+      "partial_closes": 50,
+      "win_rate": 57.0
+    },
+    "2016-05": {
+      "trades": 84,
+      "winners": 44,
+      "losers": 40,
+      "pnl": 15312.4,
+      "partial_closes": 20,
+      "win_rate": 52.4
+    },
+    "2016-06": {
+      "trades": 123,
+      "winners": 65,
+      "losers": 58,
+      "pnl": 48024.61,
+      "partial_closes": 65,
+      "win_rate": 52.8
+    },
+    "2016-07": {
+      "trades": 66,
+      "winners": 36,
+      "losers": 30,
+      "pnl": 28135.79,
+      "partial_closes": 36,
+      "win_rate": 54.5
+    },
+    "2016-08": {
+      "trades": 80,
+      "winners": 45,
+      "losers": 35,
+      "pnl": 45429.67,
+      "partial_closes": 41,
+      "win_rate": 56.2
+    },
+    "2016-09": {
+      "trades": 119,
+      "winners": 58,
+      "losers": 61,
+      "pnl": 20702.74,
+      "partial_closes": 51,
+      "win_rate": 48.7
+    },
+    "2016-10": {
+      "trades": 77,
+      "winners": 35,
+      "losers": 42,
+      "pnl": 15010.74,
+      "partial_closes": 29,
+      "win_rate": 45.5
+    },
+    "2016-11": {
+      "trades": 76,
+      "winners": 43,
+      "losers": 33,
+      "pnl": 43509.05,
+      "partial_closes": 39,
+      "win_rate": 56.6
+    },
+    "2016-12": {
+      "trades": 34,
+      "winners": 17,
+      "losers": 17,
+      "pnl": 14012.53,
+      "partial_closes": 16,
+      "win_rate": 50.0
+    },
+    "2017-01": {
+      "trades": 95,
+      "winners": 45,
+      "losers": 50,
+      "pnl": 33562.08,
+      "partial_closes": 41,
+      "win_rate": 47.4
+    },
+    "2017-02": {
+      "trades": 87,
+      "winners": 45,
+      "losers": 42,
+      "pnl": 39001.76,
+      "partial_closes": 42,
+      "win_rate": 51.7
+    },
+    "2017-03": {
+      "trades": 77,
+      "winners": 43,
+      "losers": 34,
+      "pnl": 22626.47,
+      "partial_closes": 27,
+      "win_rate": 55.8
+    },
+    "2017-04": {
+      "trades": 53,
+      "winners": 26,
+      "losers": 27,
+      "pnl": 12296.91,
+      "partial_closes": 14,
+      "win_rate": 49.1
+    },
+    "2017-05": {
+      "trades": 67,
+      "winners": 37,
+      "losers": 30,
+      "pnl": 34470.46,
+      "partial_closes": 28,
+      "win_rate": 55.2
+    },
+    "2017-06": {
+      "trades": 71,
+      "winners": 34,
+      "losers": 37,
+      "pnl": 11410.25,
+      "partial_closes": 35,
+      "win_rate": 47.9
+    },
+    "2017-07": {
+      "trades": 79,
+      "winners": 49,
+      "losers": 30,
+      "pnl": 53657.43,
+      "partial_closes": 46,
+      "win_rate": 62.0
+    },
+    "2017-08": {
+      "trades": 68,
+      "winners": 41,
+      "losers": 27,
+      "pnl": 41261.4,
+      "partial_closes": 33,
+      "win_rate": 60.3
+    },
+    "2017-09": {
+      "trades": 85,
+      "winners": 35,
+      "losers": 50,
+      "pnl": 13203.76,
+      "partial_closes": 30,
+      "win_rate": 41.2
+    },
+    "2017-10": {
+      "trades": 86,
+      "winners": 54,
+      "losers": 32,
+      "pnl": 65719.96,
+      "partial_closes": 41,
+      "win_rate": 62.8
+    },
+    "2017-11": {
+      "trades": 95,
+      "winners": 52,
+      "losers": 43,
+      "pnl": 38896.64,
+      "partial_closes": 37,
+      "win_rate": 54.7
+    },
+    "2017-12": {
+      "trades": 104,
+      "winners": 59,
+      "losers": 45,
+      "pnl": 25138.13,
+      "partial_closes": 50,
+      "win_rate": 56.7
+    },
+    "2018-01": {
+      "trades": 59,
+      "winners": 30,
+      "losers": 29,
+      "pnl": 27841.83,
+      "partial_closes": 22,
+      "win_rate": 50.8
+    },
+    "2018-02": {
+      "trades": 62,
+      "winners": 33,
+      "losers": 29,
+      "pnl": 15697.76,
+      "partial_closes": 33,
+      "win_rate": 53.2
+    },
+    "2018-03": {
+      "trades": 86,
+      "winners": 48,
+      "losers": 38,
+      "pnl": 38366.89,
+      "partial_closes": 30,
+      "win_rate": 55.8
+    },
+    "2018-04": {
+      "trades": 57,
+      "winners": 31,
+      "losers": 26,
+      "pnl": 31067.15,
+      "partial_closes": 19,
+      "win_rate": 54.4
+    },
+    "2018-05": {
+      "trades": 53,
+      "winners": 27,
+      "losers": 26,
+      "pnl": 23768.47,
+      "partial_closes": 20,
+      "win_rate": 50.9
+    },
+    "2018-06": {
+      "trades": 82,
+      "winners": 47,
+      "losers": 35,
+      "pnl": 32386.36,
+      "partial_closes": 37,
+      "win_rate": 57.3
+    },
+    "2018-07": {
+      "trades": 90,
+      "winners": 56,
+      "losers": 34,
+      "pnl": 46721.86,
+      "partial_closes": 40,
+      "win_rate": 62.2
+    },
+    "2018-08": {
+      "trades": 98,
+      "winners": 48,
+      "losers": 50,
+      "pnl": 42889.78,
+      "partial_closes": 35,
+      "win_rate": 49.0
+    },
+    "2018-09": {
+      "trades": 80,
+      "winners": 42,
+      "losers": 38,
+      "pnl": 20050.19,
+      "partial_closes": 31,
+      "win_rate": 52.5
+    },
+    "2018-10": {
+      "trades": 100,
+      "winners": 56,
+      "losers": 44,
+      "pnl": 38062.65,
+      "partial_closes": 38,
+      "win_rate": 56.0
+    },
+    "2018-11": {
+      "trades": 85,
+      "winners": 33,
+      "losers": 52,
+      "pnl": 7239.74,
+      "partial_closes": 43,
+      "win_rate": 38.8
+    },
+    "2018-12": {
+      "trades": 84,
+      "winners": 45,
+      "losers": 39,
+      "pnl": 43278.91,
+      "partial_closes": 39,
+      "win_rate": 53.6
+    },
+    "2019-01": {
+      "trades": 70,
+      "winners": 31,
+      "losers": 39,
+      "pnl": 29891.15,
+      "partial_closes": 29,
+      "win_rate": 44.3
+    },
+    "2019-02": {
+      "trades": 131,
+      "winners": 75,
+      "losers": 56,
+      "pnl": 77978.46,
+      "partial_closes": 66,
+      "win_rate": 57.3
+    },
+    "2019-03": {
+      "trades": 154,
+      "winners": 87,
+      "losers": 67,
+      "pnl": 41017.1,
+      "partial_closes": 82,
+      "win_rate": 56.5
+    },
+    "2019-04": {
+      "trades": 110,
+      "winners": 58,
+      "losers": 52,
+      "pnl": 45658.65,
+      "partial_closes": 51,
+      "win_rate": 52.7
+    },
+    "2019-05": {
+      "trades": 87,
+      "winners": 43,
+      "losers": 44,
+      "pnl": 10746.79,
+      "partial_closes": 47,
+      "win_rate": 49.4
+    },
+    "2019-06": {
+      "trades": 78,
+      "winners": 37,
+      "losers": 41,
+      "pnl": 22887.43,
+      "partial_closes": 33,
+      "win_rate": 47.4
+    },
+    "2019-07": {
+      "trades": 76,
+      "winners": 44,
+      "losers": 32,
+      "pnl": 42186.1,
+      "partial_closes": 29,
+      "win_rate": 57.9
+    },
+    "2019-08": {
+      "trades": 45,
+      "winners": 21,
+      "losers": 24,
+      "pnl": 29367.78,
+      "partial_closes": 23,
+      "win_rate": 46.7
+    },
+    "2019-09": {
+      "trades": 65,
+      "winners": 37,
+      "losers": 28,
+      "pnl": 16401.14,
+      "partial_closes": 30,
+      "win_rate": 56.9
+    },
+    "2019-10": {
+      "trades": 91,
+      "winners": 37,
+      "losers": 54,
+      "pnl": 4315.76,
+      "partial_closes": 40,
+      "win_rate": 40.7
+    },
+    "2019-11": {
+      "trades": 64,
+      "winners": 36,
+      "losers": 28,
+      "pnl": 29476.11,
+      "partial_closes": 33,
+      "win_rate": 56.2
+    },
+    "2019-12": {
+      "trades": 77,
+      "winners": 41,
+      "losers": 36,
+      "pnl": 30735.64,
+      "partial_closes": 27,
+      "win_rate": 53.2
+    },
+    "2020-01": {
+      "trades": 88,
+      "winners": 43,
+      "losers": 45,
+      "pnl": 18887.82,
+      "partial_closes": 31,
+      "win_rate": 48.9
+    },
+    "2020-02": {
+      "trades": 86,
+      "winners": 50,
+      "losers": 36,
+      "pnl": 28861.03,
+      "partial_closes": 30,
+      "win_rate": 58.1
+    },
+    "2020-03": {
+      "trades": 31,
+      "winners": 17,
+      "losers": 14,
+      "pnl": 16188.95,
+      "partial_closes": 20,
+      "win_rate": 54.8
+    },
+    "2020-04": {
+      "trades": 55,
+      "winners": 31,
+      "losers": 24,
+      "pnl": -3511.56,
+      "partial_closes": 18,
+      "win_rate": 56.4
+    },
+    "2020-05": {
+      "trades": 103,
+      "winners": 51,
+      "losers": 52,
+      "pnl": 24145.39,
+      "partial_closes": 40,
+      "win_rate": 49.5
+    },
+    "2020-06": {
+      "trades": 96,
+      "winners": 55,
+      "losers": 41,
+      "pnl": 39401.35,
+      "partial_closes": 46,
+      "win_rate": 57.3
+    },
+    "2020-07": {
+      "trades": 126,
+      "winners": 77,
+      "losers": 49,
+      "pnl": 102669.45,
+      "partial_closes": 73,
+      "win_rate": 61.1
+    },
+    "2020-08": {
+      "trades": 102,
+      "winners": 52,
+      "losers": 50,
+      "pnl": 24898.76,
+      "partial_closes": 38,
+      "win_rate": 51.0
+    },
+    "2020-09": {
+      "trades": 149,
+      "winners": 66,
+      "losers": 83,
+      "pnl": 35517.98,
+      "partial_closes": 49,
+      "win_rate": 44.3
+    },
+    "2020-10": {
+      "trades": 153,
+      "winners": 85,
+      "losers": 68,
+      "pnl": 54093.83,
+      "partial_closes": 77,
+      "win_rate": 55.6
+    },
+    "2020-11": {
+      "trades": 106,
+      "winners": 62,
+      "losers": 44,
+      "pnl": 39465.37,
+      "partial_closes": 36,
+      "win_rate": 58.5
+    },
+    "2020-12": {
+      "trades": 106,
+      "winners": 48,
+      "losers": 58,
+      "pnl": 23436.9,
+      "partial_closes": 35,
+      "win_rate": 45.3
+    },
+    "2021-01": {
+      "trades": 158,
+      "winners": 79,
+      "losers": 79,
+      "pnl": 30125.42,
+      "partial_closes": 68,
+      "win_rate": 50.0
+    },
+    "2021-02": {
+      "trades": 124,
+      "winners": 79,
+      "losers": 45,
+      "pnl": 68012.51,
+      "partial_closes": 68,
+      "win_rate": 63.7
+    },
+    "2021-03": {
+      "trades": 88,
+      "winners": 42,
+      "losers": 46,
+      "pnl": 18051.79,
+      "partial_closes": 39,
+      "win_rate": 47.7
+    },
+    "2021-04": {
+      "trades": 94,
+      "winners": 49,
+      "losers": 45,
+      "pnl": 34919.39,
+      "partial_closes": 39,
+      "win_rate": 52.1
+    },
+    "2021-05": {
+      "trades": 109,
+      "winners": 62,
+      "losers": 47,
+      "pnl": 17074.36,
+      "partial_closes": 41,
+      "win_rate": 56.9
+    },
+    "2021-06": {
+      "trades": 98,
+      "winners": 53,
+      "losers": 45,
+      "pnl": 13472.43,
+      "partial_closes": 33,
+      "win_rate": 54.1
+    },
+    "2021-07": {
+      "trades": 119,
+      "winners": 60,
+      "losers": 59,
+      "pnl": 36659.08,
+      "partial_closes": 54,
+      "win_rate": 50.4
+    },
+    "2021-08": {
+      "trades": 133,
+      "winners": 57,
+      "losers": 76,
+      "pnl": 43132.22,
+      "partial_closes": 54,
+      "win_rate": 42.9
+    },
+    "2021-09": {
+      "trades": 91,
+      "winners": 50,
+      "losers": 41,
+      "pnl": 40558.47,
+      "partial_closes": 43,
+      "win_rate": 54.9
+    },
+    "2021-10": {
+      "trades": 36,
+      "winners": 13,
+      "losers": 23,
+      "pnl": 4863.18,
+      "partial_closes": 15,
+      "win_rate": 36.1
+    },
+    "2021-11": {
+      "trades": 56,
+      "winners": 33,
+      "losers": 23,
+      "pnl": 11226.85,
+      "partial_closes": 20,
+      "win_rate": 58.9
+    },
+    "2021-12": {
+      "trades": 55,
+      "winners": 28,
+      "losers": 27,
+      "pnl": 10155.91,
+      "partial_closes": 13,
+      "win_rate": 50.9
+    },
+    "2022-01": {
+      "trades": 65,
+      "winners": 38,
+      "losers": 27,
+      "pnl": 25062.61,
+      "partial_closes": 23,
+      "win_rate": 58.5
+    },
+    "2022-02": {
+      "trades": 85,
+      "winners": 52,
+      "losers": 33,
+      "pnl": 38090.47,
+      "partial_closes": 44,
+      "win_rate": 61.2
+    },
+    "2022-03": {
+      "trades": 43,
+      "winners": 23,
+      "losers": 20,
+      "pnl": 18161.71,
+      "partial_closes": 14,
+      "win_rate": 53.5
+    },
+    "2022-04": {
+      "trades": 73,
+      "winners": 37,
+      "losers": 36,
+      "pnl": 7705.63,
+      "partial_closes": 34,
+      "win_rate": 50.7
+    },
+    "2022-05": {
+      "trades": 87,
+      "winners": 44,
+      "losers": 43,
+      "pnl": 1513.16,
+      "partial_closes": 37,
+      "win_rate": 50.6
+    },
+    "2022-06": {
+      "trades": 81,
+      "winners": 40,
+      "losers": 41,
+      "pnl": 31438.48,
+      "partial_closes": 44,
+      "win_rate": 49.4
+    },
+    "2022-07": {
+      "trades": 95,
+      "winners": 42,
+      "losers": 53,
+      "pnl": 28969.26,
+      "partial_closes": 40,
+      "win_rate": 44.2
+    },
+    "2022-08": {
+      "trades": 137,
+      "winners": 69,
+      "losers": 68,
+      "pnl": 73699.71,
+      "partial_closes": 69,
+      "win_rate": 50.4
+    },
+    "2022-09": {
+      "trades": 89,
+      "winners": 53,
+      "losers": 36,
+      "pnl": 60463.03,
+      "partial_closes": 56,
+      "win_rate": 59.6
+    },
+    "2022-10": {
+      "trades": 75,
+      "winners": 42,
+      "losers": 33,
+      "pnl": 22315.34,
+      "partial_closes": 27,
+      "win_rate": 56.0
+    },
+    "2022-11": {
+      "trades": 85,
+      "winners": 46,
+      "losers": 39,
+      "pnl": 41124.79,
+      "partial_closes": 34,
+      "win_rate": 54.1
+    },
+    "2022-12": {
+      "trades": 106,
+      "winners": 51,
+      "losers": 55,
+      "pnl": 38083.01,
+      "partial_closes": 45,
+      "win_rate": 48.1
+    },
+    "2023-01": {
+      "trades": 106,
+      "winners": 55,
+      "losers": 51,
+      "pnl": 53258.55,
+      "partial_closes": 58,
+      "win_rate": 51.9
+    },
+    "2023-02": {
+      "trades": 102,
+      "winners": 58,
+      "losers": 44,
+      "pnl": 76946.61,
+      "partial_closes": 51,
+      "win_rate": 56.9
+    },
+    "2023-03": {
+      "trades": 139,
+      "winners": 83,
+      "losers": 56,
+      "pnl": 89244.4,
+      "partial_closes": 68,
+      "win_rate": 59.7
+    },
+    "2023-04": {
+      "trades": 69,
+      "winners": 37,
+      "losers": 32,
+      "pnl": 23651.89,
+      "partial_closes": 34,
+      "win_rate": 53.6
+    },
+    "2023-05": {
+      "trades": 120,
+      "winners": 55,
+      "losers": 65,
+      "pnl": 26340.2,
+      "partial_closes": 40,
+      "win_rate": 45.8
+    },
+    "2023-06": {
+      "trades": 91,
+      "winners": 43,
+      "losers": 48,
+      "pnl": 12635.2,
+      "partial_closes": 42,
+      "win_rate": 47.3
+    },
+    "2023-07": {
+      "trades": 100,
+      "winners": 53,
+      "losers": 47,
+      "pnl": 26925.37,
+      "partial_closes": 30,
+      "win_rate": 53.0
+    },
+    "2023-08": {
+      "trades": 62,
+      "winners": 32,
+      "losers": 30,
+      "pnl": 14317.24,
+      "partial_closes": 27,
+      "win_rate": 51.6
+    },
+    "2023-09": {
+      "trades": 41,
+      "winners": 21,
+      "losers": 20,
+      "pnl": 19333.51,
+      "partial_closes": 30,
+      "win_rate": 51.2
+    },
+    "2023-10": {
+      "trades": 113,
+      "winners": 59,
+      "losers": 54,
+      "pnl": 45448.37,
+      "partial_closes": 43,
+      "win_rate": 52.2
+    },
+    "2023-11": {
+      "trades": 81,
+      "winners": 33,
+      "losers": 48,
+      "pnl": 16749.49,
+      "partial_closes": 26,
+      "win_rate": 40.7
+    },
+    "2023-12": {
+      "trades": 67,
+      "winners": 33,
+      "losers": 34,
+      "pnl": 30599.13,
+      "partial_closes": 33,
+      "win_rate": 49.3
+    },
+    "2024-01": {
+      "trades": 88,
+      "winners": 37,
+      "losers": 51,
+      "pnl": -405.59,
+      "partial_closes": 31,
+      "win_rate": 42.0
+    },
+    "2024-02": {
+      "trades": 83,
+      "winners": 42,
+      "losers": 41,
+      "pnl": 38693.82,
+      "partial_closes": 40,
+      "win_rate": 50.6
+    },
+    "2024-03": {
+      "trades": 100,
+      "winners": 56,
+      "losers": 44,
+      "pnl": 52029.01,
+      "partial_closes": 64,
+      "win_rate": 56.0
+    },
+    "2024-04": {
+      "trades": 109,
+      "winners": 56,
+      "losers": 53,
+      "pnl": 63529.25,
+      "partial_closes": 52,
+      "win_rate": 51.4
+    },
+    "2024-05": {
+      "trades": 61,
+      "winners": 30,
+      "losers": 31,
+      "pnl": -2796.59,
+      "partial_closes": 25,
+      "win_rate": 49.2
+    },
+    "2024-06": {
+      "trades": 110,
+      "winners": 47,
+      "losers": 63,
+      "pnl": 43598.27,
+      "partial_closes": 38,
+      "win_rate": 42.7
+    },
+    "2024-07": {
+      "trades": 69,
+      "winners": 30,
+      "losers": 39,
+      "pnl": 9796.78,
+      "partial_closes": 32,
+      "win_rate": 43.5
+    },
+    "2024-08": {
+      "trades": 34,
+      "winners": 14,
+      "losers": 20,
+      "pnl": 13791.18,
+      "partial_closes": 14,
+      "win_rate": 41.2
+    },
+    "2024-09": {
+      "trades": 64,
+      "winners": 30,
+      "losers": 34,
+      "pnl": 27548.7,
+      "partial_closes": 31,
+      "win_rate": 46.9
+    },
+    "2024-10": {
+      "trades": 71,
+      "winners": 44,
+      "losers": 27,
+      "pnl": 44694.61,
+      "partial_closes": 32,
+      "win_rate": 62.0
+    },
+    "2024-11": {
+      "trades": 122,
+      "winners": 59,
+      "losers": 63,
+      "pnl": 17737.05,
+      "partial_closes": 58,
+      "win_rate": 48.4
+    },
+    "2024-12": {
+      "trades": 72,
+      "winners": 33,
+      "losers": 39,
+      "pnl": 32565.13,
+      "partial_closes": 29,
+      "win_rate": 45.8
+    },
+    "2025-01": {
+      "trades": 131,
+      "winners": 64,
+      "losers": 67,
+      "pnl": 2213.13,
+      "partial_closes": 42,
+      "win_rate": 48.9
+    },
+    "2025-02": {
+      "trades": 148,
+      "winners": 82,
+      "losers": 66,
+      "pnl": 49997.77,
+      "partial_closes": 62,
+      "win_rate": 55.4
+    },
+    "2025-03": {
+      "trades": 122,
+      "winners": 54,
+      "losers": 68,
+      "pnl": 43255.95,
+      "partial_closes": 47,
+      "win_rate": 44.3
+    },
+    "2025-04": {
+      "trades": 53,
+      "winners": 38,
+      "losers": 15,
+      "pnl": 57327.05,
+      "partial_closes": 23,
+      "win_rate": 71.7
+    },
+    "2025-05": {
+      "trades": 147,
+      "winners": 66,
+      "losers": 81,
+      "pnl": 29340.86,
+      "partial_closes": 71,
+      "win_rate": 44.9
+    },
+    "2025-06": {
+      "trades": 174,
+      "winners": 101,
+      "losers": 73,
+      "pnl": 72876.74,
+      "partial_closes": 69,
+      "win_rate": 58.0
+    },
+    "2025-07": {
+      "trades": 137,
+      "winners": 75,
+      "losers": 62,
+      "pnl": 36990.52,
+      "partial_closes": 58,
+      "win_rate": 54.7
+    },
+    "2025-08": {
+      "trades": 151,
+      "winners": 92,
+      "losers": 59,
+      "pnl": 88393.76,
+      "partial_closes": 71,
+      "win_rate": 60.9
+    },
+    "2025-09": {
+      "trades": 159,
+      "winners": 81,
+      "losers": 78,
+      "pnl": 54547.59,
+      "partial_closes": 66,
+      "win_rate": 50.9
+    },
+    "2025-10": {
+      "trades": 110,
+      "winners": 52,
+      "losers": 58,
+      "pnl": 17619.65,
+      "partial_closes": 40,
+      "win_rate": 47.3
+    },
+    "2025-11": {
+      "trades": 100,
+      "winners": 44,
+      "losers": 56,
+      "pnl": 40335.93,
+      "partial_closes": 37,
+      "win_rate": 44.0
+    },
+    "2025-12": {
+      "trades": 96,
+      "winners": 48,
+      "losers": 48,
+      "pnl": 48439.47,
+      "partial_closes": 35,
+      "win_rate": 50.0
+    }
+  },
+  "fiveers_total_withdrawn": 4018735.84,
+  "fiveers_final_funded_level": 500000,
+  "fiveers_scaling_events": 88,
+  "fiveers_scaling_log": [
+    {
+      "time": "2015-01-15 11:30:00+00:00",
+      "old_level": 50000.0,
+      "new_level": 60000,
+      "profit_made": 5391.8,
+      "trader_payout": 4313.44,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-04-09 22:00:00+00:00",
+      "old_level": 60000,
+      "new_level": 70000,
+      "profit_made": 6502.83,
+      "trader_payout": 5202.26,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-05-07 22:00:00+00:00",
+      "old_level": 70000,
+      "new_level": 80000,
+      "profit_made": 7081.91,
+      "trader_payout": 5665.53,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-05-27 22:00:00+00:00",
+      "old_level": 80000,
+      "new_level": 100000,
+      "profit_made": 8647.09,
+      "trader_payout": 6917.67,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-06-10 22:00:00+00:00",
+      "old_level": 100000,
+      "new_level": 125000,
+      "profit_made": 10467.04,
+      "trader_payout": 8373.63,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-06-25 22:00:00+00:00",
+      "old_level": 125000,
+      "new_level": 150000,
+      "profit_made": 13393.51,
+      "trader_payout": 10714.81,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-06-29 22:00:00+00:00",
+      "old_level": 150000,
+      "new_level": 175000,
+      "profit_made": 16041.15,
+      "trader_payout": 12832.92,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2015-07-06 22:00:00+00:00",
+      "old_level": 175000,
+      "new_level": 200000,
+      "profit_made": 20155.24,
+      "trader_payout": 17131.95,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2015-08-20 09:30:00+00:00",
+      "old_level": 200000,
+      "new_level": 250000,
+      "profit_made": 20366.27,
+      "trader_payout": 17311.33,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2015-08-24 13:00:00+00:00",
+      "old_level": 250000,
+      "new_level": 300000,
+      "profit_made": 29553.53,
+      "trader_payout": 26598.17,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2015-10-26 22:00:00+00:00",
+      "old_level": 300000,
+      "new_level": 350000,
+      "profit_made": 30150.27,
+      "trader_payout": 27135.24,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2015-12-13 22:00:00+00:00",
+      "old_level": 350000,
+      "new_level": 400000,
+      "profit_made": 35450.71,
+      "trader_payout": 35450.71,
+      "profit_split": 1.0
+    },
+    {
+      "time": "2016-02-02 22:00:00+00:00",
+      "old_level": 400000,
+      "new_level": 450000,
+      "profit_made": 40480.88,
+      "trader_payout": 40480.88,
+      "profit_split": 1.0
+    },
+    {
+      "time": "2016-03-20 22:00:00+00:00",
+      "old_level": 450000,
+      "new_level": 500000,
+      "profit_made": 45329.78,
+      "trader_payout": 45329.78,
+      "profit_split": 1.0
+    },
+    {
+      "time": "2016-04-21 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50320.74,
+      "trader_payout": 50320.74,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2016-06-05 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51442.45,
+      "trader_payout": 51442.45,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2016-07-07 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51072.55,
+      "trader_payout": 51072.55,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2016-08-17 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50196.45,
+      "trader_payout": 50196.45,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2016-11-02 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50268.67,
+      "trader_payout": 50268.67,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2016-12-07 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 52032.26,
+      "trader_payout": 52032.26,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-02-10 12:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50455.13,
+      "trader_payout": 50455.13,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-04-10 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50732.87,
+      "trader_payout": 50732.87,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-07-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51515.1,
+      "trader_payout": 51515.1,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-08-16 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50532.09,
+      "trader_payout": 50532.09,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-09-21 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51819.02,
+      "trader_payout": 51819.02,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-10-22 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50325.27,
+      "trader_payout": 50325.27,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2017-12-11 07:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50791.8,
+      "trader_payout": 50791.8,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-02-01 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51885.15,
+      "trader_payout": 51885.15,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-03-27 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50929.98,
+      "trader_payout": 50929.98,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-05-29 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50155.76,
+      "trader_payout": 50155.76,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-07-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51432.69,
+      "trader_payout": 51432.69,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-08-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 52100.13,
+      "trader_payout": 52100.13,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-10-10 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51219.06,
+      "trader_payout": 51219.06,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2018-12-19 07:45:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50085.93,
+      "trader_payout": 50085.93,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-01-25 01:15:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50382.91,
+      "trader_payout": 50382.91,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-02-25 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50502.41,
+      "trader_payout": 50502.41,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-03-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50341.82,
+      "trader_payout": 50341.82,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-04-18 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51115.38,
+      "trader_payout": 51115.38,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-07-02 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51351.15,
+      "trader_payout": 51351.15,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-08-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50671.07,
+      "trader_payout": 50671.07,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2019-11-21 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50525.71,
+      "trader_payout": 50525.71,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-01-15 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50147.0,
+      "trader_payout": 50147.0,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-04-12 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50077.2,
+      "trader_payout": 50077.2,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-06-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50026.28,
+      "trader_payout": 50026.28,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-07-16 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50323.26,
+      "trader_payout": 50323.26,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-07-30 18:45:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50084.88,
+      "trader_payout": 50084.88,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-09-15 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50834.87,
+      "trader_payout": 50834.87,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-10-21 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50626.29,
+      "trader_payout": 50626.29,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2020-11-24 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50387.61,
+      "trader_payout": 50387.61,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-01-27 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50896.8,
+      "trader_payout": 50896.8,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-02-21 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50587.59,
+      "trader_payout": 50587.59,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-04-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51238.98,
+      "trader_payout": 51238.98,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-05-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50062.8,
+      "trader_payout": 50062.8,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-08-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50006.25,
+      "trader_payout": 50006.25,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2021-09-19 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50995.28,
+      "trader_payout": 50995.28,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-01-13 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50620.28,
+      "trader_payout": 50620.28,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-02-22 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50927.91,
+      "trader_payout": 50927.91,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-06-15 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 52527.6,
+      "trader_payout": 52527.6,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-08-08 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51058.74,
+      "trader_payout": 51058.74,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-08-29 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50285.43,
+      "trader_payout": 50285.43,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-09-22 11:15:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50235.83,
+      "trader_payout": 50235.83,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-11-06 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50487.16,
+      "trader_payout": 50487.16,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2022-12-13 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50780.82,
+      "trader_payout": 50780.82,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-01-12 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51026.06,
+      "trader_payout": 51026.06,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-02-05 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50052.87,
+      "trader_payout": 50052.87,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-03-06 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51246.04,
+      "trader_payout": 51246.04,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-03-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50453.64,
+      "trader_payout": 50453.64,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-04-30 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50779.49,
+      "trader_payout": 50779.49,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-07-10 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50160.01,
+      "trader_payout": 50160.01,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-10-02 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51466.29,
+      "trader_payout": 51466.29,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2023-11-21 03:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50604.3,
+      "trader_payout": 50604.3,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-02-06 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50822.35,
+      "trader_payout": 50822.35,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-03-19 01:30:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50264.86,
+      "trader_payout": 50264.86,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-04-14 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50077.51,
+      "trader_payout": 50077.51,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-06-11 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50082.27,
+      "trader_payout": 50082.27,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-09-23 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50289.11,
+      "trader_payout": 50289.11,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-10-22 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50620.27,
+      "trader_payout": 50620.27,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2024-12-09 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50212.86,
+      "trader_payout": 50212.86,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-02-27 10:45:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 51176.55,
+      "trader_payout": 51176.55,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-03-31 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50673.68,
+      "trader_payout": 50673.68,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-04-06 22:45:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 52161.48,
+      "trader_payout": 52161.48,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-06-12 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50275.99,
+      "trader_payout": 50275.99,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-06-29 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50598.07,
+      "trader_payout": 50598.07,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-07-28 13:15:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50353.96,
+      "trader_payout": 50353.96,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-08-20 02:15:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50559.42,
+      "trader_payout": 50559.42,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-09-07 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 53055.26,
+      "trader_payout": 53055.26,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-11-06 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50524.8,
+      "trader_payout": 50524.8,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    },
+    {
+      "time": "2025-12-08 22:00:00+00:00",
+      "old_level": 500000,
+      "new_level": 500000,
+      "profit_made": 50317.93,
+      "trader_payout": 50317.93,
+      "profit_split": 1.0,
+      "note": "at_cap"
+    }
+  ],
+  "terminal_on_breach": true,
+  "account_failed": false,
+  "fail_info": null
+}
