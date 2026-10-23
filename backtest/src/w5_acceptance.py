@@ -313,7 +313,31 @@ def main():
     if not _ok_s2:
         fails.append("stap 2: STEP2_RISK_PCT moet standaard 1.8 zijn en aan de risicoberekening hangen")
 
+    # 5f ── KLIMLIMIET gefund onder 300k (FUNDED_CLIMB_RISK_PCT=1.8).
+    _m3 = re.search(r'^def _w5_climb_risk_pct\(\):.*?(?=\n\n\n)', _live_src2, re.S | re.M)
+    _ns3 = {"os": os}
+    _sv3 = os.environ.pop("FUNDED_CLIMB_RISK_PCT", None)
+    try:
+        if _m3:
+            exec(_m3.group(0), _ns3)
+        _cl = float(_ns3["_w5_climb_risk_pct"]()) if _m3 else 0.0
+    finally:
+        if _sv3 is not None:
+            os.environ["FUNDED_CLIMB_RISK_PCT"] = _sv3
+    _cl_wired = "base_risk = min(base_risk, _w5_climb_risk_pct())" in _live_src2
+    _cl_bt = 'os.getenv("FUNDED_CLIMB_RISK_PCT"' in bt_src
+    _ok_cl = abs(_cl - 1.8) < 1e-9 and _cl_wired and _cl_bt
+    print(f"  {'OK  ' if _ok_cl else 'FAIL'}  {'klimlimiet gefund <300k 1.8%':<44} "
+          f"{_cl} / gekoppeld {_cl_wired} / backtest {_cl_bt}")
+    if not _ok_cl:
+        fails.append("klimlimiet: FUNDED_CLIMB_RISK_PCT moet live standaard 1.8 zijn en aan de risicoberekening hangen")
+
     # 6 ── known deliberate divergences, reported not failed
+    notes.append(
+        "KLIMLIMIET staat live standaard AAN (FUNDED_CLIMB_RISK_PCT=1.8), de backtest "
+        "standaard UIT, net als de pin-bewaking. Gemeten in w5_variants.py (climb18): "
+        "20/20 gefunde accounts overleven 3 jaar tegen 12/20 zonder, en in "
+        "quant/climb18 (11 jaar aan een stuk).")
     notes.append(
         "PIN-BEWAKING staat live standaard AAN (PEG_GUARD_VOL=2.5), de backtest "
         "standaard UIT, zodat opgeslagen resultaten reproduceerbaar blijven. De "

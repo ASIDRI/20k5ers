@@ -3356,7 +3356,7 @@ class LiveTradingBot:
         elif funded_level >= 300_000:
             base_risk = min(base_risk, 0.60)
         else:
-            # FUNDED_CLIMB_RISK_PCT (default off): cap risk during the climb
+            # FUNDED_CLIMB_RISK_PCT (backtest default off, live 1.8): cap risk during the climb
             # from the start level to 300k. Every funded death in the random
             # study (15/40) happened below 300k, where the account trades at
             # full risk; above 300k the cap above already applies.

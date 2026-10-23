@@ -334,6 +334,17 @@ def _w5_step2_risk_pct():
     return float(os.getenv("STEP2_RISK_PCT", "1.8"))
 
 
+def _w5_climb_risk_pct():
+    """Funded risk cap below the 300k level (FUNDED_CLIMB_RISK_PCT, default 1.8); 0 = off.
+
+    Every funded death in the random study (15/40) happened below 300k,
+    where the account traded at full 2.7%. Same 20 random 3-year starts
+    (w5_variants.py): 12/20 survive without the cap, 20/20 with 1.8%, and
+    the average payout rises from $17.6k to $27.4k per month.
+    """
+    return float(os.getenv("FUNDED_CLIMB_RISK_PCT", "1.8"))
+
+
 _W5_STEP_FILE = Path(__file__).resolve().parent / "challenge_steps.json"
 _W5_STEP_CACHE = {}
 
@@ -5078,10 +5089,10 @@ class LiveTradingBot:
             base_risk = min(base_risk, 0.40)
         elif current_balance >= 300_000:
             base_risk = min(base_risk, 0.60)
-        elif _w5_challenge_step() == "funded" and os.getenv("FUNDED_CLIMB_RISK_PCT", ""):
-            # W5: cap risk during the funded climb to 300k (default off).
+        elif _w5_challenge_step() == "funded" and _w5_climb_risk_pct() > 0:
+            # W5: cap risk during the funded climb to 300k (live default 1.8).
             # Backtest gate: main_live_bot_backtest.py, funded-level caps.
-            base_risk = min(base_risk, float(os.getenv("FUNDED_CLIMB_RISK_PCT")))
+            base_risk = min(base_risk, _w5_climb_risk_pct())
 
         # Apply safety reductions based on drawdown levels.
         # Graduated recovery: TDD must drop to <3% before returning to full 1.1% risk,

@@ -18,6 +18,7 @@ step2_risk.json (1,80); funded = random_study 'funded_3y'.
 
 Draaien:  uv run python3 backtest/src/w5_variants.py challenges s1_22
           uv run python3 backtest/src/w5_variants.py funded climb18
+          uv run python3 backtest/src/w5_variants.py funded8 climb18
           uv run python3 backtest/src/w5_variants.py report
 """
 import concurrent.futures, importlib.util, json, sys
@@ -59,7 +60,7 @@ def challenge_one(var, start):
     return {"total": d1 + 1 + s2["pass_day"], "d1": d1, "breach": False, "why": ""}
 
 
-def funded_one(var, start):
+def funded_one(var, start, years=3):
     env_x, _ = VARIANTS[var]
     orig = rs.live_config
 
@@ -67,18 +68,22 @@ def funded_one(var, start):
         env, tp = orig(); env.update(env_x); return env, tp
     rs.live_config = patched
     try:
-        return rs.run_funded_one(3, start)
+        return rs.run_funded_one(years, start)
     finally:
         rs.live_config = orig
 
 
 def run(kind, var):
-    starts = rs.challenge_starts(100) if kind == "challenges" else rs.funded_starts(3, 20)
+    # kind: challenges | funded (3 yr, 20) | funded5 / funded8 (10 accounts,
+    # same starts as random_study funded_5y / funded_8y)
+    years = {"funded": 3, "funded5": 5, "funded8": 8}.get(kind)
+    starts = (rs.challenge_starts(100) if kind == "challenges"
+              else rs.funded_starts(years, 20 if years == 3 else 10))
     key = f"{kind}:{var}"
     store = w5.load_json(OUT)
     todo = [s for s in starts if s not in store.get(key, {}) or store[key][s].get("error")]
     print(f"[var] {key}: {len(todo)} van {len(starts)} te gaan", flush=True)
-    fn = challenge_one if kind == "challenges" else funded_one
+    fn = challenge_one if kind == "challenges" else (lambda v, st: funded_one(v, st, years))
     with concurrent.futures.ThreadPoolExecutor(max_workers=rs.WORKERS) as ex:
         futs = {ex.submit(fn, var, s): s for s in todo}
         for f in concurrent.futures.as_completed(futs):
@@ -121,6 +126,21 @@ def report():
         alive = sum(1 for r in v if not r["died"])
         print(f"  {name:12} {alive:>7}/{len(v):<3} ${sum(w)/len(w)/36:>16,.0f} ${w[len(w)//2]:>14,.0f} "
               f"{max(r['max_ddd_pct'] or 0 for r in v):>10.2f}%")
+    for kind, ref in (("funded5", "funded_5y"), ("funded8", "funded_8y")):
+        rows5 = {"referentie": w5.load_json(rs.OUT).get(ref, {})}
+        rows5.update({k.split(":")[1]: v for k, v in store.items() if k.startswith(kind + ":")})
+        if len(rows5) == 1:
+            continue
+        yrs = int(kind[-1])
+        print(f"\nGEFUND {yrs} JAAR (10 accounts)")
+        for name, d in rows5.items():
+            v = [r for r in d.values() if not r.get("error")]
+            if not v:
+                continue
+            w = sorted(r["withdrawn"] for r in v)
+            alive = sum(1 for r in v if not r["died"])
+            print(f"  {name:12} {alive:>7}/{len(v):<3} ${sum(w)/len(w)/(12*yrs):>16,.0f} ${w[len(w)//2]:>14,.0f} "
+                  f"{max(r['max_ddd_pct'] or 0 for r in v):>10.2f}%")
     print("\n[w5_variants] DONE_MARKER", flush=True)
 
 
