@@ -38,3 +38,21 @@ The live bot itself is unchanged and behaves as designed (it only ever sees comp
 It means the parameters were tuned on leaked data, so there is no evidence of an edge. Do not trade
 real money or buy a challenge on these results. All earlier optimisation (915 setups, ticker study,
 risk ladders, climb cap) used the leaky simulator and has to be redone.
+
+## The mechanism (why it made so much money)
+`strategy_core.compute_trade_levels` uses `current = daily_candles[-1]["close"]` and places the entry at
+`current` when it lies near the fib level. With the leak, that "current price" was the close of a day that
+had not happened yet, so orders were placed at the price where the day would END.
+2019: 36.5% of trades opened within 5% of the day's range from that day's (future) close; with completed
+candles 9.1%.
+
+## The real live bot, replayed bar by bar (live_replay.py, 2019, live timing: scan 00:15 server time)
+| Candles given to the bot | trades | win rate | trading P&L |
+|---|---|---|---|
+| leaky (old simulator) | 886 | 56.2% | +$247,199 (scaled to $450k) |
+| completed only, like MT5 | 118 | 39.0% | -$2,709 |
+
+In the MT5-like run the live bot stopped on 2019-02-07: ChallengeRiskManager's emergency close-all at
+5.5% total drawdown ("halting all trading", permanent until restart). The backtest has no such halt
+(TDD_EMERGENCY_HALT=0, wall-guard instead). This is a live/backtest divergence not covered by
+w5_parity_audit.py.

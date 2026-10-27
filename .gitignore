@@ -265,3 +265,7 @@ backtest/output/doe/full_2step_eval.json
 backtest/output/doe/wall5/*_run.log
 backtest/output/doe/wall5/margin_trades/
 challenge_steps.json
+
+# live replay logs are large; keep trades/summary only
+backtest/output/replay/**/replay.log
+backtest/output/replay/**/scan_errors.log

@@ -1,0 +1,37 @@
+{
+  "diag": {
+    "setups": {
+      "AUD_USD": "pending",
+      "NZD_USD": "pending",
+      "EUR_GBP": "pending",
+      "EUR_JPY": "pending",
+      "EUR_CHF": "pending",
+      "EUR_AUD": "pending",
+      "EUR_CAD": "pending",
+      "EUR_NZD": "pending",
+      "GBP_JPY": "pending",
+      "GBP_AUD": "pending",
+      "GBP_CAD": "pending",
+      "GBP_NZD": "pending",
+      "AUD_JPY": "pending",
+      "AUD_CHF": "pending",
+      "AUD_CAD": "pending",
+      "AUD_NZD": "pending",
+      "NZD_CHF": "pending",
+      "NZD_CAD": "pending",
+      "CAD_CHF": "pending",
+      "CHF_JPY": "pending"
+    },
+    "stale_filled_setups": [],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 24784,
+  "trades_rows": 1401,
+  "final_balance": 450301.5565,
+  "withdrawn": 214550.89113558712,
+  "funded_level": 450000,
+  "work_dir": "/tmp/live_replay_5vavoz1r"
+}
