@@ -323,6 +323,17 @@ def _w5_corr_group_cap():
     return int(os.getenv("CORR_GROUP_CAP", "6"))
 
 
+def _w5_step1_risk_pct():
+    """Risk per trade in challenge STEP 1 (STEP1_RISK_PCT, default 1.8).
+
+    Measured on the same 100 random challenges (w5_variants.py, s1_18): step 1
+    at 1.8% gives 94 pass / 3 breach, median 21 days, against 95 / 2 and 20
+    days at 2.7%. The difference is noise, so the safer 1.8% is used live.
+    Only the live bot applies this cap; the headline backtest ran step 1 at 2.7%.
+    """
+    return float(os.getenv("STEP1_RISK_PCT", "1.8"))
+
+
 def _w5_step2_risk_pct():
     """Risk per trade in challenge STEP 2 (STEP2_RISK_PCT, default 1.8).
 
@@ -5100,7 +5111,9 @@ class LiveTradingBot:
         base_risk = getattr(self.params, 'risk_per_trade_pct', FIVEERS_CONFIG.risk_per_trade_pct)
 
         # W5: challenge step 2 trades smaller (target 5% instead of 8%).
-        if _w5_challenge_step() == "2":
+        if _w5_challenge_step() == "1":
+            base_risk = min(base_risk, _w5_step1_risk_pct())
+        elif _w5_challenge_step() == "2":
             base_risk = min(base_risk, _w5_step2_risk_pct())
 
         # Scale risk down as funded level grows to prevent DDD breaches.
@@ -7358,7 +7371,7 @@ class LiveTradingBot:
             if _step in ("1", "2"):
                 _tgt = 8.0 if _step == "1" else 5.0
                 log.info(f"  Challenge step (by login): {_step}  target {_tgt}%  "
-                         f"risk cap {'params' if _step == '1' else f'{_w5_step2_risk_pct()}%'}")
+                         f"risk cap {_w5_step1_risk_pct() if _step == '1' else _w5_step2_risk_pct()}%")
                 if profit_pct >= _tgt and len(self.challenge_manager.trading_days) >= 3:
                     _w5_mark_step_passed()
             else:

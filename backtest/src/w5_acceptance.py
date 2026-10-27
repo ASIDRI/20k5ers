@@ -313,6 +313,24 @@ def main():
     if not _ok_s2:
         fails.append("stap 2: STEP2_RISK_PCT moet standaard 1.8 zijn en aan de risicoberekening hangen")
 
+    # 5e2 ── STAP 1 handelt kleiner (STEP1_RISK_PCT=1.8): zelfde meting, ruis-verschil, veiliger.
+    _m1 = re.search(r'^def _w5_step1_risk_pct\(\):.*?(?=\n\n\n)', _live_src2, re.S | re.M)
+    _ns1 = {"os": os}
+    _sv1 = os.environ.pop("STEP1_RISK_PCT", None)
+    try:
+        if _m1:
+            exec(_m1.group(0), _ns1)
+        _s1 = float(_ns1["_w5_step1_risk_pct"]()) if _m1 else 0.0
+    finally:
+        if _sv1 is not None:
+            os.environ["STEP1_RISK_PCT"] = _sv1
+    _s1_wired = "base_risk = min(base_risk, _w5_step1_risk_pct())" in _live_src2
+    _ok_s1 = abs(_s1 - 1.8) < 1e-9 and _s1_wired
+    print(f"  {'OK  ' if _ok_s1 else 'FAIL'}  {'stap 1 risico 1.8% (automatisch per login)':<44} "
+          f"{_s1} / gekoppeld {_s1_wired}")
+    if not _ok_s1:
+        fails.append("stap 1: STEP1_RISK_PCT moet standaard 1.8 zijn en aan de risicoberekening hangen")
+
     # 5f ── KLIMLIMIET gefund onder 300k (FUNDED_CLIMB_RISK_PCT=1.8).
     _m3 = re.search(r'^def _w5_climb_risk_pct\(\):.*?(?=\n\n\n)', _live_src2, re.S | re.M)
     _ns3 = {"os": os}
@@ -353,6 +371,10 @@ def main():
         fails.append("pariteit: live beslist anders dan de backtest (draai w5_parity_audit.py)")
 
     # 6 ── known deliberate divergences, reported not failed
+    notes.append(
+        "STAP 1 handelt live op 1,8% (STEP1_RISK_PCT); de headline-backtest draaide stap 1 op "
+        "2,7%. Gemeten op dezelfde 100 starts (w5_variants.py, s1_18): 94 geslaagd / 3 breach, "
+        "mediaan 21 dagen, tegen 95 / 2 en 20 dagen. Verschil binnen ruis; bewust veiliger gekozen.")
     notes.append(
         "KLIMLIMIET staat live standaard AAN (FUNDED_CLIMB_RISK_PCT=1.8), de backtest "
         "standaard UIT, net als de pin-bewaking. Gemeten in w5_variants.py (climb18): "

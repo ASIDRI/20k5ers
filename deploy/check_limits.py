@@ -80,9 +80,10 @@ def main():
     print("\n Risico per trade")
     try:
         prm = json.loads((REPO / "params" / "current_params.json").read_text())["parameters"]
-        print(f"   Basis (parameters)              : {prm.get('risk_per_trade_pct')}%")
+        print(f"   Basis (parameters, daalt per fase): {prm.get('risk_per_trade_pct')}%")
     except Exception:
         pass
+    print(f"   Challenge stap 1                : {getf('STEP1_RISK_PCT', '1.8'):.2f}%")
     print(f"   Challenge stap 2                : {getf('STEP2_RISK_PCT', '1.8'):.2f}%")
     print(f"   Gefund onder $300k (klimlimiet) : {getf('FUNDED_CLIMB_RISK_PCT', '1.8'):.2f}%")
     print(f"   Gefund vanaf $300k              : 0.60%")
