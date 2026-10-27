@@ -89,7 +89,10 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--env-json", default=None, help="JSON file with extra env (broker/simulator costs and live settings)")
     ap.add_argument("--data-dir", default=str(REPO / "data" / "ohlcv"))
-    ap.add_argument("--verbose", action="store_true")
+    ap.add_argument("--verbose", action="store_true", help="also print INFO to the console")
+    ap.add_argument("--log-info", action="store_true", help="write the bot's INFO lines to replay.log (slow, large)")
+    ap.add_argument("--params-json", default=None, help="strategy parameters to test, overlaid on params/current_params.json in memory only")
+    ap.add_argument("--no-stop-on-breach", action="store_true", help="keep trading after a 5%% daily or 10%% total breach")
     args = ap.parse_args()
     if os.getenv("REPLAY_TRACE"):
         import faulthandler
@@ -122,10 +125,14 @@ def main():
         if isinstance(h, logging.StreamHandler) and not hasattr(h, "baseFilename"):
             h.setLevel(logging.INFO if args.verbose else logging.ERROR)
     fh = logging.FileHandler(out / "replay.log", encoding="utf-8")
-    fh.setLevel(logging.INFO)
+    _lvl = logging.INFO if (args.log_info or args.verbose) else logging.WARNING
+    fh.setLevel(_lvl)
     fh.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+    for h in logging.getLogger("tradr").handlers:
+        if hasattr(h, "baseFilename"):
+            h.setLevel(_lvl)  # the bot's own logs/tradr_live.log in the throw-away dir
     logging.getLogger("tradr").addHandler(fh)
-    logging.getLogger("tradr").setLevel(logging.INFO)
+    logging.getLogger("tradr").setLevel(_lvl)  # below INFO nothing is formatted at all: much faster
 
     from csv_mt5_simulator import CSVMT5Simulator
 
@@ -212,6 +219,33 @@ def main():
             mod.datetime = FakeDT
 
     state = {"i": -1, "ddd": False, "bars": 0, "sl_hits": 0}
+    import live_clock as _lc
+    acc = {"day": None, "day_start": args.balance, "payout_day0": 0.0, "max_ddd": 0.0, "max_tdd": 0.0,
+           "breach": None, "ref": args.balance}
+
+    def measure():
+        """5ers rules on the fake account: daily loss vs MAX(equity, balance) at the server-day start,
+        total loss vs the funded level; equity marked to each bar's adverse extreme (worst case)."""
+        a = sim.get_account_info()
+        bal, eq = a.get("balance", 0.0), a.get("equity", 0.0)
+        try:
+            eq = min(eq, bal + sim.calculate_worst_case_floating_pnl())
+        except Exception:
+            pass
+        payout = getattr(sim, "_payout_balance_removed", 0.0)
+        sd = _lc.server_time(Clock.now).date()
+        if sd != acc["day"]:
+            acc["day"] = sd
+            acc["day_start"] = max(a.get("equity", 0.0), bal)
+            acc["payout_day0"] = payout
+            acc["ref"] = max(acc["ref"], getattr(sim, "_funded_level", acc["ref"]) or acc["ref"])
+        ddd = max(0.0, (acc["day_start"] - eq - (payout - acc["payout_day0"])) / acc["day_start"] * 100) if acc["day_start"] else 0
+        tdd = max(0.0, (acc["ref"] - eq) / acc["ref"] * 100) if acc["ref"] else 0
+        acc["max_ddd"] = max(acc["max_ddd"], ddd); acc["max_tdd"] = max(acc["max_tdd"], tdd)
+        if acc["breach"] is None and (ddd >= 5.0 or tdd >= 10.0):
+            acc["breach"] = {"time": str(Clock.now), "daily_pct": round(ddd, 2), "total_pct": round(tdd, 2)}
+            if not args.no_stop_on_breach:
+                raise KeyboardInterrupt()
     threading.Thread = FakeThread  # DDD worker is driven by us, not by a real thread
 
     def fake_time():
@@ -229,6 +263,12 @@ def main():
 
     bot = live.LiveTradingBot(immediate_scan=False)
     bot.mt5 = fake
+    if args.params_json:
+        _p = json.loads(Path(args.params_json).read_text())
+        _p = _p.get("parameters", _p)
+        for k, v in _p.items():
+            if hasattr(bot.params, k):
+                setattr(bot.params, k, v)
 
     # Debug aid only: write the traceback of any scan error to scan_errors.log (the bot logs just the message).
     _orig_scan = bot.scan_symbol
@@ -294,6 +334,7 @@ def main():
         if wd == 5 or (wd == 6 and t.hour < 22):
             return  # market closed: the bot's own loop still ticks, the broker does nothing
         broker_events()
+        measure()
         run_ddd_step()
         # In reality the bot's 10-second loop notices a fill or a closed position within seconds,
         # long before its 5-minute orphan check. One loop pass per 15-minute bar would reverse that
@@ -333,7 +374,18 @@ def main():
                  "challenge_mode": live.CHALLENGE_MODE}
     except Exception as _e:  # noqa
         _diag = {"diag_error": repr(_e)}
+    from collections import defaultdict as _dd
+    _pos = _dd(float)
+    for t in closed:
+        _pos[str(t.get("ticket")).split("_")[0]] += (t.get("pnl", 0) or 0) + (t.get("swap", 0) or 0)
+    _gp = sum(v for v in _pos.values() if v > 0); _gl = -sum(v for v in _pos.values() if v <= 0)
+    _cm = getattr(bot, "challenge_manager", None)
     summary = {"diag": _diag,
+        "trades": len(_pos), "win_rate": round(100 * sum(v > 0 for v in _pos.values()) / max(1, len(_pos)), 1),
+        "trading_pnl": round(sum(_pos.values()), 2), "profit_factor": round(_gp / _gl, 3) if _gl else None,
+        "max_daily_dd_pct": round(acc["max_ddd"], 2), "max_total_dd_pct": round(acc["max_tdd"], 2),
+        "breach": acc["breach"], "bot_halted": bool(_cm and getattr(_cm, "halted", False)),
+        "bot_halt_reason": getattr(_cm, "halt_reason", "") if _cm else "",
         "start": args.start, "end": args.end, "bars": state["bars"], "trades_rows": len(closed),
         "final_balance": acct.get("balance"), "withdrawn": getattr(sim, "_total_withdrawn", 0.0),
         "funded_level": getattr(sim, "_funded_level", None), "work_dir": str(work),

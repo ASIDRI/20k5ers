@@ -1,0 +1,124 @@
+{
+  "initial_balance": 50000.0,
+  "final_balance": 45645.08,
+  "net_pnl": -4354.92,
+  "closed_trades_pnl": -4324.38,
+  "total_commission": 30.54,
+  "total_swap": 0.0,
+  "return_pct": -8.71,
+  "total_trades": 78,
+  "winners": 30,
+  "losers": 48,
+  "win_rate": 38.5,
+  "win_rate_final_leg": 30.8,
+  "mfe_r_median": 0.591,
+  "mfe_r_p75": 1.151,
+  "mae_r_median": 0.927,
+  "tp1_hits": 58,
+  "tp1_hit_rate": 74.4,
+  "max_tdd_pct": 8.72,
+  "max_ddd_pct": 2.62,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 7,
+  "ddd_halts": 0,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 2,
+  "ddd_warnings": 5,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2019-01": {
+      "trades": 16,
+      "winners": 3,
+      "losers": 13,
+      "pnl": -3872.67,
+      "partial_closes": 20,
+      "win_rate": 18.8
+    },
+    "2019-02": {
+      "trades": 13,
+      "winners": 4,
+      "losers": 9,
+      "pnl": -455.39,
+      "partial_closes": 28,
+      "win_rate": 30.8
+    },
+    "2019-03": {
+      "trades": 12,
+      "winners": 6,
+      "losers": 6,
+      "pnl": 30.75,
+      "partial_closes": 29,
+      "win_rate": 50.0
+    },
+    "2019-04": {
+      "trades": 10,
+      "winners": 3,
+      "losers": 7,
+      "pnl": -239.98,
+      "partial_closes": 18,
+      "win_rate": 30.0
+    },
+    "2019-05": {
+      "trades": 15,
+      "winners": 6,
+      "losers": 9,
+      "pnl": -709.43,
+      "partial_closes": 24,
+      "win_rate": 40.0
+    },
+    "2019-06": {
+      "trades": 5,
+      "winners": 2,
+      "losers": 3,
+      "pnl": -86.99,
+      "partial_closes": 9,
+      "win_rate": 40.0
+    },
+    "2019-07": {
+      "trades": 1,
+      "winners": 1,
+      "losers": 0,
+      "pnl": 29.9,
+      "partial_closes": 0,
+      "win_rate": 100.0
+    },
+    "2019-08": {
+      "trades": 0,
+      "winners": 0,
+      "losers": 0,
+      "pnl": 11.75,
+      "partial_closes": 2,
+      "win_rate": 0
+    },
+    "2019-10": {
+      "trades": 0,
+      "winners": 0,
+      "losers": 0,
+      "pnl": 12.55,
+      "partial_closes": 2,
+      "win_rate": 0
+    },
+    "2019-12": {
+      "trades": 6,
+      "winners": 5,
+      "losers": 1,
+      "pnl": 955.11,
+      "partial_closes": 0,
+      "win_rate": 83.3
+    }
+  },
+  "fiveers_total_withdrawn": 0.0,
+  "fiveers_final_funded_level": 50000.0,
+  "fiveers_scaling_events": 0,
+  "fiveers_scaling_log": [],
+  "terminal_on_breach": false,
+  "account_failed": false,
+  "fail_info": null
+}

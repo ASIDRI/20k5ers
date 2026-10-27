@@ -109,6 +109,7 @@ except ImportError:
 
 # BACKTEST MODE: Use CSV simulator instead of MT5Client
 from csv_mt5_simulator import CSVMT5Simulator as MT5Client, PendingOrder, Position as MT5Position
+import live_clock as _lc  # the live bot's own clock rules (LIVE_TIMING=1 default)
 from tradr.risk.manager import RiskManager
 from tradr.utils.logger import setup_logger
 from challenge_risk_manager import ChallengeRiskManager, ChallengeConfig, RiskMode, ActionType, ProtectionAction, create_challenge_manager
@@ -797,6 +798,8 @@ class LiveTradingBot:
 
     @staticmethod
     def _is_rollover_window(t) -> bool:
+        if _lc.enabled():
+            return _lc.in_rollover(t)  # live: 16:30-17:30 New York (21:30-22:30 UTC winter, 20:30-21:30 summer)
         # 21:30 - 22:30 UTC daily
         if t.hour == 21 and t.minute >= 30:
             return True
@@ -1125,6 +1128,7 @@ class LiveTradingBot:
         self.last_entry_check_time: Optional[datetime] = None  # Track entry proximity checks
         self.scan_count = 0
         self.pending_setups: Dict[str, PendingSetup] = {}
+        self._rollover_queue: Dict[str, Dict] = {}  # LIVE: setups held back by the rollover window
         self.symbol_map: Dict[str, str] = {}  # our_symbol -> broker_symbol
         self.challenge_manager: Optional[ChallengeRiskManager] = None
         # First run detection
@@ -1962,7 +1966,10 @@ class LiveTradingBot:
         _dbg = os.getenv("NIGHTLY_DEBUG") == "1"
         if _dbg:
             self._nd_hours = getattr(self, "_nd_hours", set()); self._nd_hours.add(now.hour)
-        if now.hour != hour:
+        if _lc.enabled():
+            if not _lc.derisk_now(now):  # live: 16:00-16:14 New York
+                return
+        elif now.hour != hour:
             return
         # Friday is already handled by the weekend logic — don't double-derisk.
         if now.weekday() == 4:
@@ -2192,7 +2199,9 @@ class LiveTradingBot:
         Uses current_time (simulator time) instead of datetime.now().
         """
         # Only run Monday (weekday 0)
-        if current_time.weekday() != 0:
+        # LIVE: Monday 01:00 SERVER time (Sunday 23:00 UTC in winter), the same moment as the Monday scan
+        _ct = _lc.server_time(current_time) if _lc.enabled() else current_time
+        if _ct.weekday() != 0:
             self._weekend_resume_done = False
             return
 
@@ -2201,7 +2210,7 @@ class LiveTradingBot:
             return
 
         # Wait until 01:00 simulated time (market needs to stabilize after open)
-        if current_time.hour < 1:
+        if _ct.hour < 1:
             return
 
         if not self._weekend_paused_orders:
@@ -4388,6 +4397,12 @@ class LiveTradingBot:
             blocked, reason = self._protection_block(symbol, direction)
             if blocked:
                 log.info(f"[{symbol}] Trade blocked by protection layer: {reason}")
+                if _lc.enabled():
+                    # LIVE: rollover -> queue and place when the window ends; news -> entry queue
+                    if reason.startswith("rollover"):
+                        self._rollover_queue[symbol] = {**setup, "force_limit": True}
+                    else:
+                        self.add_to_awaiting_entry(setup)
                 return False
             
             # NOTE: NO cumulative risk check - removed to match simulator
@@ -4416,7 +4431,7 @@ class LiveTradingBot:
             
             lot_size = risk_check.adjusted_lot
         
-        if entry_distance_r <= FIVEERS_CONFIG.immediate_entry_r:
+        if not setup.get("force_limit") and entry_distance_r <= FIVEERS_CONFIG.immediate_entry_r:  # live: post-rollover entries are always limits
             order_type = "MARKET"
             log.info(f"[{symbol}] Price at entry ({entry_distance_r:.2f}R) - using MARKET ORDER")
             
@@ -5452,6 +5467,9 @@ class LiveTradingBot:
         sim_time = self.mt5.get_current_time() if hasattr(self.mt5, 'get_current_time') else datetime.now(timezone.utc)
         current_day = sim_time.weekday()  # 0=Monday, 6=Sunday
         is_weekend = current_day in [5, 6]  # Saturday=5, Sunday=6
+        if _lc.enabled():
+            # LIVE (is_market_open): closed on Saturday and on Sunday before 22:00 UTC only
+            is_weekend = current_day == 5 or (current_day == 6 and sim_time.hour < 22)
         for symbol in available_symbols:
             try:
                 # ═══════════════════════════════════════════════════════════
@@ -6415,15 +6433,31 @@ class LiveTradingBot:
             # ═══════════════════════════════════════════════════════════════
             # DAILY SCAN at 00:00-00:30 (first M15 bar of day)
             # ═══════════════════════════════════════════════════════════════
-            if today != last_scanned_date and current_time.hour == 0 and current_time.minute < 30:
+            # LIVE: place setups the rollover window held back, as soon as it ends (main_live_bot.run)
+            if _lc.enabled() and self._rollover_queue and not _lc.in_rollover(current_time):
+                for _sym, _setup in list(self._rollover_queue.items()):
+                    if self.check_existing_position(self.symbol_map.get(_sym, _sym)):
+                        pass
+                    elif not self.place_setup_order(_setup, check_spread=True, skip_proximity_check=True):
+                        self.add_to_awaiting_entry(_setup)
+                    del self._rollover_queue[_sym]
+
+            if _lc.enabled():
+                # LIVE schedule: 00:15 server time Tue-Fri, 01:00 Monday (right after the daily close)
+                _sd = _lc.server_time(current_time).date()
+                _do_scan = _lc.is_scan_bar(current_time) and _sd != last_scanned_date
+            else:
+                _sd = today
+                _do_scan = today != last_scanned_date and current_time.hour == 0 and current_time.minute < 30
+            if _do_scan:
                 log.info(f"📊 DAILY SCAN - {current_time.strftime('%Y-%m-%d')}")
                 self.scan_all_symbols()
-                last_scanned_date = today
+                last_scanned_date = _sd
             
             # ═══════════════════════════════════════════════════════════════
             # ENTRY QUEUE CHECK (every 30 min in M15 terms = every 2 bars)
             # ═══════════════════════════════════════════════════════════════
-            if current_time.minute in [0, 30]:
+            if _lc.enabled() or current_time.minute in [0, 30]:  # live checks every 5 min, i.e. every bar
                 self.check_awaiting_entry_signals()
             
             # ═══════════════════════════════════════════════════════════════

@@ -56,3 +56,18 @@ In the MT5-like run the live bot stopped on 2019-02-07: ChallengeRiskManager's e
 5.5% total drawdown ("halting all trading", permanent until restart). The backtest has no such halt
 (TDD_EMERGENCY_HALT=0, wall-guard instead). This is a live/backtest divergence not covered by
 w5_parity_audit.py.
+
+## How to backtest from now on
+**The real live bot is the backtest.** `backtest/src/live_replay.py` runs the unmodified
+`main_live_bot.py` on recorded 15-minute prices with a fake MT5 (completed candles only, like
+`copy_rates_from_pos(..., 1, ...)`), a fake clock (scan at 00:15 server time, rollover queue, Monday
+01:00, nightly de-risk on New York time) and the bot's DDD thread called every bar. About 5 minutes per
+year in quiet mode. Options: `--params-json` (test parameters in memory, live files untouched),
+`--env-json` (settings), `--no-stop-on-breach`. It reports 5ers numbers: max daily/total drawdown,
+first breach, whether the bot halted itself.
+
+- `live_screen.py` runs many parameter sets through it in parallel.
+- The old engine (`main_live_bot_backtest.py`) now also uses the live clock (`LIVE_TIMING=1`, via
+  `live_clock.py`, which reads the rules from main_live_bot.py itself). On January 2019 it matched 77
+  of ~100 live trades; it still lacks live-only bookkeeping (orphan-order recovery), so it is only a
+  fast pre-filter. Final numbers must come from live_replay.py.
