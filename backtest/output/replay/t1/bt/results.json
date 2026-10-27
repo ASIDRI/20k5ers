@@ -1,0 +1,61 @@
+{
+  "initial_balance": 60000,
+  "final_balance": 60175.71,
+  "net_pnl": 14351.75,
+  "closed_trades_pnl": 5551.06,
+  "total_commission": 155.3,
+  "total_swap": 0.0,
+  "return_pct": 28.7,
+  "total_trades": 64,
+  "winners": 33,
+  "losers": 31,
+  "win_rate": 51.6,
+  "win_rate_final_leg": 45.3,
+  "mfe_r_median": 0.2,
+  "mfe_r_p75": 0.426,
+  "mae_r_median": 0.117,
+  "tp1_hits": 20,
+  "tp1_hit_rate": 31.2,
+  "max_tdd_pct": 0.22,
+  "max_ddd_pct": 2.52,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 2,
+  "ddd_halts": 0,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 1,
+  "ddd_warnings": 1,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2019-03": {
+      "trades": 64,
+      "winners": 33,
+      "losers": 31,
+      "pnl": 5551.06,
+      "partial_closes": 23,
+      "win_rate": 51.6
+    }
+  },
+  "fiveers_total_withdrawn": 4176.04,
+  "fiveers_final_funded_level": 60000,
+  "fiveers_scaling_events": 1,
+  "fiveers_scaling_log": [
+    {
+      "time": "2019-03-13 22:00:00+00:00",
+      "old_level": 50000.0,
+      "new_level": 60000,
+      "profit_made": 5220.05,
+      "trader_payout": 4176.04,
+      "profit_split": 0.8
+    }
+  ],
+  "terminal_on_breach": true,
+  "account_failed": false,
+  "fail_info": null
+}

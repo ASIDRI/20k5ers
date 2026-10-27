@@ -1,0 +1,245 @@
+{
+  "initial_balance": 450000,
+  "final_balance": 480381.16,
+  "net_pnl": 641079.47,
+  "closed_trades_pnl": 275174.99,
+  "total_commission": 9831.14,
+  "total_swap": 0.0,
+  "return_pct": 1282.16,
+  "total_trades": 1210,
+  "winners": 639,
+  "losers": 571,
+  "win_rate": 52.8,
+  "win_rate_final_leg": 50.8,
+  "mfe_r_median": 0.166,
+  "mfe_r_p75": 0.445,
+  "mae_r_median": 0.133,
+  "tp1_hits": 413,
+  "tp1_hit_rate": 34.1,
+  "max_tdd_pct": 4.64,
+  "max_ddd_pct": 3.86,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 34,
+  "ddd_halts": 10,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 8,
+  "ddd_warnings": 16,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2019-01": {
+      "trades": 90,
+      "winners": 41,
+      "losers": 49,
+      "pnl": 11025.19,
+      "partial_closes": 43,
+      "win_rate": 45.6
+    },
+    "2019-02": {
+      "trades": 136,
+      "winners": 77,
+      "losers": 59,
+      "pnl": 38798.86,
+      "partial_closes": 54,
+      "win_rate": 56.6
+    },
+    "2019-03": {
+      "trades": 165,
+      "winners": 90,
+      "losers": 75,
+      "pnl": 12221.09,
+      "partial_closes": 63,
+      "win_rate": 54.5
+    },
+    "2019-04": {
+      "trades": 121,
+      "winners": 65,
+      "losers": 56,
+      "pnl": 35638.09,
+      "partial_closes": 64,
+      "win_rate": 53.7
+    },
+    "2019-05": {
+      "trades": 120,
+      "winners": 61,
+      "losers": 59,
+      "pnl": 10871.04,
+      "partial_closes": 59,
+      "win_rate": 50.8
+    },
+    "2019-06": {
+      "trades": 118,
+      "winners": 62,
+      "losers": 56,
+      "pnl": 45082.04,
+      "partial_closes": 50,
+      "win_rate": 52.5
+    },
+    "2019-07": {
+      "trades": 90,
+      "winners": 51,
+      "losers": 39,
+      "pnl": 22126.71,
+      "partial_closes": 33,
+      "win_rate": 56.7
+    },
+    "2019-08": {
+      "trades": 54,
+      "winners": 29,
+      "losers": 25,
+      "pnl": 36745.49,
+      "partial_closes": 29,
+      "win_rate": 53.7
+    },
+    "2019-09": {
+      "trades": 73,
+      "winners": 44,
+      "losers": 29,
+      "pnl": 16398.46,
+      "partial_closes": 33,
+      "win_rate": 60.3
+    },
+    "2019-10": {
+      "trades": 94,
+      "winners": 37,
+      "losers": 57,
+      "pnl": -789.4,
+      "partial_closes": 39,
+      "win_rate": 39.4
+    },
+    "2019-11": {
+      "trades": 68,
+      "winners": 37,
+      "losers": 31,
+      "pnl": 23293.98,
+      "partial_closes": 37,
+      "win_rate": 54.4
+    },
+    "2019-12": {
+      "trades": 81,
+      "winners": 45,
+      "losers": 36,
+      "pnl": 23763.45,
+      "partial_closes": 27,
+      "win_rate": 55.6
+    }
+  },
+  "fiveers_total_withdrawn": 210698.32,
+  "fiveers_final_funded_level": 450000,
+  "fiveers_scaling_events": 13,
+  "fiveers_scaling_log": [
+    {
+      "time": "2019-01-24 22:00:00+00:00",
+      "old_level": 50000.0,
+      "new_level": 60000,
+      "profit_made": 5327.49,
+      "trader_payout": 4261.99,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-02-06 22:00:00+00:00",
+      "old_level": 60000,
+      "new_level": 70000,
+      "profit_made": 6506.1,
+      "trader_payout": 5204.88,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-02-13 09:45:00+00:00",
+      "old_level": 70000,
+      "new_level": 80000,
+      "profit_made": 7278.81,
+      "trader_payout": 5823.04,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-02-22 19:30:00+00:00",
+      "old_level": 80000,
+      "new_level": 100000,
+      "profit_made": 8036.72,
+      "trader_payout": 6429.38,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-02-26 11:45:00+00:00",
+      "old_level": 100000,
+      "new_level": 125000,
+      "profit_made": 10246.26,
+      "trader_payout": 8197.01,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-03-01 19:30:00+00:00",
+      "old_level": 125000,
+      "new_level": 150000,
+      "profit_made": 12523.64,
+      "trader_payout": 10018.91,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-03-08 13:30:00+00:00",
+      "old_level": 150000,
+      "new_level": 175000,
+      "profit_made": 15099.67,
+      "trader_payout": 12079.73,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2019-04-14 22:00:00+00:00",
+      "old_level": 175000,
+      "new_level": 200000,
+      "profit_made": 17655.42,
+      "trader_payout": 15007.11,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2019-05-07 22:00:00+00:00",
+      "old_level": 200000,
+      "new_level": 250000,
+      "profit_made": 20014.28,
+      "trader_payout": 17012.14,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2019-06-07 16:45:00+00:00",
+      "old_level": 250000,
+      "new_level": 300000,
+      "profit_made": 25895.54,
+      "trader_payout": 23305.99,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2019-07-21 22:00:00+00:00",
+      "old_level": 300000,
+      "new_level": 350000,
+      "profit_made": 30206.34,
+      "trader_payout": 27185.71,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2019-08-25 22:00:00+00:00",
+      "old_level": 350000,
+      "new_level": 400000,
+      "profit_made": 35633.92,
+      "trader_payout": 35633.92,
+      "profit_split": 1.0
+    },
+    {
+      "time": "2019-11-21 22:00:00+00:00",
+      "old_level": 400000,
+      "new_level": 450000,
+      "profit_made": 40538.51,
+      "trader_payout": 40538.51,
+      "profit_split": 1.0
+    }
+  ],
+  "terminal_on_breach": true,
+  "account_failed": false,
+  "fail_info": null
+}

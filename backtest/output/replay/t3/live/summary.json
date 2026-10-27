@@ -1,0 +1,43 @@
+{
+  "diag": {
+    "setups": {
+      "EUR_USD": "paused_ddd",
+      "GBP_USD": "paused_ddd",
+      "USD_JPY": "closed_ddd",
+      "USD_CHF": "paused_ddd",
+      "USD_CAD": "paused_ddd",
+      "AUD_USD": "paused_ddd",
+      "NZD_USD": "closed_ddd",
+      "EUR_GBP": "paused_ddd",
+      "EUR_JPY": "paused_ddd",
+      "EUR_CHF": "paused_ddd",
+      "EUR_AUD": "closed_ddd",
+      "EUR_CAD": "paused_ddd",
+      "EUR_NZD": "closed_ddd",
+      "GBP_JPY": "paused_ddd",
+      "GBP_CHF": "closed_ddd",
+      "GBP_AUD": "closed_ddd",
+      "GBP_CAD": "paused_ddd",
+      "GBP_NZD": "closed_ddd",
+      "AUD_JPY": "paused_ddd",
+      "AUD_CHF": "paused_ddd",
+      "XTI_USD": "filled",
+      "AUD_NZD": "pending",
+      "NZD_CAD": "pending",
+      "UK100_USD": "pending"
+    },
+    "stale_filled_setups": [
+      "XTI_USD"
+    ],
+    "risk_manager_open_positions": 1,
+    "challenge_mode": true
+  },
+  "start": "2019-03-04",
+  "end": "2019-03-15",
+  "bars": 869,
+  "trades_rows": 57,
+  "final_balance": 52011.87670000003,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_dwl05mun"
+}

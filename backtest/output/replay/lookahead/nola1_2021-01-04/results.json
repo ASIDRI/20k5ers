@@ -1,0 +1,149 @@
+{
+  "initial_balance": 60000,
+  "final_balance": 56445.12,
+  "net_pnl": 10505.94,
+  "closed_trades_pnl": 2460.1,
+  "total_commission": 938.96,
+  "total_swap": 0.0,
+  "return_pct": 21.01,
+  "total_trades": 1151,
+  "winners": 570,
+  "losers": 581,
+  "win_rate": 49.5,
+  "win_rate_final_leg": 46.7,
+  "mfe_r_median": 0.162,
+  "mfe_r_p75": 0.324,
+  "mae_r_median": 0.179,
+  "tp1_hits": 296,
+  "tp1_hit_rate": 25.7,
+  "max_tdd_pct": 6.31,
+  "max_ddd_pct": 3.32,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 31,
+  "ddd_halts": 9,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 8,
+  "ddd_warnings": 14,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2021-01": {
+      "trades": 114,
+      "winners": 51,
+      "losers": 63,
+      "pnl": 2098.21,
+      "partial_closes": 23,
+      "win_rate": 44.7
+    },
+    "2021-02": {
+      "trades": 89,
+      "winners": 46,
+      "losers": 43,
+      "pnl": 1917.99,
+      "partial_closes": 31,
+      "win_rate": 51.7
+    },
+    "2021-03": {
+      "trades": 83,
+      "winners": 42,
+      "losers": 41,
+      "pnl": -16.03,
+      "partial_closes": 31,
+      "win_rate": 50.6
+    },
+    "2021-04": {
+      "trades": 93,
+      "winners": 44,
+      "losers": 49,
+      "pnl": -928.87,
+      "partial_closes": 26,
+      "win_rate": 47.3
+    },
+    "2021-05": {
+      "trades": 90,
+      "winners": 48,
+      "losers": 42,
+      "pnl": 431.15,
+      "partial_closes": 40,
+      "win_rate": 53.3
+    },
+    "2021-06": {
+      "trades": 95,
+      "winners": 62,
+      "losers": 33,
+      "pnl": 1001.14,
+      "partial_closes": 28,
+      "win_rate": 65.3
+    },
+    "2021-07": {
+      "trades": 144,
+      "winners": 65,
+      "losers": 79,
+      "pnl": -834.66,
+      "partial_closes": 50,
+      "win_rate": 45.1
+    },
+    "2021-08": {
+      "trades": 152,
+      "winners": 65,
+      "losers": 87,
+      "pnl": -1167.17,
+      "partial_closes": 44,
+      "win_rate": 42.8
+    },
+    "2021-09": {
+      "trades": 109,
+      "winners": 60,
+      "losers": 49,
+      "pnl": 1028.24,
+      "partial_closes": 48,
+      "win_rate": 55.0
+    },
+    "2021-10": {
+      "trades": 45,
+      "winners": 22,
+      "losers": 23,
+      "pnl": -158.96,
+      "partial_closes": 17,
+      "win_rate": 48.9
+    },
+    "2021-11": {
+      "trades": 78,
+      "winners": 38,
+      "losers": 40,
+      "pnl": -895.62,
+      "partial_closes": 22,
+      "win_rate": 48.7
+    },
+    "2021-12": {
+      "trades": 59,
+      "winners": 27,
+      "losers": 32,
+      "pnl": -15.29,
+      "partial_closes": 9,
+      "win_rate": 45.8
+    }
+  },
+  "fiveers_total_withdrawn": 4060.81,
+  "fiveers_final_funded_level": 60000,
+  "fiveers_scaling_events": 1,
+  "fiveers_scaling_log": [
+    {
+      "time": "2021-02-21 22:00:00+00:00",
+      "old_level": 50000.0,
+      "new_level": 60000,
+      "profit_made": 5076.02,
+      "trader_payout": 4060.81,
+      "profit_split": 0.8
+    }
+  ],
+  "terminal_on_breach": true,
+  "account_failed": false,
+  "fail_info": null
+}

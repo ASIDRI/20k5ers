@@ -37,6 +37,28 @@ log = logging.getLogger(__name__)
 # DATA CLASSES - EXACT SAME AS tradr/mt5/client.py
 # ═══════════════════════════════════════════════════════════════════════════
 
+_TF_DURATION = {"M15": pd.Timedelta(minutes=15), "H1": pd.Timedelta(hours=1), "H4": pd.Timedelta(hours=4),
+                "D1": pd.Timedelta(hours=24), "W1": pd.Timedelta(days=7), "MN": pd.Timedelta(days=31)}
+
+
+def _drop_forming_bar(df, tf, end_ts):
+    """HTF_NO_LOOKAHEAD=1: return COMPLETED candles only, like the real MT5Client (copy_rates_from_pos
+    position 1). The CSV holds each bar stamped with its OPEN time and its FINAL high/low/close, so a bar that
+    opened before 'now' but closes after it would reveal the rest of its period (a whole week on a weekly bar).
+    Only the last row can still be forming. DEFAULT ON since the leak was found; HTF_NO_LOOKAHEAD=0 reproduces the old (leaky) stored results."""
+    flag = os.getenv("HTF_NO_LOOKAHEAD", "1").strip().upper()
+    if flag in ("", "0", "FALSE", "NO", "OFF"):
+        return df
+    if flag not in ("1", "TRUE", "YES", "ON") and tf not in {x.strip() for x in flag.split(",")}:
+        return df  # a list such as "MN,W1" limits the fix to those timeframes (diagnosis only)
+    dur = _TF_DURATION.get(tf)
+    if dur is None or df.empty:
+        return df
+    if df['time'].iloc[-1] + dur > end_ts:
+        return df.iloc[:-1]
+    return df
+
+
 @dataclass
 class TickData:
     """Represents a price tick."""
@@ -809,6 +831,7 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
+        df = _drop_forming_bar(df, tf, end_ts)
         
         if df.empty:
             return None
@@ -848,6 +871,7 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
+        df = _drop_forming_bar(df, tf, end_ts)
         
         if df.empty:
             return None

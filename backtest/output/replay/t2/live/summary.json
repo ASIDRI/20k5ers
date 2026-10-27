@@ -1,0 +1,10 @@
+{
+  "start": "2019-03-04",
+  "end": "2019-03-15",
+  "bars": 869,
+  "trades_rows": 39,
+  "final_balance": 60126.76,
+  "withdrawn": 4071.4444000000076,
+  "funded_level": 60000,
+  "work_dir": "/tmp/live_replay_pg_tbsyb"
+}

@@ -1,0 +1,245 @@
+{
+  "initial_balance": 450000,
+  "final_balance": 471726.64,
+  "net_pnl": 637379.36,
+  "closed_trades_pnl": 270116.88,
+  "total_commission": 7520.98,
+  "total_swap": 0.0,
+  "return_pct": 1274.76,
+  "total_trades": 1439,
+  "winners": 709,
+  "losers": 730,
+  "win_rate": 49.3,
+  "win_rate_final_leg": 47.5,
+  "mfe_r_median": 0.158,
+  "mfe_r_p75": 0.412,
+  "mae_r_median": 0.13,
+  "tp1_hits": 456,
+  "tp1_hit_rate": 31.7,
+  "max_tdd_pct": 4.56,
+  "max_ddd_pct": 4.56,
+  "tdd_bars_ge_9_0": 0,
+  "tdd_bars_ge_9_5": 0,
+  "tdd_bars_ge_9_9": 0,
+  "tdd_days_ge_9_0": 0,
+  "tdd_days_ge_9_5": 0,
+  "tdd_days_ge_9_9": 0,
+  "tdd_excursions_ge_9_5": 0,
+  "safety_events": 55,
+  "ddd_halts": 12,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 14,
+  "ddd_warnings": 29,
+  "tdd_stopouts": 0,
+  "monthly_stats": {
+    "2023-01": {
+      "trades": 141,
+      "winners": 66,
+      "losers": 75,
+      "pnl": 8537.33,
+      "partial_closes": 52,
+      "win_rate": 46.8
+    },
+    "2023-02": {
+      "trades": 129,
+      "winners": 62,
+      "losers": 67,
+      "pnl": 15687.81,
+      "partial_closes": 54,
+      "win_rate": 48.1
+    },
+    "2023-03": {
+      "trades": 167,
+      "winners": 89,
+      "losers": 78,
+      "pnl": 41122.98,
+      "partial_closes": 78,
+      "win_rate": 53.3
+    },
+    "2023-04": {
+      "trades": 93,
+      "winners": 47,
+      "losers": 46,
+      "pnl": 17660.11,
+      "partial_closes": 38,
+      "win_rate": 50.5
+    },
+    "2023-05": {
+      "trades": 133,
+      "winners": 64,
+      "losers": 69,
+      "pnl": 2662.32,
+      "partial_closes": 42,
+      "win_rate": 48.1
+    },
+    "2023-06": {
+      "trades": 112,
+      "winners": 47,
+      "losers": 65,
+      "pnl": 145.99,
+      "partial_closes": 41,
+      "win_rate": 42.0
+    },
+    "2023-07": {
+      "trades": 156,
+      "winners": 85,
+      "losers": 71,
+      "pnl": 56321.58,
+      "partial_closes": 58,
+      "win_rate": 54.5
+    },
+    "2023-08": {
+      "trades": 84,
+      "winners": 44,
+      "losers": 40,
+      "pnl": 20086.47,
+      "partial_closes": 42,
+      "win_rate": 52.4
+    },
+    "2023-09": {
+      "trades": 68,
+      "winners": 37,
+      "losers": 31,
+      "pnl": 28451.25,
+      "partial_closes": 49,
+      "win_rate": 54.4
+    },
+    "2023-10": {
+      "trades": 151,
+      "winners": 75,
+      "losers": 76,
+      "pnl": 28408.64,
+      "partial_closes": 52,
+      "win_rate": 49.7
+    },
+    "2023-11": {
+      "trades": 121,
+      "winners": 50,
+      "losers": 71,
+      "pnl": 21476.11,
+      "partial_closes": 41,
+      "win_rate": 41.3
+    },
+    "2023-12": {
+      "trades": 84,
+      "winners": 43,
+      "losers": 41,
+      "pnl": 29556.29,
+      "partial_closes": 44,
+      "win_rate": 51.2
+    }
+  },
+  "fiveers_total_withdrawn": 215652.72,
+  "fiveers_final_funded_level": 450000,
+  "fiveers_scaling_events": 13,
+  "fiveers_scaling_log": [
+    {
+      "time": "2023-01-19 22:00:00+00:00",
+      "old_level": 50000.0,
+      "new_level": 60000,
+      "profit_made": 5499.69,
+      "trader_payout": 4399.75,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-02-01 22:00:00+00:00",
+      "old_level": 60000,
+      "new_level": 70000,
+      "profit_made": 6232.72,
+      "trader_payout": 4986.18,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-02-05 22:00:00+00:00",
+      "old_level": 70000,
+      "new_level": 80000,
+      "profit_made": 8154.39,
+      "trader_payout": 6523.51,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-03-06 22:00:00+00:00",
+      "old_level": 80000,
+      "new_level": 100000,
+      "profit_made": 8406.66,
+      "trader_payout": 6725.32,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-03-09 22:00:00+00:00",
+      "old_level": 100000,
+      "new_level": 125000,
+      "profit_made": 11688.37,
+      "trader_payout": 9350.7,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-03-15 22:00:00+00:00",
+      "old_level": 125000,
+      "new_level": 150000,
+      "profit_made": 13195.33,
+      "trader_payout": 10556.26,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-04-06 13:15:00+00:00",
+      "old_level": 150000,
+      "new_level": 175000,
+      "profit_made": 15143.76,
+      "trader_payout": 12115.0,
+      "profit_split": 0.8
+    },
+    {
+      "time": "2023-04-17 13:00:00+00:00",
+      "old_level": 175000,
+      "new_level": 200000,
+      "profit_made": 17660.33,
+      "trader_payout": 15011.28,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2023-07-10 16:30:00+00:00",
+      "old_level": 200000,
+      "new_level": 250000,
+      "profit_made": 20321.62,
+      "trader_payout": 17273.37,
+      "profit_split": 0.85
+    },
+    {
+      "time": "2023-07-26 22:00:00+00:00",
+      "old_level": 250000,
+      "new_level": 300000,
+      "profit_made": 27573.05,
+      "trader_payout": 24815.74,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2023-09-07 22:00:00+00:00",
+      "old_level": 300000,
+      "new_level": 350000,
+      "profit_made": 30977.62,
+      "trader_payout": 27879.86,
+      "profit_split": 0.9
+    },
+    {
+      "time": "2023-10-23 22:00:00+00:00",
+      "old_level": 350000,
+      "new_level": 400000,
+      "profit_made": 35354.92,
+      "trader_payout": 35354.92,
+      "profit_split": 1.0
+    },
+    {
+      "time": "2023-12-14 22:00:00+00:00",
+      "old_level": 400000,
+      "new_level": 450000,
+      "profit_made": 40660.81,
+      "trader_payout": 40660.81,
+      "profit_split": 1.0
+    }
+  ],
+  "terminal_on_breach": true,
+  "account_failed": false,
+  "fail_info": null
+}
