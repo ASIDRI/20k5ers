@@ -49,17 +49,18 @@ def main():
     print("\n Bot, DAGELIJKS verlies (t.o.v. equity aan het begin van de dag)")
     src = f"uit .env ({halt_env})" if halt_env else "standaard"
     flag = "" if abs(gate - BASELINE["CFG_DAILY_HALT_PCT"]) < 1e-9 else "   <-- AFWIJKEND van de geteste 2.5"
-    print(f"   Waarschuwing                    : {C.daily_loss_warning_pct:.2f}%")
-    print(f"   Geen nieuwe trades (CFG_DAILY_HALT_PCT): {gate:.2f}%  ({src}){flag}")
+    print(f"   Waarschuwing                    : {C.daily_loss_warning_pct:.2f}%  (risico max 0.25%)")
+    print(f"   Reduceren                       : {C.daily_loss_reduce_pct:.2f}%  (risico max 0.15%)")
+    print(f"   Dagstop (CFG_DAILY_HALT_PCT)    : {gate:.2f}%  ({src}){flag}")
+    print(f"      = geen nieuwe trades EN alles sluiten, dezelfde instelling als in de backtest")
     print(f"      bij meer dan 5 open posities : {gate - 0.4:.2f}%")
-    print(f"   Alles sluiten (noodstop)        : {C.daily_loss_halt_pct:.2f}%  (vast in code)")
-    print(f"      bij meer dan 5 posities      : {C.daily_loss_halt_pct - 0.4:.2f}%")
     print(f"      rond de rollover (22:00 UTC / 21:00 in de zomer): max 2.50%")
-    print(f"   Marge tot 5ers-grens (noodstop) : {5 - C.daily_loss_halt_pct:.2f} procentpunt")
+    print(f"   Marge tot 5ers-grens            : {5 - gate:.2f} procentpunt")
 
     print("\n Bot, TOTAAL verlies (t.o.v. het startbedrag)")
-    print(f"   Voorzichtig-modus vanaf         : {getf('CFG_TDD_CAUTION_PCT', '1.5'):.2f}%  (risico per trade omlaag)")
-    print(f"   Muurbewaking vanaf              : {getf('CFG_TDD_EMERGENCY_PCT', '5.5'):.2f}%")
+    print(f"   Trap 1 vanaf {getf('CFG_TDD_CAUTION_PCT', '1.5'):.1f}%   : risico max {getf('CFG_RISK_CAUTIOUS', '0.4'):.2f}%")
+    print(f"   Trap 2 vanaf {getf('CFG_TDD_WARNING_PCT', '2.5'):.1f}%   : risico max {getf('CFG_RISK_CONSERVATIVE', '0.25'):.2f}%")
+    print(f"   Trap 3 vanaf {getf('CFG_TDD_EMERGENCY_PCT', '5.5'):.1f}%   : risico max {getf('CFG_RISK_ULTRASAFE', '0.15'):.2f}%, plus muurbewaking")
     print(f"   5ers-grens                      : 10.00%")
 
     print("\n Risico per trade")

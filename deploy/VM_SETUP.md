@@ -102,12 +102,12 @@ Bekijken (bot-limieten naast die van 5ers, laatste statusregel, saldo en equity)
 ```
 deploy\show_limits.bat
 ```
-Je ziet daar twee dagstops:
-- **Geen nieuwe trades** bij 2,5% dagverlies (bij meer dan 5 open posities 2,1%). Dit is instelbaar.
-- **Alles sluiten** bij 3,2% (2,8% bij meer dan 5 posities). Dit staat vast in de code.
+Je ziet daar:
+- **Dagstop 2,5%** (bij meer dan 5 open posities 2,1%): boven dit dagverlies krijgt de bot geen nieuwe trades en sluit hij alles. Dit is dezelfde instelling als in de backtest en is instelbaar.
+- Een trapje dat het risico per trade verlaagt bij dagverlies (2,0% en 2,5%) en bij totaalverlies (1,5%, 2,5% en 5,5%).
 - 5ers sluit je account bij **5%** dagverlies en **10%** totaal. Kijk bij twijfel altijd op je 5ers-dashboard.
 
-Wijzigen van de dagstop "geen nieuwe trades" (geteste waarden 2,0 t/m 3,5; meer dan 4,0 wordt geweigerd):
+Wijzigen van de dagstop (geteste waarden 2,0 t/m 3,5; meer dan 4,0 wordt geweigerd):
 ```
 deploy\set_daily_limit.bat 2.0
 ```

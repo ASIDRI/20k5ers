@@ -336,6 +336,22 @@ def main():
     if not _ok_cl:
         fails.append("klimlimiet: FUNDED_CLIMB_RISK_PCT moet live 1.8 zijn, aan de risicoberekening hangen en nergens overschreven worden")
 
+    # 5g ── PARITEIT: beslist live hetzelfde als de backtest achter de 4 miljoen?
+    # w5_parity_audit.py vergelijkt de effectieve parameters, de risicoladder
+    # (numeriek), de stoplogica na elke TP, de vrijdagtijd, de dagstop en de
+    # standaardwaarden. Zonder dit startte de bot met een andere instap, andere
+    # SL-niveaus en een losser risicotrapje dan alles wat getest is.
+    import subprocess as _sp
+    _pa = _sp.run([sys.executable, str(HERE / "w5_parity_audit.py")],
+                  capture_output=True, text=True, encoding="utf-8", errors="replace")
+    _bad = [ln.strip() for ln in _pa.stdout.splitlines() if ln.strip().startswith("FAIL")]
+    print(f"  {'OK  ' if _pa.returncode == 0 else 'FAIL'}  {'pariteit live == backtest (w5_parity_audit.py)':<44} "
+          f"{'identiek' if _pa.returncode == 0 else str(len(_bad)) + ' afwijking(en)'}")
+    for _ln in _bad:
+        print(f"        {_ln}")
+    if _pa.returncode != 0:
+        fails.append("pariteit: live beslist anders dan de backtest (draai w5_parity_audit.py)")
+
     # 6 ── known deliberate divergences, reported not failed
     notes.append(
         "KLIMLIMIET staat live standaard AAN (FUNDED_CLIMB_RISK_PCT=1.8), de backtest "

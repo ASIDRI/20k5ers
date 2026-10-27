@@ -437,6 +437,27 @@ def _w5_risk_cautious():
     return float(os.getenv("CFG_RISK_CAUTIOUS", "0.4"))
 
 
+def _w5_tdd_warning_pct():
+    """Total-DD level of the 'conservative' rung (CFG_TDD_WARNING_PCT, default 2.5).
+
+    The frozen backtest sets 2.5 and its ladder reads it through ftmo_config,
+    so from 2.5% total drawdown the validated account trades at most
+    _w5_risk_conservative(). Live used a hardcoded 5.0 here until the parity
+    audit (w5_parity_audit.py) caught it.
+    """
+    return float(os.getenv("CFG_TDD_WARNING_PCT", "2.5"))
+
+
+def _w5_risk_conservative():
+    """Risk % in the conservative rung (CFG_RISK_CONSERVATIVE, default 0.25)."""
+    return float(os.getenv("CFG_RISK_CONSERVATIVE", "0.25"))
+
+
+def _w5_risk_ultrasafe():
+    """Risk % in the ultra-safe rung (CFG_RISK_ULTRASAFE, default 0.15)."""
+    return float(os.getenv("CFG_RISK_ULTRASAFE", "0.15"))
+
+
 def _w5_dynamic_halt_pct(base_halt_pct, n_positions, now_utc):
     """W5 PORT of the backtest's Layer-5 halt tightening (backtest:950).
 
@@ -1083,10 +1104,11 @@ def is_market_open() -> bool:
 def is_friday_closing_period() -> bool:
     """
     Check if we're in the Friday closing period (no new orders allowed).
-    Friday 18:30 UTC onwards = no new forex orders (weekend gap protection).
+    Friday 19:30 UTC onwards = no new forex orders (weekend gap protection).
+    (W5 PARITY: 19:30 as in the backtest; live had 18:30.)
 
     Returns:
-        True if Friday 18:30+ UTC (no new orders)
+        True if Friday 19:30+ UTC (no new orders)
         False otherwise (orders allowed)
     """
     now = datetime.now(timezone.utc)
@@ -1094,8 +1116,8 @@ def is_friday_closing_period() -> bool:
     hour = now.hour
     minute = now.minute
 
-    # Friday 18:30+ UTC = closing period
-    if weekday == 4 and (hour > 18 or (hour == 18 and minute >= 30)):
+    # Friday 19:30+ UTC = closing period
+    if weekday == 4 and (hour > 19 or (hour == 19 and minute >= 30)):
         return True
 
     return False
@@ -1417,7 +1439,7 @@ class LiveTradingBot:
                     # Get all DDD thresholds from config
                     warning_pct = getattr(FIVEERS_CONFIG, "daily_loss_warning_pct", 2.0)
                     reduce_pct = getattr(FIVEERS_CONFIG, "daily_loss_reduce_pct", 2.5)
-                    base_halt_pct = getattr(FIVEERS_CONFIG, "daily_loss_halt_pct", 3.2)
+                    base_halt_pct = _w5_daily_halt_pct()  # W5 PARITY: backtest reads CFG_DAILY_HALT_PCT here too (was fixed 3.2)
 
                     # === ALSO CHECK TDD (Total DrawDown) ===
                     # TDD is calculated from INITIAL balance (not day start)
@@ -2636,7 +2658,7 @@ class LiveTradingBot:
     def handle_friday_position_closing(self):
         """
         TIER 1: Correlation-aware Friday position closing
-        Runs Friday 18:30+ UTC to reduce weekend gap exposure
+        Runs Friday 19:30+ UTC to reduce weekend gap exposure (W5 PARITY: was 18:30)
 
         Actions:
         - Close losing positions (< 0R)
@@ -2647,9 +2669,9 @@ class LiveTradingBot:
         """
         now = datetime.now(timezone.utc)
 
-        # Only run Friday 18:30+ UTC
-        if now.weekday() != 4 or not (now.hour > 18 or (now.hour == 18 and now.minute >= 30)):
-            # Reset flag on non-Friday or before 18:30
+        # Only run Friday 19:30+ UTC
+        if now.weekday() != 4 or not (now.hour > 19 or (now.hour == 19 and now.minute >= 30)):
+            # Reset flag on non-Friday or before 19:30
             if now.weekday() != 4:
                 self.friday_closing_done = False
             return
@@ -5098,12 +5120,14 @@ class LiveTradingBot:
         # Apply safety reductions based on drawdown levels.
         # Graduated recovery: TDD must drop to <3% before returning to full 1.1% risk,
         # preventing sudden jumps from 0.4% to 1.1% after only a small recovery.
-        if daily_loss_pct >= FIVEERS_CONFIG.daily_loss_reduce_pct or total_dd_pct >= 7.0:
-            # TDD ≥7% or DDD ≥ reduce threshold → ultra-safe 0.25%
-            risk_pct = min(base_risk, FIVEERS_CONFIG.ultra_safe_risk_pct)
-        elif daily_loss_pct >= FIVEERS_CONFIG.daily_loss_warning_pct or total_dd_pct >= 5.0:
-            # TDD 5-7% → reduced 0.4%
-            risk_pct = min(base_risk, FIVEERS_CONFIG.max_risk_conservative_pct)
+        # W5 PARITY: identical to the backtest ladder (main_live_bot_backtest.py
+        # ~3365). The validated config runs ultra-safe 0.15% from DDD 2.5% or
+        # TDD 5.5%, conservative 0.25% from DDD 2.0% or TDD 2.5%, cautious 0.4%
+        # from TDD 1.5%. Live had 7.0 / 5.0 / 0.25 / 0.4, a looser ladder.
+        if daily_loss_pct >= FIVEERS_CONFIG.daily_loss_reduce_pct or total_dd_pct >= _w5_tdd_emergency_pct():
+            risk_pct = min(base_risk, _w5_risk_ultrasafe())
+        elif daily_loss_pct >= FIVEERS_CONFIG.daily_loss_warning_pct or total_dd_pct >= _w5_tdd_warning_pct():
+            risk_pct = min(base_risk, _w5_risk_conservative())
         elif total_dd_pct >= _w5_tdd_caution():
             # W5 PORT: cautious rung. Live hardcoded 3.0% -> 0.60%; the validated
             # config de-risks at 1.5% -> 0.40%, i.e. at half the drawdown and to
@@ -6853,13 +6877,15 @@ class LiveTradingBot:
                         pos.ticket, broker_symbol, setup, final_tp_price
                     )
 
-                    # Move SL to 0.1R (lock in small profit)
+                    # W5 PARITY: SL goes to sl_after_tp1_r (frozen: -0.1R), as in the
+                    # backtest. Live used a fixed +0.1R here.
+                    sl_after_tp1_r = getattr(self.params, 'sl_after_tp1_r', -0.5)
                     if setup.direction == "bullish":
-                        new_sl = entry + (risk * 0.1)
+                        new_sl = entry + (risk * sl_after_tp1_r)
                     else:
-                        new_sl = entry - (risk * 0.1)
+                        new_sl = entry - (risk * sl_after_tp1_r)
                     self.mt5.modify_sl_tp(current_ticket, sl=new_sl)
-                    log.info(f"[{broker_symbol}] SL moved to 0.1R: {new_sl:.5f}")
+                    log.info(f"[{broker_symbol}] SL moved to {sl_after_tp1_r:+.2f}R after TP1: {new_sl:.5f}")
 
                     self._save_pending_setups()
                 else:
@@ -6895,14 +6921,15 @@ class LiveTradingBot:
                         pos.ticket, broker_symbol, setup, final_tp_price
                     )
 
-                    # Trail SL to TP1 level
+                    # W5 PARITY: SL to sl_after_tp2_r (frozen: 0.9R), not to TP1
+                    sl_r = getattr(self.params, 'sl_after_tp2_r', tp1_r)
                     if setup.direction == "bullish":
-                        new_sl = entry + (risk * tp1_r)
+                        new_sl = entry + (risk * sl_r)
                     else:
-                        new_sl = entry - (risk * tp1_r)
+                        new_sl = entry - (risk * sl_r)
 
                     self.mt5.modify_sl_tp(current_ticket, sl=new_sl)
-                    log.info(f"[{broker_symbol}] SL trailed to TP1 ({tp1_r}R): {new_sl:.5f}")
+                    log.info(f"[{broker_symbol}] SL trailed to {sl_r:.2f}R after TP2: {new_sl:.5f}")
 
                     self._save_pending_setups()
                 else:
@@ -6938,14 +6965,15 @@ class LiveTradingBot:
                         pos.ticket, broker_symbol, setup, final_tp_price
                     )
 
-                    # Trail SL to TP2 level
+                    # W5 PARITY: SL to sl_after_tp3_r (frozen: 1.7R), not to TP2
+                    sl_r = getattr(self.params, 'sl_after_tp3_r', tp1_r)
                     if setup.direction == "bullish":
-                        new_sl = entry + (risk * tp2_r)
+                        new_sl = entry + (risk * sl_r)
                     else:
-                        new_sl = entry - (risk * tp2_r)
+                        new_sl = entry - (risk * sl_r)
 
                     self.mt5.modify_sl_tp(current_ticket, sl=new_sl)
-                    log.info(f"[{broker_symbol}] SL trailed to TP2 ({tp2_r}R): {new_sl:.5f}")
+                    log.info(f"[{broker_symbol}] SL trailed to {sl_r:.2f}R after TP3: {new_sl:.5f}")
 
                     self._save_pending_setups()
                 else:
@@ -6981,14 +7009,15 @@ class LiveTradingBot:
                         pos.ticket, broker_symbol, setup, final_tp_price
                     )
 
-                    # Trail SL to TP3 level
+                    # W5 PARITY: SL to sl_after_tp4_r, as in the backtest
+                    sl_r = getattr(self.params, 'sl_after_tp4_r', tp2_r)
                     if setup.direction == "bullish":
-                        new_sl = entry + (risk * tp3_r)
+                        new_sl = entry + (risk * sl_r)
                     else:
-                        new_sl = entry - (risk * tp3_r)
+                        new_sl = entry - (risk * sl_r)
 
                     self.mt5.modify_sl_tp(current_ticket, sl=new_sl)
-                    log.info(f"[{broker_symbol}] SL trailed to TP3 ({tp3_r}R): {new_sl:.5f}")
+                    log.info(f"[{broker_symbol}] SL trailed to {sl_r:.2f}R after TP4: {new_sl:.5f}")
                     
                     self._save_pending_setups()
                 else:
@@ -7220,16 +7249,17 @@ class LiveTradingBot:
             log.info(f"  TDD: {total_dd_pct:.2f}% (halt at 10%)")
             log.info("=" * 70)
             
-            # Block scan entirely if DDD >= 3.2% (HALT tier)
-            if daily_loss_pct >= 3.2:
+            # Block scan entirely if DDD >= 3.5% (W5 PARITY with the backtest; was 3.2)
+            if daily_loss_pct >= 3.5:
                 log.error("=" * 70)
-                log.error(f"🚫 SCAN BLOCKED: DDD {daily_loss_pct:.2f}% >= 3.2%")
+                log.error(f"🚫 SCAN BLOCKED: DDD {daily_loss_pct:.2f}% >= 3.5%")
                 log.error("  No new orders will be placed until next trading day")
                 log.error("=" * 70)
                 return
             
-            # Block scan if TDD >= 7% (emergency zone)
-            if total_dd_pct >= 7.0:
+            # Block scan if TDD >= 7% (emergency zone), only when TDD_EMERGENCY_HALT is on
+            # (W5 PARITY: the validated config sets it to 0; the wall-guard replaces it)
+            if total_dd_pct >= 7.0 and _w5_tdd_emergency_halt_enabled():
                 log.error("=" * 70)
                 log.error(f"🚫 SCAN BLOCKED: TDD {total_dd_pct:.2f}% >= 7%")
                 log.error("  No new orders will be placed - approaching 10% limit!")

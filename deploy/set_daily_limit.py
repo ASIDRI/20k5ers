@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Past de dagstop 'geen nieuwe trades' van de bot aan in .env (CFG_DAILY_HALT_PCT).
+Past de dagstop van de bot aan in .env (CFG_DAILY_HALT_PCT).
 
     python deploy\\set_daily_limit.py 2.0     zet op 2.0%
     python deploy\\set_daily_limit.py reset   terug naar de geteste standaard (2.5%)
 
 Gevolgen:
   - Eerst de bot stoppen (Ctrl+C) en daarna opnieuw starten; lopende bot leest niet opnieuw in.
-  - Alleen deze poort verandert. De noodstop 'alles sluiten' (3.2%) staat vast in de code.
+  - Deze ene instelling bepaalt zowel 'geen nieuwe trades' als 'alles sluiten' (zoals in de backtest).
   - Geteste waarden: 2.0 t/m 3.5. Daarbuiten kan de bot ofwel nauwelijks nog handelen (<2.0),
     ofwel te dicht bij de 5ers-grens van 5% komen (>3.5). Meer dan 4.0 wordt geweigerd.
 """
