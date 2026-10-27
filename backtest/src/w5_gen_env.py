@@ -13,8 +13,8 @@ NIGHTLY_DERISK_HOUR staat in de frozen config op 22 (wat getest is) maar moet
 live op 21, omdat 22:00 UTC midden in het rollover-venster valt waar spreads
 5-50x uitlopen — kosten die de vlakke-spread simulator niet ziet.
 
-Credentials worden NIET in het bestand gezet. Die horen in de omgeving van de
-machine, niet in een bestand dat in git staat.
+Credentials worden NIET in het bestand gezet. Die staan in .env (niet in git);
+deploy/preflight.py controleert ze voor de start.
 
 Draaien:  uv run python3 backtest/src/w5_gen_env.py
 """
@@ -67,32 +67,63 @@ def main():
     for k in LIVE_KEYS:
         if k in OVERRIDES:
             continue
+        if k == "CFG_DAILY_HALT_PCT":
+            continue
         v = eff.get(k)
         if v is None:
             continue
         lines.append(f"set {k}={v}")
     lines += [
         "",
-        "REM --- credentials: NIET hier invullen, zet ze in de omgeving ---",
-        "if \"%MT5_LOGIN%\"==\"\" echo [FOUT] MT5_LOGIN niet gezet && exit /b 1",
-        "if \"%MT5_PASSWORD%\"==\"\" echo [FOUT] MT5_PASSWORD niet gezet && exit /b 1",
-        "if \"%MT5_SERVER%\"==\"\" echo [FOUT] MT5_SERVER niet gezet && exit /b 1",
+        "REM --- dagstop: CFG_DAILY_HALT_PCT bewust NIET hier gezet. Standaard 2.5; wijzigen",
+        "REM     met deploy\\set_daily_limit.bat <procent> (schrijft naar .env) ---",
         "",
-        "REM --- verificatie: bot start NIET als de config afwijkt ---",
-        "python backtest\\src\\w5_acceptance.py",
+        "REM --- credentials staan in .env (niet in git) ---",
+        "",
+        "REM --- console: UTF-8 zodat alle meldingen leesbaar zijn, en direct tonen ---",
+        "chcp 65001 >nul",
+        "set PYTHONUTF8=1",
+        "set PYTHONIOENCODING=utf-8",
+        "set PYTHONUNBUFFERED=1",
+        "",
+        "cd /d \"%~dp0..\"",
+        "title 20k5ers live bot",
+        "",
+        "where python >nul 2>&1",
         "if errorlevel 1 (",
-        "  echo.",
-        "  echo [AFGEBROKEN] Config wijkt af van de gevalideerde baseline.",
-        "  echo De bot is NIET gestart.",
-        "  exit /b 1",
+        "  echo [FOUT] Python is niet gevonden. Installeer Python 3.11 of 3.12 en vink 'Add to PATH' aan.",
+        "  goto :fail",
         ")",
         "",
-        "echo [OK] Config komt overeen met de gevalideerde baseline.",
-        "python main_live_bot.py %*",
+        "echo.",
+        "echo ============ STAP 1: controle voor de start ============",
+        "python deploy\\preflight.py",
+        "if errorlevel 1 goto :fail",
+        "",
+        "echo.",
+        "echo ============ STAP 2: bot draait (Ctrl+C om te stoppen) ============",
+        "python -u main_live_bot.py %*",
+        "set EXITCODE=%errorlevel%",
+        "echo.",
+        "echo [BOT GESTOPT] afsluitcode %EXITCODE%. Details: logs\\tradr_live.log",
+        "if not defined NO_PAUSE pause",
+        "exit /b %EXITCODE%",
+        "",
+        ":fail",
+        "echo.",
+        "echo [AFGEBROKEN] De controle voor de start is mislukt. De bot is NIET gestart.",
+        "echo Los de [FOUT]-regels hierboven op en start opnieuw.",
+        "if not defined NO_PAUSE pause",
+        "exit /b 3",
     ]
     out = REPO / "deploy" / "start_live.bat"
     out.parent.mkdir(exist_ok=True)
-    out.write_text("\r\n".join(lines) + "\r\n", encoding="utf-8")
+    text = "\r\n".join(lines) + "\r\n"
+    # Zuiver ASCII: cmd leest het bestand voor 'chcp 65001' met de tekenset van
+    # de machine, dus UTF-8-tekens (zoals een gedachtestreep) kunnen daar rommel geven.
+    text = text.replace("\u2014", "-")
+    text.encode("ascii")
+    out.write_bytes(text.encode("ascii"))
     print(f"geschreven: {out}")
     print(f"  {len([k for k in LIVE_KEYS if eff.get(k) is not None])} strategie-variabelen")
     print(f"  {len(OVERRIDES)} bewuste overrides")

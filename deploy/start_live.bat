@@ -1,7 +1,7 @@
 @echo off
 REM ===================================================================
-REM  5ers live bot — W5 baseline (t65 + TDD tiers)
-REM  GEGENEREERD door backtest/src/w5_gen_env.py — niet met de hand
+REM  5ers live bot - W5 baseline (t65 + TDD tiers)
+REM  GEGENEREERD door backtest/src/w5_gen_env.py - niet met de hand
 REM  aanpassen; draai het script opnieuw als de config verandert.
 REM ===================================================================
 
@@ -23,7 +23,6 @@ set CFG_TDD_CAUTION_PCT=1.5
 set CFG_RISK_CAUTIOUS=0.4
 set CFG_TDD_EMERGENCY_PCT=5.5
 set TDD_WALL_SAFETY=5.5
-set CFG_DAILY_HALT_PCT=2.50
 set TDD_EMERGENCY_HALT=0
 set NIGHTLY_DERISK=1
 set NIGHTLY_MAX_PER_GROUP=0
@@ -37,19 +36,43 @@ set RISK_VOLATILE_MULT=1.0
 set VOL_REGIME_DD_OFF=5.0
 set VOL_REGIME_DD_MULT=1.0
 
-REM --- credentials: NIET hier invullen, zet ze in de omgeving ---
-if "%MT5_LOGIN%"=="" echo [FOUT] MT5_LOGIN niet gezet && exit /b 1
-if "%MT5_PASSWORD%"=="" echo [FOUT] MT5_PASSWORD niet gezet && exit /b 1
-if "%MT5_SERVER%"=="" echo [FOUT] MT5_SERVER niet gezet && exit /b 1
+REM --- dagstop: CFG_DAILY_HALT_PCT bewust NIET hier gezet. Standaard 2.5; wijzigen
+REM     met deploy\set_daily_limit.bat <procent> (schrijft naar .env) ---
 
-REM --- verificatie: bot start NIET als de config afwijkt ---
-python backtest\src\w5_acceptance.py
+REM --- credentials staan in .env (niet in git) ---
+
+REM --- console: UTF-8 zodat alle meldingen leesbaar zijn, en direct tonen ---
+chcp 65001 >nul
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
+set PYTHONUNBUFFERED=1
+
+cd /d "%~dp0.."
+title 20k5ers live bot
+
+where python >nul 2>&1
 if errorlevel 1 (
-  echo.
-  echo [AFGEBROKEN] Config wijkt af van de gevalideerde baseline.
-  echo De bot is NIET gestart.
-  exit /b 1
+  echo [FOUT] Python is niet gevonden. Installeer Python 3.11 of 3.12 en vink 'Add to PATH' aan.
+  goto :fail
 )
 
-echo [OK] Config komt overeen met de gevalideerde baseline.
-python main_live_bot.py %*
+echo.
+echo ============ STAP 1: controle voor de start ============
+python deploy\preflight.py
+if errorlevel 1 goto :fail
+
+echo.
+echo ============ STAP 2: bot draait (Ctrl+C om te stoppen) ============
+python -u main_live_bot.py %*
+set EXITCODE=%errorlevel%
+echo.
+echo [BOT GESTOPT] afsluitcode %EXITCODE%. Details: logs\tradr_live.log
+if not defined NO_PAUSE pause
+exit /b %EXITCODE%
+
+:fail
+echo.
+echo [AFGEBROKEN] De controle voor de start is mislukt. De bot is NIET gestart.
+echo Los de [FOUT]-regels hierboven op en start opnieuw.
+if not defined NO_PAUSE pause
+exit /b 3
