@@ -118,6 +118,20 @@ deploy\set_daily_limit.bat reset
 Stop de bot daarna met `Ctrl+C` en start hem opnieuw; een draaiende bot leest dit niet opnieuw in.
 Controleer met `deploy\show_limits.bat`; bij een afwijking van de geteste 2,5 staat daar een melding.
 
+### Toont de bot een andere dagelijkse limiet dan 5ers? (bijvoorbeeld 48.700 tegen 47.679)
+De bot rekent met zijn dagbasis: de hoogste van equity en saldo bij de dagreset van 5ers. Staat die basis
+anders dan bij 5ers, dan klopt ook zijn limiet niet. Corrigeren:
+1. Stop de bot met `Ctrl+C`.
+2. Zet de limiet van het 5ers-dashboard in de bot (hier: 47.679):
+```
+deploy\set_day_start.bat --floor 47679
+```
+   Of geef de dagbasis zelf op: `deploy\set_day_start.bat --start 50188`. Zonder getal toont hij alleen wat er nu staat.
+3. Start de bot opnieuw met `deploy\start_live.bat` en controleer met `deploy\show_limits.bat` dat het klopt.
+
+De waarde blijft tot de volgende dagreset staan; daarna rekent de bot weer zelf. Er wordt een reservekopie gemaakt
+(`challenge_risk_state.json.bak`). Dit bestand bestaat pas nadat de bot een keer is gestart.
+
 ## 9. Updaten
 Stop de bot (`Ctrl+C`), dan:
 ```

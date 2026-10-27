@@ -57,6 +57,20 @@ def main():
     print(f"      rond de rollover (22:00 UTC / 21:00 in de zomer): max 2.50%")
     print(f"   Marge tot 5ers-grens            : {5 - gate:.2f} procentpunt")
 
+    sf0 = REPO / "challenge_risk_state.json"
+    if sf0.exists():
+        try:
+            stt = json.loads(sf0.read_text(encoding="utf-8"))
+            ds = float(stt.get("day_start_equity", 0))
+            print("\n Dagbasis van de bot (challenge_risk_state.json) -> vergelijk met het 5ers-dashboard")
+            print(f"   Dagbasis (day start equity)     : ${ds:,.2f}   datum {stt.get('current_date')}"
+                  f"{'  (handmatig gezet)' if stt.get('day_start_equity_manually_set_date') else ''}")
+            print(f"   Dagelijkse 5%-limiet in de bot  : ${ds * 0.95:,.2f}   <-- moet gelijk zijn aan de limiet op 5ers")
+            print(f"   Bot stopt bij {gate:.2f}% verlies  : equity ${ds * (1 - gate / 100):,.2f}")
+            print("   Staat het anders dan 5ers?  deploy\\set_day_start.bat --floor <limiet van 5ers>")
+        except Exception as e:
+            print(f"\n (dagbasis niet te lezen: {e})")
+
     print("\n Bot, TOTAAL verlies (t.o.v. het startbedrag)")
     print(f"   Trap 1 vanaf {getf('CFG_TDD_CAUTION_PCT', '1.5'):.1f}%   : risico max {getf('CFG_RISK_CAUTIOUS', '0.4'):.2f}%")
     print(f"   Trap 2 vanaf {getf('CFG_TDD_WARNING_PCT', '2.5'):.1f}%   : risico max {getf('CFG_RISK_CONSERVATIVE', '0.25'):.2f}%")
