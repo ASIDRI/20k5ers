@@ -42,7 +42,7 @@ DOE_DIR.mkdir(parents=True, exist_ok=True)
 
 END           = "2024-12-31"
 FULL_START    = "2015-01-01"
-RUN_TIMEOUT_S = int(os.getenv("RUN_TIMEOUT_S", "2400"))  # 40 min max per run
+RUN_TIMEOUT_S = int(os.getenv("RUN_TIMEOUT_S", "0")) or None  # 0 / unset = no time limit
 
 # ── MEMORY-SAFE CONCURRENCY (hard-won; see SESSION_HANDOFF §6) ────────────────
 # A FULL-PATH run (start → 2024) holds ~4.6GB RSS. A SHORT 3-year window holds

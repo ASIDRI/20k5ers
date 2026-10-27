@@ -45,7 +45,7 @@ def run_one(job):
     e = dict(os.environ); e.update(ENV); e["PYTHONUTF8"] = "1"; e.pop("OPT_PARAMS", None)
     subprocess.run([sys.executable, str(HERE / "main_live_bot_backtest.py"), "--start", a, "--end", b,
                     "--balance", "50000", "--output", str(d), "--quiet", "--params-file", str(pf)],
-                   env=e, cwd=str(REPO), capture_output=True, text=True, timeout=4 * 3600)
+                   env=e, cwd=str(REPO), capture_output=True, text=True)
     return job
 
 

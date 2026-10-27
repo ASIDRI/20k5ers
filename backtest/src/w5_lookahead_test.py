@@ -40,7 +40,7 @@ def run_one(arm):
     e["OPT_PARAMS"] = json.dumps(tp); e["PYTHONUTF8"] = "1"; e["HTF_NO_LOOKAHEAD"] = str(flag)
     subprocess.run([sys.executable, str(HERE / "main_live_bot_backtest.py"), "--start", a, "--end", b,
                     "--balance", "50000", "--output", str(d), "--quiet"], env=e, cwd=str(REPO),
-                   capture_output=True, text=True, timeout=4 * 3600)
+                   capture_output=True, text=True)
     return arm
 
 

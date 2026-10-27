@@ -83,3 +83,9 @@ drawn down to the 10% wall (the wall-guard then throttles risk). Profit factors 
    TDD_EMERGENCY_HALT=0; below -5.5% every restart halts again, so the bot can never trade again.
 2. After a 10% stop-out (monitor_5ers_drawdown) the main loop `continue`s without sleeping: a busy loop
    that writes the same error forever.
+
+## Running tests: no time limits
+All study scripts run their backtests without a time limit (subprocess timeouts removed; doe_harness
+RUN_TIMEOUT_S defaults to none; challenge_score has no per-step limit). Start long jobs with
+`backtest/run_job.sh <name> <command>`: detached from the session, no timeout, resumable (finished runs
+are skipped when the same command is started again). Log in backtest/output/jobs/.

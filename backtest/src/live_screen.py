@@ -33,7 +33,7 @@ def run_one(job):
     (d / "env.json").write_text(json.dumps(env))
     subprocess.run([sys.executable, str(HERE / "live_replay.py"), "--start", a, "--end", b, "--out", str(d),
                     "--env-json", str(d / "env.json"), "--params-json", str(d / "params.json"), "--no-stop-on-breach", "--validated-halts"],
-                   cwd=str(REPO), capture_output=True, text=True, timeout=6 * 3600)
+                   cwd=str(REPO), capture_output=True, text=True)
     return job
 
 

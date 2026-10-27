@@ -26,8 +26,7 @@ def run_full():
     e = dict(os.environ); e.update({k: str(v) for k, v in env.items()}); e["OPT_PARAMS"] = json.dumps(tp)
     e["PYTHONUTF8"] = "1"; e["HTF_NO_LOOKAHEAD"] = "1"
     subprocess.run([sys.executable, str(HERE / "main_live_bot_backtest.py"), "--start", "2015-01-02", "--end", "2025-12-31",
-                    "--balance", "50000", "--output", str(d), "--quiet"], env=e, cwd=str(REPO), capture_output=True, text=True,
-                   timeout=12 * 3600)
+                    "--balance", "50000", "--output", str(d), "--quiet"], env=e, cwd=str(REPO), capture_output=True, text=True)
 
 
 def run_challenge(n):

@@ -269,3 +269,6 @@ challenge_steps.json
 # live replay logs are large; keep trades/summary only
 backtest/output/replay/**/replay.log
 backtest/output/replay/**/scan_errors.log
+
+# job logs
+backtest/output/jobs/*.log

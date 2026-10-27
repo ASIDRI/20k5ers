@@ -120,7 +120,7 @@ def run_funded_one(years, start_iso):
         subprocess.run([sys.executable, str(w5.cs.dh.BACKTEST), "--start", start_iso,
                         "--end", end, "--balance", f"{START_BALANCE:.2f}", "--output", str(d),
                         "--quiet"], env=e, cwd=str(w5.cs.dh.REPO), capture_output=True,
-                       text=True, encoding="utf-8", errors="replace", timeout=6 * 3600)
+                       text=True, encoding="utf-8", errors="replace")
         rj = d / "results.json"
         if not rj.exists():
             return {"start": start_iso, "error": "geen results.json"}

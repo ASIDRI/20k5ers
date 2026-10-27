@@ -39,7 +39,7 @@ def run_arm(arm):
     subprocess.run([sys.executable, str(w5.cs.dh.BACKTEST), "--start", START, "--end", END,
                     "--balance", f"{BAL:.2f}", "--output", str(d), "--quiet"],
                    env=e, cwd=str(w5.cs.dh.REPO), capture_output=True, text=True,
-                   encoding="utf-8", errors="replace", timeout=12 * 3600)
+                   encoding="utf-8", errors="replace")
     return arm
 
 

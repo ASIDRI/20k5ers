@@ -97,7 +97,7 @@ def run_step(env_over: dict, tp_over: dict, start: str, target_usd: float,
         cmd = [sys.executable, str(dh.BACKTEST), "--start", start, "--end", end,
                "--balance", str(ACCOUNT), "--output", td, "--quiet"]
         subprocess.run(cmd, env=env, cwd=str(dh.REPO), capture_output=True,
-                       text=True, encoding="utf-8", errors="replace", timeout=1200)
+                       text=True, encoding="utf-8", errors="replace")
         rj = Path(td) / "results.json"
         r = json.loads(rj.read_text()) if rj.exists() else {}
         fi = r.get("fail_info") or {}
