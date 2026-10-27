@@ -1,0 +1,420 @@
+{
+  "initial_balance": 50000.0,
+  "final_balance": 44977.24,
+  "net_pnl": -5022.76,
+  "closed_trades_pnl": -4525.84,
+  "total_commission": 496.92,
+  "total_swap": 0.0,
+  "return_pct": -10.05,
+  "total_trades": 2944,
+  "winners": 1428,
+  "losers": 1516,
+  "win_rate": 48.5,
+  "win_rate_final_leg": 46.7,
+  "mfe_r_median": 0.156,
+  "mfe_r_p75": 0.324,
+  "mae_r_median": 0.188,
+  "tp1_hits": 744,
+  "tp1_hit_rate": 25.3,
+  "max_tdd_pct": 10.08,
+  "max_ddd_pct": 3.52,
+  "tdd_bars_ge_9_0": 33029,
+  "tdd_bars_ge_9_5": 31651,
+  "tdd_bars_ge_9_9": 23562,
+  "tdd_days_ge_9_0": 420,
+  "tdd_days_ge_9_5": 402,
+  "tdd_days_ge_9_9": 310,
+  "tdd_excursions_ge_9_5": 2,
+  "safety_events": 4,
+  "ddd_halts": 1,
+  "ddd_halts_midbar": 0,
+  "breaches_5pct": 0,
+  "ddd_reduces": 1,
+  "ddd_warnings": 1,
+  "tdd_stopouts": 1,
+  "monthly_stats": {
+    "2015-01": {
+      "trades": 58,
+      "winners": 29,
+      "losers": 29,
+      "pnl": -1442.01,
+      "partial_closes": 21,
+      "win_rate": 50.0
+    },
+    "2015-02": {
+      "trades": 43,
+      "winners": 24,
+      "losers": 19,
+      "pnl": 215.73,
+      "partial_closes": 16,
+      "win_rate": 55.8
+    },
+    "2015-03": {
+      "trades": 94,
+      "winners": 40,
+      "losers": 54,
+      "pnl": -594.2,
+      "partial_closes": 29,
+      "win_rate": 42.6
+    },
+    "2015-04": {
+      "trades": 102,
+      "winners": 51,
+      "losers": 51,
+      "pnl": -828.59,
+      "partial_closes": 26,
+      "win_rate": 50.0
+    },
+    "2015-05": {
+      "trades": 64,
+      "winners": 36,
+      "losers": 28,
+      "pnl": -130.39,
+      "partial_closes": 28,
+      "win_rate": 56.2
+    },
+    "2015-06": {
+      "trades": 107,
+      "winners": 54,
+      "losers": 53,
+      "pnl": -253.73,
+      "partial_closes": 26,
+      "win_rate": 50.5
+    },
+    "2015-07": {
+      "trades": 67,
+      "winners": 36,
+      "losers": 31,
+      "pnl": 73.23,
+      "partial_closes": 25,
+      "win_rate": 53.7
+    },
+    "2015-08": {
+      "trades": 105,
+      "winners": 52,
+      "losers": 53,
+      "pnl": -70.69,
+      "partial_closes": 43,
+      "win_rate": 49.5
+    },
+    "2015-09": {
+      "trades": 67,
+      "winners": 39,
+      "losers": 28,
+      "pnl": 356.16,
+      "partial_closes": 21,
+      "win_rate": 58.2
+    },
+    "2015-10": {
+      "trades": 103,
+      "winners": 49,
+      "losers": 54,
+      "pnl": -310.04,
+      "partial_closes": 35,
+      "win_rate": 47.6
+    },
+    "2015-11": {
+      "trades": 59,
+      "winners": 34,
+      "losers": 25,
+      "pnl": 93.77,
+      "partial_closes": 18,
+      "win_rate": 57.6
+    },
+    "2015-12": {
+      "trades": 63,
+      "winners": 26,
+      "losers": 37,
+      "pnl": -483.98,
+      "partial_closes": 13,
+      "win_rate": 41.3
+    },
+    "2016-01": {
+      "trades": 50,
+      "winners": 27,
+      "losers": 23,
+      "pnl": 106.98,
+      "partial_closes": 20,
+      "win_rate": 54.0
+    },
+    "2016-02": {
+      "trades": 94,
+      "winners": 48,
+      "losers": 46,
+      "pnl": 355.12,
+      "partial_closes": 40,
+      "win_rate": 51.1
+    },
+    "2016-03": {
+      "trades": 98,
+      "winners": 55,
+      "losers": 43,
+      "pnl": 336.15,
+      "partial_closes": 41,
+      "win_rate": 56.1
+    },
+    "2016-04": {
+      "trades": 74,
+      "winners": 30,
+      "losers": 44,
+      "pnl": -171.41,
+      "partial_closes": 22,
+      "win_rate": 40.5
+    },
+    "2016-05": {
+      "trades": 65,
+      "winners": 28,
+      "losers": 37,
+      "pnl": -233.56,
+      "partial_closes": 20,
+      "win_rate": 43.1
+    },
+    "2016-06": {
+      "trades": 94,
+      "winners": 43,
+      "losers": 51,
+      "pnl": -241.9,
+      "partial_closes": 43,
+      "win_rate": 45.7
+    },
+    "2016-07": {
+      "trades": 59,
+      "winners": 28,
+      "losers": 31,
+      "pnl": 306.8,
+      "partial_closes": 31,
+      "win_rate": 47.5
+    },
+    "2016-08": {
+      "trades": 62,
+      "winners": 33,
+      "losers": 29,
+      "pnl": 354.02,
+      "partial_closes": 21,
+      "win_rate": 53.2
+    },
+    "2016-09": {
+      "trades": 125,
+      "winners": 60,
+      "losers": 65,
+      "pnl": -29.22,
+      "partial_closes": 54,
+      "win_rate": 48.0
+    },
+    "2016-10": {
+      "trades": 70,
+      "winners": 33,
+      "losers": 37,
+      "pnl": -203.87,
+      "partial_closes": 21,
+      "win_rate": 47.1
+    },
+    "2016-11": {
+      "trades": 77,
+      "winners": 35,
+      "losers": 42,
+      "pnl": -239.3,
+      "partial_closes": 31,
+      "win_rate": 45.5
+    },
+    "2016-12": {
+      "trades": 34,
+      "winners": 17,
+      "losers": 17,
+      "pnl": 6.58,
+      "partial_closes": 15,
+      "win_rate": 50.0
+    },
+    "2017-01": {
+      "trades": 88,
+      "winners": 38,
+      "losers": 50,
+      "pnl": -88.4,
+      "partial_closes": 34,
+      "win_rate": 43.2
+    },
+    "2017-02": {
+      "trades": 66,
+      "winners": 29,
+      "losers": 37,
+      "pnl": 81.45,
+      "partial_closes": 22,
+      "win_rate": 43.9
+    },
+    "2017-03": {
+      "trades": 66,
+      "winners": 32,
+      "losers": 34,
+      "pnl": -163.15,
+      "partial_closes": 21,
+      "win_rate": 48.5
+    },
+    "2017-04": {
+      "trades": 54,
+      "winners": 26,
+      "losers": 28,
+      "pnl": -134.36,
+      "partial_closes": 13,
+      "win_rate": 48.1
+    },
+    "2017-05": {
+      "trades": 68,
+      "winners": 26,
+      "losers": 42,
+      "pnl": -329.96,
+      "partial_closes": 18,
+      "win_rate": 38.2
+    },
+    "2017-06": {
+      "trades": 73,
+      "winners": 38,
+      "losers": 35,
+      "pnl": -126.09,
+      "partial_closes": 31,
+      "win_rate": 52.1
+    },
+    "2017-07": {
+      "trades": 82,
+      "winners": 45,
+      "losers": 37,
+      "pnl": 4.14,
+      "partial_closes": 24,
+      "win_rate": 54.9
+    },
+    "2017-08": {
+      "trades": 59,
+      "winners": 21,
+      "losers": 38,
+      "pnl": -183.48,
+      "partial_closes": 15,
+      "win_rate": 35.6
+    },
+    "2017-09": {
+      "trades": 80,
+      "winners": 37,
+      "losers": 43,
+      "pnl": -440.79,
+      "partial_closes": 21,
+      "win_rate": 46.2
+    },
+    "2017-10": {
+      "trades": 81,
+      "winners": 41,
+      "losers": 40,
+      "pnl": 35.0,
+      "partial_closes": 17,
+      "win_rate": 50.6
+    },
+    "2017-11": {
+      "trades": 80,
+      "winners": 38,
+      "losers": 42,
+      "pnl": -84.52,
+      "partial_closes": 4,
+      "win_rate": 47.5
+    },
+    "2017-12": {
+      "trades": 101,
+      "winners": 46,
+      "losers": 55,
+      "pnl": 36.68,
+      "partial_closes": 8,
+      "win_rate": 45.5
+    },
+    "2018-01": {
+      "trades": 58,
+      "winners": 33,
+      "losers": 25,
+      "pnl": -46.98,
+      "partial_closes": 7,
+      "win_rate": 56.9
+    },
+    "2018-02": {
+      "trades": 21,
+      "winners": 8,
+      "losers": 13,
+      "pnl": -18.36,
+      "partial_closes": 1,
+      "win_rate": 38.1
+    },
+    "2018-03": {
+      "trades": 64,
+      "winners": 36,
+      "losers": 28,
+      "pnl": 10.78,
+      "partial_closes": 5,
+      "win_rate": 56.2
+    },
+    "2018-04": {
+      "trades": 32,
+      "winners": 14,
+      "losers": 18,
+      "pnl": -5.49,
+      "partial_closes": 2,
+      "win_rate": 43.8
+    },
+    "2018-05": {
+      "trades": 10,
+      "winners": 4,
+      "losers": 6,
+      "pnl": 0.7,
+      "partial_closes": 1,
+      "win_rate": 40.0
+    },
+    "2018-06": {
+      "trades": 20,
+      "winners": 5,
+      "losers": 15,
+      "pnl": -17.82,
+      "partial_closes": 0,
+      "win_rate": 25.0
+    },
+    "2018-08": {
+      "trades": 2,
+      "winners": 0,
+      "losers": 2,
+      "pnl": -1.81,
+      "partial_closes": 0,
+      "win_rate": 0.0
+    },
+    "2018-11": {
+      "trades": 1,
+      "winners": 1,
+      "losers": 0,
+      "pnl": 5.7,
+      "partial_closes": 0,
+      "win_rate": 100.0
+    },
+    "2018-12": {
+      "trades": 3,
+      "winners": 3,
+      "losers": 0,
+      "pnl": 5.79,
+      "partial_closes": 1,
+      "win_rate": 100.0
+    },
+    "2019-01": {
+      "trades": 1,
+      "winners": 0,
+      "losers": 1,
+      "pnl": -36.52,
+      "partial_closes": 0,
+      "win_rate": 0.0
+    }
+  },
+  "fiveers_total_withdrawn": 0.0,
+  "fiveers_final_funded_level": 50000.0,
+  "fiveers_scaling_events": 0,
+  "fiveers_scaling_log": [],
+  "terminal_on_breach": true,
+  "account_failed": true,
+  "fail_info": {
+    "failed": true,
+    "breach_type": "total",
+    "reason": "10% total drawdown breached (10.08%) [bar]",
+    "time": "2019-01-02 22:45:00+00:00",
+    "funded_level_at_failure": 50000.0,
+    "ddd_pct_at_failure": 10.08,
+    "survived_days": 1461
+  }
+}
