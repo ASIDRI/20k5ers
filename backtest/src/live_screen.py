@@ -3,7 +3,7 @@
 Test parameter sets with the REAL live bot (live_replay.py): same code as on MT5, completed candles only.
 
 Every set runs at 1.0% base risk on a flat $50k account (no 5ers scaling), through breaches, so the
-numbers measure the edge per trade, not survival luck. The live bot's own protections stay on.
+numbers measure the edge per trade, not survival luck. The live bot's own protections stay on, except the permanent total-drawdown stop (--validated-halts).
 
     uv run python3 backtest/src/live_screen.py run 2019-01-02 2019-12-31 [key1,key2,...]
     uv run python3 backtest/src/live_screen.py report
@@ -32,7 +32,7 @@ def run_one(job):
     env.update({"FIVEERS_SCALING_OFF": "1", "HTF_NO_LOOKAHEAD": "1", "CHALLENGE_STEP": "funded"})
     (d / "env.json").write_text(json.dumps(env))
     subprocess.run([sys.executable, str(HERE / "live_replay.py"), "--start", a, "--end", b, "--out", str(d),
-                    "--env-json", str(d / "env.json"), "--params-json", str(d / "params.json"), "--no-stop-on-breach"],
+                    "--env-json", str(d / "env.json"), "--params-json", str(d / "params.json"), "--no-stop-on-breach", "--validated-halts"],
                    cwd=str(REPO), capture_output=True, text=True, timeout=6 * 3600)
     return job
 

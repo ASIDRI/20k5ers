@@ -1,0 +1,25 @@
+{
+  "diag": {
+    "setups": {},
+    "stale_filled_setups": [],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "trades": 74,
+  "win_rate": 32.4,
+  "trading_pnl": -2768.8,
+  "profit_factor": 0.352,
+  "max_daily_dd_pct": 2.62,
+  "max_total_dd_pct": 5.65,
+  "breach": null,
+  "bot_halted": true,
+  "bot_halt_reason": "Emergency: Total DD 5.6% >= 5.5%",
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 24784,
+  "trades_rows": 104,
+  "final_balance": 47179.01586446723,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_y6m487gn"
+}

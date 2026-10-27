@@ -36,6 +36,10 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 
 
+class RestartBot(BaseException):
+    """Leave bot.run() so the harness can start a fresh bot, like an operator restarting it."""
+
+
 class StepDone(BaseException):
     """Raised inside the fake sleep to leave the DDD worker's endless loop."""
 
@@ -93,11 +97,18 @@ def main():
     ap.add_argument("--log-info", action="store_true", help="write the bot's INFO lines to replay.log (slow, large)")
     ap.add_argument("--params-json", default=None, help="strategy parameters to test, overlaid on params/current_params.json in memory only")
     ap.add_argument("--no-stop-on-breach", action="store_true", help="keep trading after a 5%% daily or 10%% total breach")
+    ap.add_argument("--validated-halts", action="store_true",
+                    help="TEST ONLY, in memory: no permanent stop on total drawdown (TDD_EMERGENCY_HALT=0, as validated) and "
+                         "restart the next server day after a daily halt. Implies --restart-after-halt.")
+    ap.add_argument("--restart-after-halt", action="store_true",
+                    help="when the bot halts itself, restart it at the next server day (a fresh process, as an operator would)")
     args = ap.parse_args()
     if os.getenv("REPLAY_TRACE"):
         import faulthandler
         faulthandler.dump_traceback_later(int(os.getenv("REPLAY_TRACE")), exit=True)
 
+    if args.validated_halts:
+        args.restart_after_halt = True
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix="live_replay_"))
@@ -261,8 +272,15 @@ def main():
     _real_time.time = fake_time
     _real_time.sleep = fake_sleep
 
-    bot = live.LiveTradingBot(immediate_scan=False)
-    bot.mt5 = fake
+    H = {"restarts": 0, "halt_day": None}
+
+    def new_bot():
+        b = live.LiveTradingBot(immediate_scan=False)
+        b.mt5 = fake
+        return b
+
+    bot = new_bot()
+    H["bot"] = bot
     if args.params_json:
         _p = json.loads(Path(args.params_json).read_text())
         _p = _p.get("parameters", _p)
@@ -339,7 +357,21 @@ def main():
         # In reality the bot's 10-second loop notices a fill or a closed position within seconds,
         # long before its 5-minute orphan check. One loop pass per 15-minute bar would reverse that
         # order, so give the bot those two checks right after the broker has acted.
-        for fn in (bot.check_pending_orders, bot.check_position_updates):
+        b = H["bot"]
+        cm0 = getattr(b, "challenge_manager", None)
+        if args.validated_halts and cm0 is not None and not getattr(cm0, "_replay_patched", False):
+            cm0.config.total_dd_emergency_pct = 1000.0  # the wall-guard handles deep drawdown, as in the validated config
+            cm0._replay_patched = True
+        if args.restart_after_halt:
+            cm = getattr(b, "challenge_manager", None)
+            sd = _lc.server_time(Clock.now).date()
+            if cm is not None and getattr(cm, "halted", False):
+                if H["halt_day"] is None:
+                    H["halt_day"] = sd
+                elif sd != H["halt_day"]:
+                    H["halt_day"] = None
+                    raise RestartBot()
+        for fn in (b.check_pending_orders, b.check_position_updates):
             try:
                 fn()
             except Exception as e:  # noqa
@@ -348,10 +380,23 @@ def main():
     # Start on the first bar, then let the bot's own run() loop take over.
     advance()
     live.running = True
-    try:
-        bot.run()
-    except KeyboardInterrupt:
-        pass
+    while True:
+        try:
+            H["bot"].run()
+            break  # run() returns when the timeline ends (KeyboardInterrupt inside its loop)
+        except KeyboardInterrupt:
+            break
+        except RestartBot:
+            H["restarts"] += 1
+            live.log.warning(f"[replay] operator restart #{H['restarts']} at {Clock.now} after a bot halt")
+            nb = new_bot()
+            if args.params_json:
+                for k, v in _p.items():
+                    if hasattr(nb.params, k):
+                        setattr(nb.params, k, v)
+            nb.scan_symbol = nb.scan_symbol
+            H["bot"] = nb
+    bot = H["bot"]
 
     for pos in list(sim.get_my_positions()):
         sim.close_position(pos.ticket)
@@ -385,6 +430,7 @@ def main():
         "trading_pnl": round(sum(_pos.values()), 2), "profit_factor": round(_gp / _gl, 3) if _gl else None,
         "max_daily_dd_pct": round(acc["max_ddd"], 2), "max_total_dd_pct": round(acc["max_tdd"], 2),
         "breach": acc["breach"], "bot_halted": bool(_cm and getattr(_cm, "halted", False)),
+        "operator_restarts": H["restarts"], "validated_halts": bool(args.validated_halts),
         "bot_halt_reason": getattr(_cm, "halt_reason", "") if _cm else "",
         "start": args.start, "end": args.end, "bars": state["bars"], "trades_rows": len(closed),
         "final_balance": acct.get("balance"), "withdrawn": getattr(sim, "_total_withdrawn", 0.0),
