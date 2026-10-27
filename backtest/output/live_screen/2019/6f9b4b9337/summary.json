@@ -1,0 +1,40 @@
+{
+  "diag": {
+    "setups": {
+      "EUR_USD": "pending",
+      "USD_CHF": "pending",
+      "AUD_USD": "pending",
+      "EUR_CHF": "pending",
+      "EUR_AUD": "pending",
+      "EUR_CAD": "pending",
+      "AUD_CHF": "pending",
+      "AUD_NZD": "pending"
+    },
+    "stale_filled_setups": [],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "trades": 978,
+  "win_rate": 44.7,
+  "trading_pnl": -4814.27,
+  "profit_factor": 0.673,
+  "max_daily_dd_pct": 1.79,
+  "max_total_dd_pct": 10.02,
+  "breach": {
+    "time": "2019-10-10 17:45:00+00:00",
+    "daily_pct": 0.24,
+    "total_pct": 10.02
+  },
+  "bot_halted": false,
+  "operator_restarts": 0,
+  "validated_halts": true,
+  "bot_halt_reason": "",
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 19415,
+  "trades_rows": 1303,
+  "final_balance": 44993.24992932376,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_flmi8amn"
+}

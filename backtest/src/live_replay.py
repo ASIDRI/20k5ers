@@ -277,6 +277,16 @@ def main():
     def new_bot():
         b = live.LiveTradingBot(immediate_scan=False)
         b.mt5 = fake
+        # After a 10% stop-out the live loop does `continue` without sleeping, so on a real machine it
+        # spins while wall-clock time passes. Let replay time pass too, or the replay would hang.
+        _orig_mon = b.monitor_5ers_drawdown
+
+        def _mon(*a, **k):
+            r = _orig_mon(*a, **k)
+            if r:
+                advance()
+            return r
+        b.monitor_5ers_drawdown = _mon
         return b
 
     bot = new_bot()

@@ -1,0 +1,37 @@
+{
+  "diag": {
+    "setups": {
+      "EUR_CHF": "filled",
+      "EUR_CAD": "filled",
+      "GBP_JPY": "filled",
+      "XBR_USD": "pending",
+      "XTI_USD": "pending"
+    },
+    "stale_filled_setups": [
+      "EUR_CHF",
+      "EUR_CAD",
+      "GBP_JPY"
+    ],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "trades": 734,
+  "win_rate": 44.4,
+  "trading_pnl": -4786.01,
+  "profit_factor": 0.653,
+  "max_daily_dd_pct": 2.62,
+  "max_total_dd_pct": 9.98,
+  "breach": null,
+  "bot_halted": false,
+  "operator_restarts": 0,
+  "validated_halts": true,
+  "bot_halt_reason": "",
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 24784,
+  "trades_rows": 1091,
+  "final_balance": 45012.4452581095,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_p8zrytg2"
+}

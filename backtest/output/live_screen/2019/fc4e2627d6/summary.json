@@ -1,0 +1,31 @@
+{
+  "diag": {
+    "setups": {},
+    "stale_filled_setups": [],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "trades": 980,
+  "win_rate": 44.7,
+  "trading_pnl": -4821.4,
+  "profit_factor": 0.665,
+  "max_daily_dd_pct": 1.79,
+  "max_total_dd_pct": 10.02,
+  "breach": {
+    "time": "2019-10-10 17:45:00+00:00",
+    "daily_pct": 0.22,
+    "total_pct": 10.02
+  },
+  "bot_halted": false,
+  "operator_restarts": 0,
+  "validated_halts": true,
+  "bot_halt_reason": "",
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 24784,
+  "trades_rows": 1353,
+  "final_balance": 44991.622169955495,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_0wb1qwbh"
+}

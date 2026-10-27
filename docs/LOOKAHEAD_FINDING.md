@@ -71,3 +71,15 @@ first breach, whether the bot halted itself.
   `live_clock.py`, which reads the rules from main_live_bot.py itself). On January 2019 it matched 77
   of ~100 live trades; it still lacks live-only bookkeeping (orphan-order recovery), so it is only a
   fast pre-filter. Final numbers must come from live_replay.py.
+
+## All 50 historical parameter sets, real live bot, 2019 (live_screen.py)
+Every unique parameter set from the git history and params/ (34 with 5 take-profits) was run through
+live_replay.py: 1.0% base risk, flat $50k, completed candles, --validated-halts. **All 50 lose money.**
+Best: profit factor 0.80 (sets from 2026-03-22, -$3,364); most -$4,700 to -$4,800 with the account
+drawn down to the 10% wall (the wall-guard then throttles risk). Profit factors 0.65-0.80, win rate 44-50%.
+
+## Live-bot issues found by the replay (not fixed, need a decision)
+1. ChallengeRiskManager closes all and halts PERMANENTLY at 2.5% daily or 5.5% total drawdown. It ignores
+   TDD_EMERGENCY_HALT=0; below -5.5% every restart halts again, so the bot can never trade again.
+2. After a 10% stop-out (monitor_5ers_drawdown) the main loop `continue`s without sleeping: a busy loop
+   that writes the same error forever.

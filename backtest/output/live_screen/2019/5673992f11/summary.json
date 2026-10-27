@@ -1,0 +1,43 @@
+{
+  "diag": {
+    "setups": {
+      "CHF_JPY": "filled",
+      "GBP_AUD": "filled",
+      "CAD_CHF": "filled",
+      "XTI_USD": "filled",
+      "AUD_NZD": "pending",
+      "XBR_USD": "pending"
+    },
+    "stale_filled_setups": [
+      "CHF_JPY",
+      "GBP_AUD",
+      "CAD_CHF",
+      "XTI_USD"
+    ],
+    "risk_manager_open_positions": 0,
+    "challenge_mode": true
+  },
+  "trades": 966,
+  "win_rate": 45.9,
+  "trading_pnl": -4781.1,
+  "profit_factor": 0.677,
+  "max_daily_dd_pct": 1.8,
+  "max_total_dd_pct": 10.04,
+  "breach": {
+    "time": "2019-10-11 15:30:00+00:00",
+    "daily_pct": 0.8,
+    "total_pct": 10.04
+  },
+  "bot_halted": false,
+  "operator_restarts": 0,
+  "validated_halts": true,
+  "bot_halt_reason": "",
+  "start": "2019-01-02",
+  "end": "2019-12-31",
+  "bars": 24784,
+  "trades_rows": 1343,
+  "final_balance": 45017.46411989491,
+  "withdrawn": 0.0,
+  "funded_level": 50000.0,
+  "work_dir": "/tmp/live_replay_24g3t3md"
+}
