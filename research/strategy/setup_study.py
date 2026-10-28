@@ -95,7 +95,9 @@ def study(sym, start, end):
         if nxt:  # the next S/R before -0.65 is the final target
             tp2 = min(nxt) if dirn == 1 else max(nxt)
         pending[:] = [p for p in pending if p["dir"] != dirn]  # newest setup replaces the older one
-        pending.append(dict(sym=sym, kind=w["kind"], dir=dirn, date=w["date"], entry=entry, sl=sl,
+        z1, z2 = top - dirn * 0.618 * rng, top - dirn * 0.796 * rng
+        zone_level = any(min(z1, z2) - 0.1 * w["atr"] <= p <= max(z1, z2) + 0.1 * w["atr"] for p, _ in levs)
+        pending.append(dict(sym=sym, kind=w["kind"], dir=dirn, date=w["date"], entry=entry, sl=sl, hl=w["hl"], zone_level=zone_level,
                             tp1=tp1, tp2=tp2, risk=abs(entry - sl)))
     i0 = int(np.searchsorted(d["time"].values, np.datetime64(pd.Timestamp(start).tz_localize(None))))
     for i in range(max(i0, 60), len(d)):
@@ -168,7 +170,9 @@ def study(sym, start, end):
                 ahead = [p for p, _ in levs if (p - c[i]) * dirn > 0]
                 kind = "cont_level" if ahead else "cont_open"
             trend = dirn
-            w = dict(dir=dirn, ext=ext, levs=levs, atr=atr[i], kind=kind, date=str(t.date()), bos_i=i)
+            prev = [x for x in (lows if dirn == 1 else highs) if x < sw_i]
+            hl_ok = bool(prev) and ((ext > l[prev[-1]]) if dirn == 1 else (ext < h[prev[-1]]))
+            w = dict(dir=dirn, ext=ext, levs=levs, atr=atr[i], kind=kind, date=str(t.date()), bos_i=i, hl=hl_ok)
             if FIB_MODE == "break":
                 make(w, h[i] if dirn == 1 else l[i])
             else:
@@ -201,11 +205,26 @@ if __name__ == "__main__":
     ap.add_argument("--start", default="2010-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--fib", default="confirmed", choices=["confirmed", "break"])
+    ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()
     FIB_MODE = a.fib
     out = HERE / "out"
     out.mkdir(exist_ok=True)
+    allf = []
     for s in a.symbols:
-        df = study(s, a.start, a.end)
+        try:
+            df = study(s, a.start, a.end)
+        except Exception as e:  # noqa
+            print(f"{s}: overgeslagen ({type(e).__name__}: {e})")
+            continue
         df.to_csv(out / f"setups_{s}.csv", index=False)
-        report(df, s)
+        if not a.quiet:
+            report(df, s)
+        allf.append(df)
+    df = pd.concat(allf)
+    f = df[df["result"] == "gevuld"].copy()
+    f["soort"] = np.where(f["kind"].str.startswith("cont"), "voortzetting", np.where(f["kind"] == "rev_level", "omkeer bij niveau", "omkeer zonder niveau"))
+    print(f"\n##### ALLE {len(allf)} assets: {len(df)} setups, {len(f)} gevuld")
+    g = f.groupby(["soort", "hl", "zone_level"])["R"].agg(trades="count", tp1=lambda r: round((r > 0).mean() * 100), gemR="mean", somR="sum").round(2)
+    print(g.to_string())
+    print("\nper jaar, alle soorten (som R):", f.assign(y=f.date.str[:4]).groupby("y")["R"].sum().round(1).to_dict())
