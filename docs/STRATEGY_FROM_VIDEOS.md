@@ -229,3 +229,68 @@ Winnaars tegenover verliezers, gezocht op 2015-2020 en gecontroleerd op 2021-202
 
 Per asset: 9 in beide helften negatief, 5 in beide positief; bij toeval verwacht je er ongeveer 7 à 8 van elk.
 Conclusie: wat in 2015-2020 hielp, krimpt in 2021-2025 tot ongeveer 0. Geen voordeel dat na kosten overblijft.
+
+## 7. Forex HTF Analysis (64:22)
+
+Context: live-analyse van 7 juni 2023 (TradingView, OANDA/TVC-data), werkwijze "van groot naar klein": maand -> week -> dag -> 4h -> 1h/15m. Per pair één chart-tab met drawings die per timeframe in een eigen **groep** worden bewaard (groepen "weekly", "daily"; drawings staan "sync globally", dus ook op telefoon/andere layout zichtbaar). Weinig harde trades: het is vooral een plan + wachten.
+
+### Geanalyseerde instrumenten
+
+| Instrument | Tijd | Conclusie (bias / level / wacht op) |
+|---|---|---|
+| NZDUSD (1M, 1W, 1D, 4h) | 00:00-15:15 | Maand: nog bearish (trendlijn), hoofd-SR = bounce/rejectie-support, volgende resistance erboven. Week: sterk SR-level gebroken met kracht, maar W-beweging / mogelijk 5-golf + ABC (corrective); "niet volledig bullish op inverse H&S". Voorkeur: lager (USD sterker). Daily: FVG + OB op resistance + golden pocket = interessant voor short. 4h: wacht op reactie; long alleen als de resistance flipt naar support. Eerder genomen long op -0.25 (07:09 = "reden dat ik de long nam"). Target bij pop: -0.25. |
+| EURAUD (15m/1h) | 11:34-12:20 | Prijs op -0.25 + OB (groene zone) op 15m: "geen reactie, geen entry". Wacht tot 1h minstens afremt. |
+| EURUSD/USD-kant (XY) | 15:20-17:00 | Geen bias; "laatste 5 golven omhoog", bounce komt, "dit wordt een goede trade". |
+| AUDUSD (1D, 4h) | 17:13-20:50 | Aan einde 5-golf omhoog, trendlijn-resistance + liquidity erboven (previous day/week/month high gepakt). **Niet shorten** ("durf geen short te raken"), want nog heftig in uptrend en 4h nog niet vertraagd; wacht op AUD. |
+| EURCAD (1D) | 21:00-25:20 | Equal lows dichtbij; USD zou kunnen dalen -> EUR hoger vanaf volume point of control. Mogelijke inverse H&S, maar "te vroeg om te callen", neckline nog niet gebroken, "niet ideaal om nu in te stappen". Nieuws vandaag: Balance of Trade, niet belangrijk. |
+| GBPCAD (1M, 1W, 1D, 4h/1h) | 25:20-39:00 | Maand: bearish trendlijn, rejecties; volgend support = SR laag. Week: nog downtrend (geen high gebroken), W-W-W lager. Short-entry was H&S (perfect). Targets -0.25/-0.65/-1 (-1 = SR). Daily: -0.25 + mogelijk ABC; short-setup = daily FVG + OB + golden pocket (+ vPOC). 4h/1h: **geen long, liever short; geen trade nu** - plan ligt op chart. |
+| Silver (1M, 1W, 1D, 4h) | 39:30-64:20 | Hogere TF bullish (uptrend), H&S -> verwacht M-patroon omhoog. Weekly-bias: groene support-box + golden pocket moet houden; daalt het eronder -> bearish. Daily: golden pocket + OB geraakt; rechter schouder nog nodig voor echte reversal; long-voorkeur. 4h: inverse H&S, entry op GP, -0.25/-0.65/-1. |
+| DXY (1D) | 17:40 en 14:48 (tab), 05:15 | Alleen als correlatiecheck (tab "DXY" naast pairs); 5-golf-telling omhoog met pullback, SR-niveaus 101.68 / 104.64 / 105.04 / 105.33. |
+
+### Regels (nieuw / preciezer dan eerder)
+
+| # | Regel / werkwijze (met tijd mm:ss) | Meetbaar gemaakt |
+|---|---|---|
+| HTF1 | Vaste top-down volgorde: eerst maand (trendlijn, SR, patroon), dan week, dan dag, dan 4h/1h voor entry (00:00-15:00, 25:53-30:00, 41:03-64:00). "Je moet flippen tussen timeframes" (46:50). | Procesvolgorde M -> W -> D -> 4h -> 1h/15m; elke TF levert: trendrichting, SR, patroon, fib. Hogere TF-bias heeft voorrang boven lagere (zie HTF9). |
+| HTF2 | Maand-trendlijn bepaalt bias: "nog bearish op de maandchart" (00:10), "we zitten in een downtrend, geen high gebroken" (27:39). Trendlijn getrokken over de top-wicks; breuk met kracht = verandering. | Bias per TF = onder dalende trendlijn + geen gebroken lower high -> bearish; omgekeerd bullish. Eigen interpretatie: gebruik trendlijn-over-hoogste-highs als extra filter naast KEY. |
+| HTF3 | Per TF slechts 1-2 hoofdlevels: "dit is het main SR-level"; "next support/resistance" per timeframe; levels als horizontale rays gelabeld (template-lijst: yS/R, wS/R, dS/R, mS/R). (00:30, 01:02, 26:54-27:39, 40:39-41:42) | Max ~2 SR per TF actief: het level waar prijs nu zit + het eerstvolgende in de richting van de bias. Level = meest bounce/rejectie-wicks (zie eerdere regel). |
+| HTF4 | Level-label per timeframe (maand/week/dag) wordt op het lagere TF-chart bewaard als groep, "ik herdoe de analyse niet meer, behoud alleen de belangrijke fibs/levels" (06:36, 34:33-35:39, 48:27, 57:41). | Gebot voor de bot: weekly/daily-levels + fib-zones persistent houden in 4h-niveau; niet elke dag herberekenen, alleen updaten bij BOS/level-break. |
+| HTF5 | Drawings/hulplijnen gegroepeerd en "sync globally" (12:24-12:49). Alerts op de hoofdlevels, niet op de lagere TF-ruis (57:27: "daar wil ik alerts plaatsen"). | Alerts uitsluitend op HTF-levels (W/D SR, golden-pocket-zone, OB). |
+| HTF6 | Fib body-naar-wick is voorkeur ("ik gebruik liever de bodies"), want op monthly/weekly reageerde prijs daar, terwijl wick-tot-wick de GP nooit raakte (32:44, 43:56-44:17, 46:50, 53:13-53:42). Bij silver wisselt hij naar wick omdat daar de bounce zat, "maar de regels zeggen body" (50:50-51:13). | Standaard fib: swing-body -> wick; alleen als dat consistent niet matcht met reactie -> wick-versie als alternatief (eigen interpretatie: vermijd, houd body). |
+| HTF7 | Confluentie-eis voor interessante zone: golden pocket (0.618-0.66) + OB + (daily) FVG + SR-level samen. "Je wil trades maken op belangrijke levels" (54:29). Voorbeelden: NZDUSD daily (OB op resistance + GP, 09:36), GBPCAD daily (GP + OB + FVG, 34:00), Silver (GP + OB op daily, 54:35). | Zone kwalificeert als setup bij >= 3 van: SR (W/M), GP 0.618-0.796, OB, FVG, vPOC/point of control. Alleen op die zones zoeken naar lager-TF entry. |
+| HTF8 | OB-definitie: FVG zoeken; de **eerste tegengestelde candle links van de FVG** = OB (in downtrend: eerste up-candle; in uptrend: eerste down-candle). Body is regel, soms wick (07:47-08:01, 09:15-09:36, 33:33-33:46, 50:34-51:13). OB werkt als S/R: "moet terug naar bullish zijde flippen, anders nog downtrend" (08:01). | OB = laatste candle tegen de impuls vlak voor de FVG, zone = body (optioneel wick). Open (niet gevulde) daily FVG's en gaps ("is die gap al gevuld?") als magneet/target (33:00, 51:13-51:29). |
+| HTF9 | Lage TF entry pas bij "afremmen": 15m/1h moet vertragen na de grote beweging / reactie zien op -0.25+OB. "Geen reactie, geen entry" (11:34-12:07). Op 4h wicks die vertragen = signaal, "nog steeds broom links" -> wacht (19:49-20:30). | Entry-filter: na impulsbeweging naar de zone minstens 1 vertragende candle(s) (wicks/kleine bodies) op 1h/4h vóór entry; geen entry op doorlopende momentum-candles in tegenrichting. |
+| HTF10 | Tegen de HTF-bias niet traden: bij silver "op de hogere TF ben ik bullish, dus liever long dan short" (55:52-56:01); bij NZDUSD "we zijn onder support, noteer hogere TF" (10:06). | Trade-richting = richting maand/week-bias; daily/4h-shorts in een weekly-uptrend overslaan (met uitzondering van de expliciete ABC-correctie-short, HTF14). |
+| HTF11 | Liquidity-referenties: previous day high/low, previous week high, previous month high (18:39-18:50), equal highs/lows als "draw on liquidity" (29:53, 63:09), volume point of control (vPOC, 11:56, 31:11-31:38, 58:01-58:25: sessie-volumeprofiel op 4h; open vPOC's als target/support). Template-lijst toont: HVN, FVG, wGAP, dGAP, CR, MNY (midnight open), NYO, vPOC, Break, dOPEN/wOPEN/mOPEN, OB, SFP, pdH/pdL/pdEQ. | Bot-features: pdH/pdL, pwH/pwL, pmH, equal highs/lows, onbevestigde (nog open) vPOC, daily/weekly/monthly open, FVG/gap. Open vPOC = target of bounce-level. |
+| HTF12 | Equal highs = niet automatisch breakout: "ik heb vaak gezien dat het dichtbij komt, iedereen denkt dat het breekt, maar dan juist lager gaat" (53:51-54:09). Equal lows/highs = liquidity-pool: reversal gebeurt "onder liquidity" (29:45). | Equal highs/lows niet als breakout-bevestiging; wel als liquidity-target + mogelijke sweep-and-reverse. |
+| HTF13 | Value-area/range-regel (63:19-63:56): bij echte range -> reject VAH en short, of sweep boven range dan lager; maar alleen bij "mooie range"; zonder range negeren. | Range-play alleen als prijs duidelijk in range zit (vPOC in midden, VAH/VAL bepaald); anders overslaan. |
+| HTF14 | Elliott-/golftelling als context voor wat nog kan: 5-golf omhoog afgerond -> ABC lager verwacht (03:12, 15:57-16:56, 17:13-19:40); "5 golven omhoog is de laatste, dus er komt een bounce" (16:51). Corrective W/ABC/WXY met target "Y" lager (31:57-32:29). | Eigen interpretatie, subjectief; niet meetbaar. Praktisch: na voltooide 5-golf-impuls richting niet meer volgen, verwacht tegenbeweging naar GP/-0.25-niveau. |
+| HTF15 | Daily-"1-2-3 candles" die -0.25 vasthouden = bevestiging dat fib-level werkt (35:49). | Min. 3 daily-candles die op/boven (long) het -0.25-level sluiten = level houdt; eigen interpretatie van "123 candles". |
+| HTF16 | Trade-selectie op silver 4h (57:53-62:52): (1) optimale trade = inverse H&S rechterschouder op GP met strakke SL net onder de steun (goede RR); (2) "worst RR" = SL breed; (3) volgende trade = continuatie. "Soms moet je elke trade nemen die je ziet." SL niet te ver: "als het onder je support (rechter schouder) blaast, verliest het meestal dat level en werkt het niet uit" (60:07-60:24). Targets -0.25 / -0.65 / -1 gebruikt als eerder; -0.25 hit bij vPOC. | SL = net onder steun/rechter schouder (niet onder het hele structuur-low); als prijs onder de schouder sluit -> trade ongeldig. Entry-kwaliteit rang: 1) GP + steun dichtbij, 2) verder weg. |
+| HTF17 | Trade-timing nuance: een setup wordt niet nagejaagd: "I missed it ... je moet overal ogen hebben" (59:35-60:38); plan op chart is het belangrijkste ("ik heb mijn plan op de charts staan, dat is het belangrijkste", 38:09). | Geen late entry; als zone/entry gemist is en prijs naar -0.65/-1 loopt -> wacht op volgende setup. |
+| HTF18 | Nieuws/sessie: slechts één opmerking: "Wat gebeurt er vandaag? Balance of trades, niet erg belangrijk" (25:07). Verder: previous day/week/month high en sessie-vPOC (4h) als referentie. | Economische-kalender check vóór trade: geen high-impact news in venster (niet exact bepaald in video). |
+| HTF19 | Correlatie: USD-sterkte/zwakte vertaald naar pairs: bearish NZDUSD = USD sterker (05:04); een USD-daling -> EUR omhoog (22:20-22:25). DXY-tab staat open als check (zichtbaar in tabbalk vanaf ~17:40; DXY-chart met 5-golf op 15:40 frame). | Eigen interpretatie: USD-pairs onderling consistent houden (niet tegelijk long NZDUSD en short DXY-gevoelig), DXY-bias als filter. |
+| HTF20 | Meerdere pairs tegelijk in watchlist (12 tabs); per pair beoordelen, meeste = "nog geen trade". | Bot: scan-lijst; per pair status {plan, wacht, trade}; geen verplichting om te traden. |
+
+### Tegenstrijdig met eerdere regels
+- Body-naar-wick-fib: eerder "body-to-wick"; hier consistent bevestigd, maar bij silver daily/weekly gebruikt hij wick (50:50-51:13) omdat daar de bounce zat; hij zegt "regels zeggen body". Dus uitzonderingsgedrag, geen echte tegenstrijdigheid.
+- Eerdere regel: BOS = sterke candle-close voorbij KEY. Hier telt voor weekly "met kracht gebroken" (01:47) maar bij NZDUSD toch nog geen volledige bevestiging ("niet volledig bullish") - bevestiging via patroon (inverse H&S) is vereist naast de breuk.
+- Entry op 0.618-0.796 (eerder) vs. "-0.25 + OB" als reactiezone (11:40, 35:49): hij gebruikt -0.25 van een vorige impuls ook als support/bounce-niveau, dus -0.25 is niet enkel target maar ook level (long op -0.25 NZDUSD).
+- Equal highs ("breekt niet automatisch") past niet bij eerdere "open space: blijf N/V nemen" als blind vervolg.
+
+### Wanneer GEEN trade
+- Geen reactie / geen vertragende candles op 15m-1h na aankomst op de zone (11:34-12:07).
+- Counter-trend tegen HTF-bias (silver: HTF bullish -> geen short, 55:52; AUDUSD nog in uptrend, 20:30).
+- Patroon nog niet compleet: geen rechter schouder / neckline niet gebroken (EURCAD, 24:59-25:07; silver 50:02-50:18).
+- Prijs net onder support of onder SR terwijl hogere TF nog tegen is (NZDUSD, 10:06).
+- Tussen support en resistance in zonder duidelijk level (silver, 54:35-54:51).
+- Equal highs net aangetikt: kan reversal zijn, niet breakout nemen (53:51).
+- Geen range aanwezig -> geen vPOC/VAH-play (63:27-63:56).
+- Corrective/onduidelijke golftelling ("ik zie de setup hier niet", GBPCAD 4h/1h, 36:31-37:21).
+- Lage TF mist bullish indicatie ondanks zone (GBPCAD, "niet geïnteresseerd in long", 37:21).
+- Setup al gemist / SL zou te ver onder de steun moeten (60:07-60:38).
+- High-impact news (impliciet): vandaag alleen onbelangrijk, dus geen reden tot skippen (25:20).
+
+### Beelden bekeken
+00:20, 03:40, 07:40, 09:40, 11:40, 14:20, 15:40, 17:40, 22:00, 28:40, 33:40, 36:40, 43:02, 52:22, 55:02, 59:22, 61:22 (plus transcript volledig). Template-lijst van levellabels zichtbaar op 07:40 en 33:40; fib-template-lijst (EQ, GP, Gravis Fibs, Irregular Flat, Range, Standard, TrendPullBack) op 59:22.
+Opmerking: frames 09:40/14:20 niet los geverifieerd voor elke claim; interpretaties van tijdsaanduidingen bij NZDUSD/EURAUD zijn gebaseerd op transcript + tabbalk. Geen expliciete risico-%/lotgrootte, sessietijd of nieuws-filter in de video genoemd.
