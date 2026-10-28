@@ -96,7 +96,8 @@ def table():
             f = r / "results.json"
             if (r / "summary.json").exists():
                 c = json.loads((r / "summary.json").read_text())
-                b = float(re.search(r'"--balance", "([0-9.]+)"', (r / "cmd.json").read_text()).group(1))
+                _cmd = json.loads((r / "cmd.json").read_text())["cmd"]
+                b = float(_cmd[_cmd.index("--balance") + 1])
                 d = {"initial_balance": b, "return_pct": round(100 * (c.get("trading_pnl") or 0) / b, 1),
                      "total_trades": c.get("trades"), "win_rate": c.get("win_rate"),
                      "max_ddd_pct": c.get("max_daily_dd_pct"), "max_tdd_pct": c.get("max_total_dd_pct")}

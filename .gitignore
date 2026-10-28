@@ -272,6 +272,7 @@ backtest/output/replay/**/scan_errors.log
 
 # job logs
 backtest/output/jobs/*.log
+backtest/output/jobs/*.done
 
 # Audit: unpacked old versions and their runs (docs/AUDIT_PLAN.md)
 backtest/output/audit/*/code/
