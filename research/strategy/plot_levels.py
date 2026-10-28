@@ -13,8 +13,8 @@ for ax, tf, start in [(axs[0], "MN", "2003-01-01"), (axs[1], "W1", "2019-05-01")
         col = "#2e9e6b" if r.close >= r.open else "#d0503c"
         ax.plot([i, i], [r.low, r.high], color=col, lw=0.7)
         ax.add_patch(Rectangle((i - 0.35, min(r.open, r.close)), 0.7, abs(r.close - r.open) or 1e-9, color=col))
-    for p, t in lv:
-        ax.axhline(p, color="#222", lw=1.2); ax.text(0, p, f" bot {p:.4f} ({t} tikken)", va="bottom", fontsize=8)
+    for p, st, rt in lv:
+        ax.axhline(p, color="#222", lw=1.2); ax.text(0, p, f" bot {p:.4f} (S {st} / R {rt})", va="bottom", fontsize=8)
     vid = [1.18765, 1.08646, 0.99578] + ([1.14389] if tf == "W1" else [])
     for p in vid:
         ax.axhline(p, color="#1f6fd1", lw=1.2, ls="--"); ax.text(len(v) - 1, p, f"video {p} ", ha="right", va="top", fontsize=8, color="#1f6fd1")

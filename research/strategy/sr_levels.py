@@ -5,7 +5,8 @@ bot (MT5 history at start-up, then each new completed candle) and the backtest g
 
 Method (video 1): a level is a price where many candles turned ("taps"): swing highs and lows, wick or
 body, and role flips (throw-over / deviation and back) count too. More taps = stronger. Keep few levels
-(the strongest, spread out), and the ones near the current price matter most.
+(the strongest, spread out), and the ones near the current price matter most. A level counts only if it
+held as support AND as resistance (min_each taps on both sides); ranked by the weaker side, then the total.
 """
 import numpy as np
 
@@ -16,8 +17,8 @@ def _swings(h, l, n):
     return hi, lo
 
 
-def levels(c, n_swing=2, tol_atr=0.25, min_taps=3, max_levels=4, sep_atr=1.0, near_atr=None):
-    """c: dict of numpy arrays open/high/low/close (oldest first). Returns [(price, taps)].
+def levels(c, n_swing=2, tol_atr=0.25, min_each=2, max_levels=4, sep_atr=1.0, near_atr=None):
+    """c: dict of numpy arrays open/high/low/close (oldest first). Returns [(price, support_taps, resistance_taps)].
 
     A tap at price p = a swing high/low candle whose wick or body edge lies within tol of p (it turned
     there; a throw-over that came back is also a swing). Candidates are those same wick and body edges. Levels are taken strongest first, at least sep_atr apart; with near_atr only
@@ -31,20 +32,24 @@ def levels(c, n_swing=2, tol_atr=0.25, min_taps=3, max_levels=4, sep_atr=1.0, ne
     hi, lo = _swings(h, l, n_swing)
     cands = sorted(set([h[i] for i in hi] + [max(o[i], cl[i]) for i in hi] +
                        [l[i] for i in lo] + [min(o[i], cl[i]) for i in lo]))
-    # a tap = a distinct swing candle (wick or body edge) that turned within tol of p
-    pts = np.array([h[i] for i in hi] + [l[i] for i in lo] + [max(o[i], cl[i]) for i in hi] + [min(o[i], cl[i]) for i in lo])
-    idx = np.array(hi + lo + hi + lo)
-    scored = [(len(set(idx[np.abs(pts - p) <= tol])), p) for p in cands]
+    # resistance tap = a swing HIGH candle (wick or body top) that turned within tol of p;
+    # support tap = a swing LOW candle (wick or body bottom). A strong level was both (role flip).
+    rp = np.array([h[i] for i in hi] + [max(o[i], cl[i]) for i in hi]); ri = np.array(hi + hi)
+    sp = np.array([l[i] for i in lo] + [min(o[i], cl[i]) for i in lo]); si = np.array(lo + lo)
+    scored = []
+    for p in cands:
+        s_t = len(set(si[np.abs(sp - p) <= tol])) if len(sp) else 0
+        r_t = len(set(ri[np.abs(rp - p) <= tol])) if len(rp) else 0
+        scored.append((s_t, r_t, p))
     last = cl[-1]
+    scored = [x for x in scored if min(x[0], x[1]) >= min_each]
     if near_atr is not None:
-        scored = [x for x in scored if abs(x[1] - last) <= near_atr * atr]
-    scored.sort(key=lambda x: (-x[0], abs(x[1] - last)))
+        scored = [x for x in scored if abs(x[2] - last) <= near_atr * atr]
+    scored.sort(key=lambda x: (-min(x[0], x[1]), -(x[0] + x[1]), abs(x[2] - last)))
     out = []
-    for taps, p in scored:
-        if taps < min_taps:
-            break
-        if all(abs(p - q) > sep_atr * atr for q, _ in out):
-            out.append((float(p), int(taps)))
+    for s_t, r_t, p in scored:
+        if all(abs(p - q) > sep_atr * atr for q, _, _ in out):
+            out.append((float(p), int(s_t), int(r_t)))
         if len(out) >= max_levels:
             break
     return out
