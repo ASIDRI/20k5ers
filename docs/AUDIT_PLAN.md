@@ -105,5 +105,5 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 |---|---|
 | 0 | V1 t/m V9 uitgepakt en geïnventariseerd. Koersdata van V3 byte voor byte gelijk aan nu. |
 | 1 | Test 1 (candles) geslaagd: 1.200 gevallen, 0 lek, 0 onnodige vertraging; M15-kruiscontrole klopt behalve bij goud/zilver/NAS100 (B4). Tests 2-4 volgen. Test 5 wacht op MT5-afschriften. |
-| 2 | Runner klaar; proefruns V3 A/B/C. Daarna V3-V10, 2023, zonder tijdslimiet. |
+| 2 | Proefruns V3 A/B/C (1-10 maart 2023) geslaagd: A +8,5%, B +2,6%, C -5,1%. Volledige wachtrij V3-V10 voor 2023 loopt (`backtest/output/jobs/audit2023.log`), 24 runs, 4 tegelijk. |
 | 3-5 | Nog niet gestart |

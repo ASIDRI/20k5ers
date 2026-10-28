@@ -61,6 +61,8 @@ def start(v, year, mode):
     env.pop("AUDIT_CANDLES", None)
     if mode == "B":
         env["AUDIT_CANDLES"] = "exact"
+    if v == "V10":  # the current engine has the referee built in
+        env["HTF_NO_LOOKAHEAD"] = "1" if mode == "B" else "0"
     cmd = [PY, "-u", "backtest/src/main_live_bot_backtest.py", "--start", f"{year}-01-01", "--end", f"{year}-12-31",
            "--output", str(out)]
     (out / "cmd.json").write_text(json.dumps({"cwd": str(code), "cmd": cmd, "AUDIT_CANDLES": env.get("AUDIT_CANDLES")}, indent=1))
