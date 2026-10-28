@@ -321,3 +321,13 @@ Geslaagd als, voor die groep na kosten, ALLE drie gelden:
 2. profit factor >= 1,2;
 3. winst in minstens 6 van de 10 jaren.
 Anders: verworpen, en dan wordt deze methode niet verder gebruikt voor de bot.
+
+### Uitkomst test 3 (2005-2014, na kosten): VERWORPEN
+
+| Motor | Trades | Gem. R | Profit factor | Jaren winst | Oordeel |
+|---|---|---|---|---|---|
+| Test 2 (zone + 4u-reactie) | 680 | -0,11 | 0,88 | 6/10 | verworpen (1 en 2 niet gehaald) |
+| Test 1 (daggrafiek, limiet 0,66) | 1.010 | -0,01 | 0,98 | 3/10 | verworpen (alle drie niet gehaald) |
+
+Het voordeel van "tegen de trend" uit 2015-2025 komt in 2005-2014 niet terug. Volgens de vooraf vastgelegde
+regel wordt deze methode niet verder gebruikt voor de bot.
