@@ -275,4 +275,4 @@ backtest/output/jobs/*.log
 
 # Audit: unpacked old versions and their runs (docs/AUDIT_PLAN.md)
 backtest/output/audit/*/code/
-backtest/output/audit/*/runs/**/*.log
+backtest/output/audit/*/runs/
