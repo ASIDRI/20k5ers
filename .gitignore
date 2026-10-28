@@ -280,3 +280,4 @@ backtest/output/audit/*/runs/
 
 # Video storyboards (screenshots can be large / copyrighted): keep local
 research/videos/
+research/strategy/out/
