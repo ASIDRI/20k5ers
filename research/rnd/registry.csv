@@ -51,3 +51,197 @@ fase,groep,cel,datum
 1-week,sig/at_level/mn,sfp True -1,2026-10-28T23:25
 1-week,sig/at_level/mn,sfp True 0,2026-10-28T23:25
 1-week,sig/at_level/mn,sfp True 1,2026-10-28T23:25
+2-D1,sig,any,2026-10-28T23:37
+2-D1,sig,engulf,2026-10-28T23:37
+2-D1,sig,fvg,2026-10-28T23:37
+2-D1,sig,pin,2026-10-28T23:37
+2-D1,sig,sfp,2026-10-28T23:37
+2-D1,sig,sweep_eq,2026-10-28T23:37
+2-D1,sig,sweep_prev,2026-10-28T23:37
+2-D1,sig/at_level,any False,2026-10-28T23:37
+2-D1,sig/at_level,any True,2026-10-28T23:37
+2-D1,sig/at_level,engulf False,2026-10-28T23:37
+2-D1,sig/at_level,engulf True,2026-10-28T23:37
+2-D1,sig/at_level,fvg False,2026-10-28T23:37
+2-D1,sig/at_level,fvg True,2026-10-28T23:37
+2-D1,sig/at_level,pin False,2026-10-28T23:37
+2-D1,sig/at_level,pin True,2026-10-28T23:37
+2-D1,sig/at_level,sfp False,2026-10-28T23:37
+2-D1,sig/at_level,sfp True,2026-10-28T23:37
+2-D1,sig/at_level,sweep_eq False,2026-10-28T23:37
+2-D1,sig/at_level,sweep_eq True,2026-10-28T23:37
+2-D1,sig/at_level,sweep_prev False,2026-10-28T23:37
+2-D1,sig/at_level,sweep_prev True,2026-10-28T23:37
+2-D1,sig/at_level/wk,any False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,any False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,any False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,any True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,any True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,engulf False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,engulf False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,engulf False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,engulf True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,engulf True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,fvg False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,fvg False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,fvg False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,fvg True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,fvg True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,pin False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,pin False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,pin False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,pin True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,pin True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sfp False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sfp False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,sfp False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sfp True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sfp True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_eq False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_eq False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_eq False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_eq True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_eq True 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_prev False -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_prev False 0,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_prev False 1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_prev True -1,2026-10-28T23:37
+2-D1,sig/at_level/wk,sweep_prev True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,any False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,any False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,any False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,any True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,any True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,any True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,engulf True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,fvg True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,pin True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,sfp True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_eq False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_eq False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_eq False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_eq True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_eq True 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev False -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev False 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev False 1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev True -1,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev True 0,2026-10-28T23:37
+2-D1,sig/at_level/mn,sweep_prev True 1,2026-10-28T23:37
+2-H4,sig,any,2026-10-28T23:46
+2-H4,sig,engulf,2026-10-28T23:46
+2-H4,sig,fvg,2026-10-28T23:46
+2-H4,sig,pin,2026-10-28T23:46
+2-H4,sig,sfp,2026-10-28T23:46
+2-H4,sig,sweep_eq,2026-10-28T23:46
+2-H4,sig,sweep_prev,2026-10-28T23:46
+2-H4,sig/at_level,any False,2026-10-28T23:46
+2-H4,sig/at_level,any True,2026-10-28T23:46
+2-H4,sig/at_level,engulf False,2026-10-28T23:46
+2-H4,sig/at_level,engulf True,2026-10-28T23:46
+2-H4,sig/at_level,fvg False,2026-10-28T23:46
+2-H4,sig/at_level,fvg True,2026-10-28T23:46
+2-H4,sig/at_level,pin False,2026-10-28T23:46
+2-H4,sig/at_level,pin True,2026-10-28T23:46
+2-H4,sig/at_level,sfp False,2026-10-28T23:46
+2-H4,sig/at_level,sfp True,2026-10-28T23:46
+2-H4,sig/at_level,sweep_eq False,2026-10-28T23:46
+2-H4,sig/at_level,sweep_eq True,2026-10-28T23:46
+2-H4,sig/at_level,sweep_prev False,2026-10-28T23:46
+2-H4,sig/at_level,sweep_prev True,2026-10-28T23:46
+2-H4,sig/at_level/wk,any False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,any False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,any False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,any True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,any True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,engulf False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,engulf False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,engulf False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,engulf True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,engulf True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,fvg False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,fvg False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,fvg False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,fvg True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,fvg True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,pin False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,pin False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,pin False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,pin True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,pin True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sfp False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sfp False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,sfp False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sfp True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sfp True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_eq False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_eq False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_eq False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_eq True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_eq True 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_prev False -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_prev False 0,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_prev False 1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_prev True -1,2026-10-28T23:46
+2-H4,sig/at_level/wk,sweep_prev True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,any False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,any False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,any False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,any True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,any True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,any True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,engulf True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,fvg True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,pin True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,sfp True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_eq False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_eq False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_eq False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_eq True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_eq True 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev False -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev False 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev False 1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev True -1,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev True 0,2026-10-28T23:46
+2-H4,sig/at_level/mn,sweep_prev True 1,2026-10-28T23:46
