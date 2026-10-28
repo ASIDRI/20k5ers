@@ -1,0 +1,11 @@
+{
+  "version": "V1",
+  "commit": "912d1a2",
+  "date": "2026-01-09",
+  "what": "Initial commit; ftmo_challenge_analyzer + strategy_core.simulate_trades (D1)",
+  "engine": "ftmo_challenge_analyzer + strategy_core.simulate_trades",
+  "params_file": "params/current_params.json",
+  "live_mt5_candle_calls": [
+    "tradr/mt5/client.py: copy_rates_from_pos(symbol, tf, 0, count)"
+  ]
+}

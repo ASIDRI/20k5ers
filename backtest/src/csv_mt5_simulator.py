@@ -15,6 +15,7 @@ The simulator steps through M15 bars to simulate real-time price movement.
 
 import os
 import pandas as pd
+from candle_avail import filter_completed
 import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -42,21 +43,29 @@ _TF_DURATION = {"M15": pd.Timedelta(minutes=15), "H1": pd.Timedelta(hours=1), "H
 
 
 def _drop_forming_bar(df, tf, end_ts):
-    """HTF_NO_LOOKAHEAD=1: return COMPLETED candles only, like the real MT5Client (copy_rates_from_pos
-    position 1). The CSV holds each bar stamped with its OPEN time and its FINAL high/low/close, so a bar that
-    opened before 'now' but closes after it would reveal the rest of its period (a whole week on a weekly bar).
-    Only the last row can still be forming. DEFAULT ON since the leak was found; HTF_NO_LOOKAHEAD=0 reproduces the old (leaky) stored results."""
-    flag = os.getenv("HTF_NO_LOOKAHEAD", "1").strip().upper()
-    if flag in ("", "0", "FALSE", "NO", "OFF"):
-        return df
-    if flag not in ("1", "TRUE", "YES", "ON") and tf not in {x.strip() for x in flag.split(",")}:
-        return df  # a list such as "MN,W1" limits the fix to those timeframes (diagnosis only)
+    """The rule used from 2026-10-27 to 2026-10-28: drop the last row if 'stamp + duration' is after now.
+    WRONG on the forex MN files (stamped at month END, so every completed month stayed hidden a month
+    longer). Kept only so HTF_NO_LOOKAHEAD=crude reproduces the results of those two days."""
     dur = _TF_DURATION.get(tf)
     if dur is None or df.empty:
         return df
     if df['time'].iloc[-1] + dur > end_ts:
         return df.iloc[:-1]
     return df
+
+
+def _lookahead_mode(tf):
+    """HTF_NO_LOOKAHEAD: 1 (default) = completed candles only, like the real MT5Client (copy_rates_from_pos
+    position 1), with each file's own stamp convention (candle_avail.py); 0 = old leaky filter (the forming
+    bar with its FINAL values); crude = the 2026-10-27 rule; a list such as "MN,W1" = fix only those (diagnosis)."""
+    flag = os.getenv("HTF_NO_LOOKAHEAD", "1").strip().upper()
+    if flag in ("", "0", "FALSE", "NO", "OFF"):
+        return None
+    if flag == "CRUDE":
+        return "crude"
+    if flag in ("1", "TRUE", "YES", "ON") or tf in {x.strip() for x in flag.split(",")}:
+        return "exact"
+    return None
 
 
 @dataclass
@@ -831,7 +840,7 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
-        df = _drop_forming_bar(df, tf, end_ts)
+        df = self._completed_only(df, symbol, tf, end_ts)
         
         if df.empty:
             return None
@@ -871,13 +880,22 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
-        df = _drop_forming_bar(df, tf, end_ts)
+        df = self._completed_only(df, symbol, tf, end_ts)
         
         if df.empty:
             return None
         
         return df.tail(count).copy()
     
+    def _completed_only(self, df, symbol, tf, end_ts):
+        """Keep only the candles MT5 would already have closed at end_ts (see _lookahead_mode)."""
+        mode = _lookahead_mode(tf)
+        if mode is None or df.empty or tf == "M15" or tf not in _TF_DURATION:
+            return df
+        if mode == "crude":
+            return _drop_forming_bar(df, tf, end_ts)
+        return filter_completed(self, df, symbol, tf, end_ts)
+
     def _load_data(self, symbol: str, timeframe: str) -> Optional[pd.DataFrame]:
         """Load data from CSV file."""
         # Check cache

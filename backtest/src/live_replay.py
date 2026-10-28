@@ -100,6 +100,9 @@ def main():
     ap.add_argument("--validated-halts", action="store_true",
                     help="TEST ONLY, in memory: no permanent stop on total drawdown (TDD_EMERGENCY_HALT=0, as validated) and "
                          "restart the next server day after a daily halt. Implies --restart-after-halt.")
+    ap.add_argument("--code-root", default=None,
+                    help="run the live bot of another version (audit run C), e.g. backtest/output/audit/V5/code; "
+                         "the fake MT5, clock and 5ers measurement stay the current, tested ones")
     ap.add_argument("--restart-after-halt", action="store_true",
                     help="when the bot halts itself, restart it at the next server day (a fresh process, as an operator would)")
     args = ap.parse_args()
@@ -121,8 +124,12 @@ def main():
     os.environ["W5_CLOCK_PROBE_S"] = "0"  # the bot's server-clock probe waits on real ticks; offline it reports "not measurable"
     os.environ.pop("OPT_PARAMS", None)  # the live bot never gets the backtest's parameter overlay
 
-    sys.path.insert(0, str(REPO))
+    # The bot's own modules (main_live_bot, strategy_core, config, ...) must come from the live code, so its
+    # root goes FIRST. backtest/src (fake MT5, live_clock, candle_avail) only supplies what the root lacks:
+    # with backtest/src first, the bot imported backtest/src/strategy_core.py instead of the live one.
+    code_root = Path(args.code_root).resolve() if args.code_root else REPO
     sys.path.insert(0, str(HERE))
+    sys.path.insert(0, str(code_root))
     os.chdir(work)  # state files (challenge_state.json, pending_setups.json, ...) land here
 
     # The fake MetaTrader5 module only has to exist for imports on a Linux machine.
@@ -130,6 +137,9 @@ def main():
     sys.modules.setdefault("MetaTrader5", types.ModuleType("MetaTrader5"))
 
     import main_live_bot as live
+    import strategy_core as _sc
+    assert Path(live.__file__).resolve().parent == code_root, live.__file__
+    assert Path(_sc.__file__).resolve().parent == code_root, _sc.__file__
     import logging
     logging.getLogger("tradr").setLevel(logging.INFO if args.verbose else logging.WARNING)
     for h in logging.getLogger("tradr").handlers:
@@ -154,7 +164,9 @@ def main():
                           initial_balance=args.balance)
     sim.connect()
     sim.set_date_filter(start, end)
-    from config import FOREX_PAIRS, METALS, OIL_ASSETS, INDICES, CRYPTO_ASSETS
+    import config as _cfg  # older versions have fewer lists (no OIL_ASSETS before spring 2026)
+    FOREX_PAIRS, METALS, OIL_ASSETS, INDICES, CRYPTO_ASSETS = (list(getattr(_cfg, n, [])) for n in
+                                                              ("FOREX_PAIRS", "METALS", "OIL_ASSETS", "INDICES", "CRYPTO_ASSETS"))
     excluded = set()
     if os.getenv("OIL_ENABLE", "1").strip().lower() not in ("1", "true", "yes", "on"):
         excluded = {"XBR_USD", "XTI_USD"}
@@ -223,7 +235,7 @@ def main():
     repo_mods = []
     for name, mod in list(sys.modules.items()):
         f = getattr(mod, "__file__", None) or ""
-        if f.startswith(str(REPO)) and "/backtest/" not in f and ".venv" not in f:
+        if f.startswith(str(code_root)) and not f.startswith(str(HERE)) and ".venv" not in f:
             repo_mods.append(mod)
     for mod in repo_mods:
         if getattr(mod, "datetime", None) is _RealDT:
@@ -445,6 +457,7 @@ def main():
         "start": args.start, "end": args.end, "bars": state["bars"], "trades_rows": len(closed),
         "final_balance": acct.get("balance"), "withdrawn": getattr(sim, "_total_withdrawn", 0.0),
         "funded_level": getattr(sim, "_funded_level", None), "work_dir": str(work),
+        "code_root": str(code_root), "candles": os.getenv("HTF_NO_LOOKAHEAD", "1"),
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2, default=str))
     print(json.dumps(summary, indent=2, default=str))

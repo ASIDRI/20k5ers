@@ -2,6 +2,16 @@
 
 **The headline results ($4M, 95% challenge pass, all PDFs before this date) are not valid.**
 
+> **Correction 2026-10-28.** The "completed candles only" rule used for the leak-free numbers below was
+> itself wrong for one kind of file. The forex MN CSVs are stamped with the LAST day of the month, not the
+> first, so the rule "stamp + 31 days" hid every completed month for one more month (the bot saw the month
+> before last). Metals, indices, oil, crypto MN and all D1/W1/H4 files are stamped at the open, so the rule
+> was right there. The new rule (`backtest/src/candle_avail.py`) reads each file's own convention and was
+> checked against the M15 data (`audit_referee_tests.py candles`: 0 look-ahead, 0 needless lag).
+> The daily-candle-only test below (-$2,869 in 2019) did not touch the MN files, so the main conclusion
+> probably holds, but every leak-free number here is being measured again under `docs/AUDIT_PLAN.md`.
+> `HTF_NO_LOOKAHEAD=crude` reproduces the old rule.
+
 ## What was wrong
 `backtest/src/csv_mt5_simulator.py` served every candle that had *opened* before the simulated
 time. The CSV stores each candle with its open time and its FINAL high/low/close, so the daily,
