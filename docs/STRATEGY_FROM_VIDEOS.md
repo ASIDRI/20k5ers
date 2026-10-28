@@ -309,3 +309,15 @@ Opmerking: frames 09:40/14:20 niet los geverifieerd voor elke claim; interpretat
 
 Enige groep die in beide helften niet negatief is: trades tegen de trend van week en maand (±470 trades),
 net als in test 1. Statistisch (nog) niet te onderscheiden van nul.
+
+## Test 3: vooraf vastgelegd (geschreven vóór de run, 2026-10-28)
+
+Hypothese: setups **tegen** de trend van week en maand (wk = -1 en mn = -1 in test 1 en test 2) zijn winstgevend.
+Gevonden op 2015-2025; getest op **2005-2014**, door geen enkele studie eerder gebruikt; 28 forex-paren
+(olie en UK100 hebben geen data van voor 2015). Motor en instellingen ongewijzigd; kosten zoals in test 2.
+
+Geslaagd als, voor die groep na kosten, ALLE drie gelden:
+1. gemiddeld >= +0,10R per trade, met minstens 300 trades;
+2. profit factor >= 1,2;
+3. winst in minstens 6 van de 10 jaren.
+Anders: verworpen, en dan wordt deze methode niet verder gebruikt voor de bot.
