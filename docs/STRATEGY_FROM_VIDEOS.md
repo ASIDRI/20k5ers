@@ -210,3 +210,22 @@ Short: spiegelbeeld (bearish V). Schema: `docs/strategy_continuation.png`.
 - Tolerantie voor "raakt KEY/S-R" en voor gelijke toppen/bodems.
 - Welke timeframe de instap timet: dag of 4u; FVG/orderblok-definitie.
 - Eerste doel: -0,25 of de volgende KEY; wanneer precies "helft nemen".
+
+## Test 1: mechanische versie op de daggrafiek (30 assets, 2015-2025)
+
+`research/strategy/setup_study.py` + `winners.py`. 2.722 gevulde trades, gemiddeld -0,05R (voor kosten).
+Per soort: omkeer bij niveau -0,01R (413), omkeer zonder niveau -0,06R (931), voortzetting -0,05R (1.378).
+
+Winnaars tegenover verliezers, gezocht op 2015-2020 en gecontroleerd op 2021-2025 (gem. R per helft):
+
+| Kenmerk | 2015-20 | 2021-25 |
+|---|---|---|
+| Kleine setup (beweging <= 2,6 ATR) | +0,15 | +0,05 |
+| Grote setup (> 4,2 ATR) | -0,14 | -0,24 |
+| Tegen de weektrend | +0,09 | 0,00 |
+| Mee met de weektrend | -0,13 | -0,12 |
+| Niveau in de golden pocket | -0,19 | -0,11 |
+| Klein + snelle top + geen niveau in de zone | +0,26 | +0,01 |
+
+Per asset: 9 in beide helften negatief, 5 in beide positief; bij toeval verwacht je er ongeveer 7 à 8 van elk.
+Conclusie: wat in 2015-2020 hielp, krimpt in 2021-2025 tot ongeveer 0. Geen voordeel dat na kosten overblijft.
