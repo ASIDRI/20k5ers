@@ -277,3 +277,6 @@ backtest/output/jobs/*.done
 # Audit: unpacked old versions and their runs (docs/AUDIT_PLAN.md)
 backtest/output/audit/*/code/
 backtest/output/audit/*/runs/
+
+# Video storyboards (screenshots can be large / copyrighted): keep local
+research/videos/
