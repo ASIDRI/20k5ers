@@ -294,3 +294,18 @@ Context: live-analyse van 7 juni 2023 (TradingView, OANDA/TVC-data), werkwijze "
 ### Beelden bekeken
 00:20, 03:40, 07:40, 09:40, 11:40, 14:20, 15:40, 17:40, 22:00, 28:40, 33:40, 36:40, 43:02, 52:22, 55:02, 59:22, 61:22 (plus transcript volledig). Template-lijst van levellabels zichtbaar op 07:40 en 33:40; fib-template-lijst (EQ, GP, Gravis Fibs, Irregular Flat, Range, Standard, TrendPullBack) op 59:22.
 Opmerking: frames 09:40/14:20 niet los geverifieerd voor elke claim; interpretaties van tijdsaanduidingen bij NZDUSD/EURAUD zijn gebaseerd op transcript + tabbalk. Geen expliciete risico-%/lotgrootte, sessietijd of nieuws-filter in de video genoemd.
+
+## Test 2: zone met samenloop, instap na reactie op 4u (30 assets, 2015-2025, na kosten)
+
+`research/strategy/test2.py`. 2.822 trades; gemiddeld -0,24R (2015-20) en -0,23R (2021-25) na kosten
+(mediaan kosten 0,10R). TP1 gehaald: 14%. Kleine SL (8-40 pips op EURUSD) wordt vaak door ruis geraakt.
+
+| Groep | 2015-20 | 2021-25 |
+|---|---|---|
+| Met samenloop (niveau, OB of FVG in de zone) | -0,23 | -0,19 |
+| Zonder samenloop | -0,26 | -0,30 |
+| Mee met week- en maandtrend | -0,30 | -0,30 |
+| Tegen week- en maandtrend | +0,02 | +0,10 |
+
+Enige groep die in beide helften niet negatief is: trades tegen de trend van week en maand (±470 trades),
+net als in test 1. Statistisch (nog) niet te onderscheiden van nul.
