@@ -40,3 +40,11 @@ rows.append(("cls", None, f.groupby(["cls", "half"])["R"].agg(["count", "mean"])
 for col, q, t in rows:
     print(f"\n--- {col}" + (f"  (kwartielgrenzen 2015-20: {np.round(q, 2).tolist()})" if q is not None else ""))
     print(t.round(3).to_string())
+
+print("\n--- per asset (trades / gem. R per helft; som R totaal), slechtste eerst")
+pa = f.groupby(["sym", "half"])["R"].agg(["count", "mean"]).unstack("half")
+pa["somR"] = f.groupby("sym")["R"].sum()
+pa["beide_negatief"] = (pa[("mean", "A 2015-20")] < 0) & (pa[("mean", "B 2021-25")] < 0)
+pa["beide_positief"] = (pa[("mean", "A 2015-20")] > 0) & (pa[("mean", "B 2021-25")] > 0)
+print(pa.sort_values("somR").round(2).to_string())
+print(f"\nin beide helften negatief: {int(pa['beide_negatief'].sum())} assets; in beide positief: {int(pa['beide_positief'].sum())}")
