@@ -89,6 +89,7 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 | B6 | Huidige parameters: TP4 = 2,5R ligt **onder** TP3 = 2,75R. | Na te kijken in fase 2 (C-run van V10). |
 | B7 | V3 (de 5-TP "Trial 10") is geoptimaliseerd op 1-21 april 2024: drie weken data. | Geen basis voor live. |
 | B8 | De "confluence"-score telt een uitgeschakelde filter als geslaagd. Met de huidige parameters staan bijna alle filters uit, dus de score is altijd 13 tot 15 van 15, ver boven het minimum van 6. De drempel filtert in de praktijk niets: elke scan met een geldige instap wordt een trade. Wat echt beslist: de trendrichting (MN/W1/D1), de fib-instap en de SL/TP-regels. | De richting en de instap hangen allebei aan de slotkoers van de laatste candle. Precies daar zat het lek. |
+| B9 | De oude live-bots (V3 t/m V9) praten op een paar punten anders met MT5 dan de huidige bot: symboolnamen van indices en crypto, de koers ophalen, orders annuleren en opnieuw plaatsen. In de replay gaf dat op 3 januari 2023 onzinnige vullingen (GBPUSD "gekocht" op 1,2281 bij een markt van 1,19). | C-run V3 ongeldig (bewaard als `invalid_2023_C_harness`). C voor oude versies pas na een aansluitstuk per versie, met een eigen test. |
 
 ## Gereedschap
 
@@ -106,5 +107,5 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 |---|---|
 | 0 | V1 t/m V9 uitgepakt en geïnventariseerd. Koersdata van V3 byte voor byte gelijk aan nu. |
 | 1 | Test 1 (candles) geslaagd: 1.200 gevallen, 0 lek, 0 onnodige vertraging; M15-kruiscontrole klopt behalve bij goud/zilver/NAS100 (B4). Tests 2-4 volgen. Test 5 wacht op MT5-afschriften. |
-| 2 | Proefruns V3 A/B/C (1-10 maart 2023) geslaagd: A +8,5%, B +2,6%, C -5,1%. Volledige wachtrij V3-V10 voor 2023 loopt (`backtest/output/jobs/audit2023.log`), 24 runs, 4 tegelijk. |
+| 2 | Loopt: A en B voor V3-V10 (2023, `backtest/output/jobs/audit2023ab.log`) en C voor V10 (`audit2023c10.log`). C voor V3-V9 wacht op het aansluitstuk (B9). |
 | 3-5 | Nog niet gestart |
