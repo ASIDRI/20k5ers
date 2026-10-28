@@ -30,8 +30,12 @@ AUDIT = ROOT / "backtest" / "output" / "audit"
 PY = str(ROOT / ".venv" / "bin" / "python")
 
 
+PARAMS_FROM = None  # --params-from V7: C runs of V10 with another version's params/current_params.json
+
+
 def run_dir(v, year, mode):
-    return AUDIT / v / "runs" / f"{year}_{mode}"
+    suffix = f"_p{PARAMS_FROM}" if (PARAMS_FROM and mode == "C") else ""
+    return AUDIT / v / "runs" / f"{year}_{mode}{suffix}"
 
 
 def default_balance(code):
@@ -53,6 +57,8 @@ def start(v, year, mode):
                "--end", f"{year}-12-31", "--balance", default_balance(code), "--out", str(out),
                "--code-root", str(code), "--env-json", str(ROOT / "backtest" / "output" / "replay" / "live_env.json"),
                "--restart-after-halt", "--no-stop-on-breach"]
+        if PARAMS_FROM:
+            cmd += ["--params-json", str(AUDIT / PARAMS_FROM / "code" / "params" / "current_params.json")]
         env = dict(os.environ, PYTHONUTF8="1", HTF_NO_LOOKAHEAD="1")
         (out / "cmd.json").write_text(json.dumps({"cwd": str(ROOT), "cmd": cmd}, indent=1))
         log = open(out / "run.log", "w")
@@ -121,7 +127,9 @@ if __name__ == "__main__":
     ap.add_argument("--years", default="2023")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--modes", default="A,B,C")
+    ap.add_argument("--params-from", default=None, help="C runs only: use this version's params (e.g. V7)")
     a = ap.parse_args()
+    PARAMS_FROM = a.params_from
     if a.cmd == "queue":
         queue(a.versions.split(","), a.years.split(","), a.workers, a.modes.split(","))
     else:
