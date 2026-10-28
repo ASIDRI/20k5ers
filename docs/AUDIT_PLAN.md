@@ -106,6 +106,20 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 | Fase | Status |
 |---|---|
 | 0 | V1 t/m V9 uitgepakt en geïnventariseerd. Koersdata van V3 byte voor byte gelijk aan nu. |
-| 1 | Test 1 (candles) geslaagd: 1.200 gevallen, 0 lek, 0 onnodige vertraging; M15-kruiscontrole klopt behalve bij goud/zilver/NAS100 (B4). Tests 2-4 volgen. Test 5 wacht op MT5-afschriften. |
-| 2 | Loopt: A en B voor V3-V10 (2023, `backtest/output/jobs/audit2023ab.log`) en C voor V10 (`audit2023c10.log`). C voor V3-V9 wacht op het aansluitstuk (B9). |
+| 1 | Test 1 candles: 1.200 gevallen, 0 lek, 0 onnodige vertraging. Test 2 klok: 11.612 dagcandles openen om middernacht servertijd, 2.346 scans op de live-tijden, 0 fout. Test 3 broker: 3 van 6 gelijk aan MT5, 3 bekende gunstige afwijkingen; met `BROKER_STRICT=1` 6 van 6 (nog niet standaard, zodat lopende runs niet van regels wisselen). Test 4 (5ers-meting) volgt. Test 5 wacht op MT5-afschriften. |
+| 2 | 2023 klaar voor A en B van V3 t/m V10 (tabel `phase2_table.json`). Lopend: B over 2016-2024 voor V4 t/m V10; C met de eigen live-bot voor V7, V8, V9; C van de huidige bot met de parameters van V7. |
 | 3-5 | Nog niet gestart |
+
+### Resultaten 2023 (rendement over het jaar)
+
+| Versie | A (zoals toen) | B (alleen afgesloten candles) | C (eigen live-bot, replay) |
+|---|---|---|---|
+| V3 | +78% | -7,5% (gestopt 23 jan.) | ongeldig (B9) |
+| V4 | +142% | -4,0% | - |
+| V5 | +432% | -6,0% | - |
+| V6 | +435% | -5,5% | - |
+| V7 | +92% | positief: +$7.975 gesloten trades (wordt nagekeken) | loopt |
+| V8 | +225% | -8,1% | loopt |
+| V9 | +59% | -8,1% (gestopt 6 april) | loopt |
+| V10 | +98% | -9,4% (gestopt 24 feb.) | -5,4% (permanente noodstop 24 jan.) |
+| V10 met parameters V7 | - | - | -$2.551, PF 0,85, 5ers-dagbreuk, gestopt 17 maart |
