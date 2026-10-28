@@ -181,6 +181,17 @@ risico 0,53%, R:R 3,45). Beide kloppen.
    doel, SL naar instap.
 7. **Risico** klein: in de case 0,53% per trade.
 
+## Setup B: trendvoortzetting (aangevuld door de gebruiker)
+
+Naast de omkeer (setup A: BOS door KEY) ook voortzetting, altijd met de S/R van de hoge timeframe:
+
+1. Uitbraak: een candle **sluit** boven een S/R-niveau van maand/week (veel tikken).
+2. Retest: de prijs komt terug naar het niveau en houdt; hogere bodem op of net boven het niveau, geen slot eronder.
+3. Bullish N: vanuit die bodem **sluit** de prijs boven de vorige swing high.
+4. Fib van de retest-bodem (1, wick) naar de nieuwe top (0, lichaam); instap in de golden pocket (0,618-0,66, tot 0,796).
+5. SL onder de retest-bodem (dus ook onder het niveau); TP -0,25 / -0,65 / -1 of de volgende S/R.
+Short: spiegelbeeld (bearish V). Schema: `docs/strategy_continuation.png`.
+
 ## Verschil met de huidige bot
 
 | Onderdeel | Video's | Huidige bot |
