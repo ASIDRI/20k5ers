@@ -221,6 +221,7 @@ if __name__ == "__main__":
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--fib", default="confirmed", choices=["confirmed", "break"])
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--prefix", default="", help="prefix for the output files (keeps other runs)")
     a = ap.parse_args()
     FIB_MODE = a.fib
     out = HERE / "out"
@@ -232,7 +233,7 @@ if __name__ == "__main__":
         except Exception as e:  # noqa
             print(f"{s}: overgeslagen ({type(e).__name__}: {e})")
             continue
-        df.to_csv(out / f"setups_{s}.csv", index=False)
+        df.to_csv(out / f"{a.prefix}setups_{s}.csv", index=False)
         if not a.quiet:
             report(df, s)
         allf.append(df)

@@ -190,6 +190,7 @@ if __name__ == "__main__":
     ap.add_argument("symbols", nargs="+")
     ap.add_argument("--start", default="2015-03-01")
     ap.add_argument("--end", default="2025-12-31")
+    ap.add_argument("--prefix", default="", help="prefix for the output files (keeps other runs)")
     a = ap.parse_args()
     out = HERE / "out"
     out.mkdir(exist_ok=True)
@@ -200,7 +201,7 @@ if __name__ == "__main__":
         except Exception as e:  # noqa
             print(f"{s}: overgeslagen ({type(e).__name__}: {e})", flush=True)
             continue
-        df.to_csv(out / f"test2_{s}.csv", index=False)
+        df.to_csv(out / f"{a.prefix}test2_{s}.csv", index=False)
         print(f"{s}: {len(df)} zones, {int((df.result == 'gevuld').sum())} trades", flush=True)
         allz.append(df)
     df = pd.concat(allz)
