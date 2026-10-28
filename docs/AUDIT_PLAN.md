@@ -88,6 +88,7 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 | B5 | `live_replay.py` laadde `backtest/src/strategy_core.py` in plaats van de live `strategy_core.py` (zoekpad-volgorde). | Hersteld, met een controle die faalt als het opnieuw gebeurt. De replay-cijfers van 27/10 worden opnieuw gemeten. |
 | B6 | Huidige parameters: TP4 = 2,5R ligt **onder** TP3 = 2,75R. | Na te kijken in fase 2 (C-run van V10). |
 | B7 | V3 (de 5-TP "Trial 10") is geoptimaliseerd op 1-21 april 2024: drie weken data. | Geen basis voor live. |
+| B8 | De "confluence"-score telt een uitgeschakelde filter als geslaagd. Met de huidige parameters staan bijna alle filters uit, dus de score is altijd 13 tot 15 van 15, ver boven het minimum van 6. De drempel filtert in de praktijk niets: elke scan met een geldige instap wordt een trade. Wat echt beslist: de trendrichting (MN/W1/D1), de fib-instap en de SL/TP-regels. | De richting en de instap hangen allebei aan de slotkoers van de laatste candle. Precies daar zat het lek. |
 
 ## Gereedschap
 
