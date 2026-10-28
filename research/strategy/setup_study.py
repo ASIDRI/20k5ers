@@ -58,6 +58,15 @@ class Levels:
             self.tf[tf] = d
         self.cache = {}
 
+    def trend(self, t, tf, n=10):
+        """+1 / -1: last COMPLETED candle's close above / below the mean of the last n closes."""
+        d = self.tf[tf]
+        k = int((d["done"] <= t).sum())
+        if k < n:
+            return 0
+        cl = d["close"].values[:k]
+        return 1 if cl[-1] > cl[-n:].mean() else -1
+
     def at(self, t):
         out = []
         for tf in ("MN", "W1"):
@@ -82,7 +91,7 @@ def study(sym, start, end):
     trend = None
     pending, open_tr, done, waiting = [], [], [], []
 
-    def make(w, top):
+    def make(w, top, i_now=None):
         dirn, ext, levs = w["dir"], w["ext"], w["levs"]
         rng = abs(top - ext)
         if rng <= 0:
@@ -98,6 +107,10 @@ def study(sym, start, end):
         z1, z2 = top - dirn * 0.618 * rng, top - dirn * 0.796 * rng
         zone_level = any(min(z1, z2) - 0.1 * w["atr"] <= p <= max(z1, z2) + 0.1 * w["atr"] for p, _ in levs)
         pending.append(dict(sym=sym, kind=w["kind"], dir=dirn, date=w["date"], entry=entry, sl=sl, hl=w["hl"], zone_level=zone_level,
+                            rng_atr=rng / w["atr"], risk_atr=abs(entry - sl) / w["atr"], bos_body_atr=w["bos_body_atr"],
+                            atr_ratio=w["atr_ratio"], wk=w["wk"], mn=w["mn"],
+                            bars_to_fib=(i_now - w["bos_i"]) if i_now is not None else 0, set_i=i_now if i_now is not None else w["bos_i"],
+                            room_R=(min((abs(p - entry) for p, _ in levs if (p - entry) * dirn > 0), default=np.nan) / abs(entry - sl)),
                             tp1=tp1, tp2=tp2, risk=abs(entry - sl)))
     i0 = int(np.searchsorted(d["time"].values, np.datetime64(pd.Timestamp(start).tz_localize(None))))
     for i in range(max(i0, 60), len(d)):
@@ -125,7 +138,7 @@ def study(sym, start, end):
             if (l[i] <= p["sl"]) if long else (h[i] >= p["sl"]):
                 p["result"] = "ongeldig"; pending.remove(p); done.append(p); continue
             if (l[i] <= p["entry"]) if long else (h[i] >= p["entry"]):
-                p.update(result="gevuld", R=0.0, left=1.0, tp1_hit=False, fill=str(t.date()))
+                p.update(result="gevuld", R=0.0, left=1.0, tp1_hit=False, fill=str(t.date()), bars_to_fill=i - p["set_i"])
                 pending.remove(p); open_tr.append(p)
         # 2) swings confirmed by bar i
         k = i - N_SWING
@@ -141,7 +154,7 @@ def study(sym, start, end):
             if sw:
                 waiting.remove(w)
                 top = h[sw[0]] if dirn == 1 else l[sw[0]]
-                make(w, top)
+                make(w, top, i)
         if len(highs) < 2 or len(lows) < 2 or np.isnan(atr[i]):
             continue
         forceful = body[i] >= FORCE * body[i - FORCE_N:i].mean()
@@ -172,7 +185,9 @@ def study(sym, start, end):
             trend = dirn
             prev = [x for x in (lows if dirn == 1 else highs) if x < sw_i]
             hl_ok = bool(prev) and ((ext > l[prev[-1]]) if dirn == 1 else (ext < h[prev[-1]]))
-            w = dict(dir=dirn, ext=ext, levs=levs, atr=atr[i], kind=kind, date=str(t.date()), bos_i=i, hl=hl_ok)
+            w = dict(dir=dirn, ext=ext, levs=levs, atr=atr[i], kind=kind, date=str(t.date()), bos_i=i, hl=hl_ok,
+                     bos_body_atr=body[i] / atr[i], atr_ratio=atr[i] / np.nanmean(atr[max(0, i - 100):i + 1]),
+                     wk=lv.trend(t, "W1") * dirn, mn=lv.trend(t, "MN") * dirn)
             if FIB_MODE == "break":
                 make(w, h[i] if dirn == 1 else l[i])
             else:
