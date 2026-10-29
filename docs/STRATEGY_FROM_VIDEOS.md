@@ -745,3 +745,11 @@ de combinatie met het hoogste gemiddelde bij >= 150 trades. **Valideren**: preci
 (2005-2018) en op alle instrumenten 2019-2025. Geslaagd als beide gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
 Let op: 2019-2025 is voor de basisversie (test 20) al gezien; de andere helft van de instrumenten in 2005-2018 is de
 zuiverste controle.
+
+### Uitkomst test 21: verworpen
+Gekozen op A (17 instrumenten) 2005-2018: zigzag REV 4 / poot 8 ATR, slot 0,382-0,786, geen filter, SL 0,1 ATR,
+doel -0,65: training +0,27R (PF 1,38, t 2,3, 305 trades). Validatie: B 2005-2018 +0,14R (PF 1,19, t 1,2, 299
+trades); alle instrumenten 2019-2025 **-0,08R** (PF 0,89, 252 trades); samen +0,04R (t 0,5) -> lat niet gehaald.
+72% van de 864 combinaties met >= 150 trades was positief op de training, maar de uitkomsten wisselen per helft van
+de instrumenten en per periode (bv. week+S/R-filter: A +0,03 tot +0,24R, B -0,04 tot -0,10R, 2019-25 +0,10 tot
++0,36R). Verschillen van ±0,1R bij ±300 trades vallen binnen het toeval (standaardfout ±0,07R).
