@@ -540,3 +540,13 @@ W1: 2.581 trades, `R_t1`: -0,02 / -0,13 / +0,19R; alleen 2021-25 positief (alle 
 De vijf voorbeelden van de trader zijn winnaars uit een veel grotere verzameling setups die er mechanisch hetzelfde
 uitzien: de code vindt ±25 setups per paar per jaar, de trader neemt er een paar. Wat die selectie maakt (week-fase,
 welk niveau "KEY" is) zit niet in de regels zoals ze nu beschreven zijn.
+
+## Test 12 (vooraf vastgelegd, 2026-10-29): video 9 - week-fase als bias, dag-patroon, 4u-instap
+
+Zelfde motor als test 9/10 (`test9.py`; dagpoten, zone 0,618-1,1, 4u-afwijzingscandle, stop f110, doel -0,27 met
+stop naar instap halfweg = `R_f110_t27be`), plus de week-fase uit video 9 (`week_phase`): trend op de week = laatste
+twee toppen én bodems hoger (lager); fase 1 correctie, 2 impuls, 3 pauze (binnen 0,5 week-ATR onder de vorige top),
+4 extensie; geen duidelijke trend = niet handelen. Toegestaan (`wk_ok`): met de trend in fase 2 of 4, tegen de trend
+in fase 1. Dagpatroon: bullish N / bearish V (`cont & hl`).
+Regel: `wk_ok & cont & hl`. Alle drie de periodes, 30 assets, kosten per symbool. Geslaagd als in elke periode
+gemiddeld >= +0,10R en PF >= 1,2, samen >= 120 trades. Gerapporteerd: per fase, en zonder `cont & hl`.

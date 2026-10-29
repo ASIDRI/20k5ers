@@ -18,6 +18,8 @@ direction), body (rejection candle body / range).
 Test 10 (video 8 context, also known at the entry): wk_depth = how far price has corrected the last completed weekly
 leg (0 = its end, 1 = its start; NaN when that leg points against the trade); decel = the last counter-move on the
 daily is smaller than the one before it (corrections getting smaller).
+Test 12 (video 9): wk_trend, wk_phase (1 correction, 2 impulse, 3 pause, 4 extension, 0 no clear trend) and wk_ok
+(see week_phase).
 """
 import argparse
 import sys
@@ -49,7 +51,8 @@ def zones(sym, start, end):
     ma50 = d1.close.rolling(50).mean().values
     w = load(sym, "W1")
     w["done"] = complete_times(w["time"], "W1")
-    wturns, _ = legs(w)
+    wturns, w_atr_all = legs(w)
+    w_atr = np.array([w_atr_all[ci] for ci, *_ in wturns])
     w_done = np.array([w["done"][ci].value for ci, *_ in wturns])
     w_kind = np.array([k for *_, k in wturns])
     w_px = np.array([p for _, _, p, _ in wturns])
@@ -79,8 +82,33 @@ def zones(sym, start, end):
                         mn=lv.trend(ready, "MN") * dirn, htf=lv.trend(ready, "W1") * dirn,
                         d1_ma=int(np.sign(d1.close.values[ci] - ma50[ci]) * dirn) if not np.isnan(ma50[ci]) else 0,
                         decel=bool(counter_last < counter_before),
-                        _levs=levs, _wd=w_done, _wk=w_kind, _wp=w_px))
+                        _levs=levs, _wd=w_done, _wk=w_kind, _wp=w_px, _wa=w_atr))
     return out
+
+
+def week_phase(z, kw, entry, dirn):
+    """Video 9: weekly bias in 4 phases (uptrend; mirror for a downtrend), from the confirmed weekly zigzag turns:
+    trend = last two highs and last two lows both higher (lower); 1 = correction (last turn is a high), 2 = impulse
+    (last turn is a low), 3 = pause (within 0.5 weekly ATR under the previous high), 4 = extension (above it); 0 = no
+    clear trend. wk_ok: a trade the video allows - with the trend in phase 2 or 4, or against it in phase 1."""
+    kinds, px = z["_wk"][:kw + 1], z["_wp"][:kw + 1]
+    hs, ls = px[kinds == "H"], px[kinds == "L"]
+    if kw < 3 or len(hs) < 2 or len(ls) < 2:
+        return dict(wk_trend=0, wk_phase=0, wk_ok=False)
+    T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
+    if T == 0:
+        return dict(wk_trend=0, wk_phase=0, wk_ok=False)
+    last = kinds[-1]
+    ext = hs[-1] if T == 1 else ls[-1]  # previous extreme in the trend direction
+    if (last == "H") == (T == 1):
+        ph = 1
+    elif (entry - ext) * T > 0:
+        ph = 4
+    elif (ext - entry) * T < 0.5 * z["_wa"][kw]:
+        ph = 3
+    else:
+        ph = 2
+    return dict(wk_trend=T * dirn, wk_phase=ph, wk_ok=bool((ph in (2, 4) and dirn == T) or (ph == 1 and dirn == -T)))
 
 
 def follow(dirn, entry, sl, tp, be, h, l, start):
@@ -135,6 +163,7 @@ def trade(z, d, sym):
                    wk_last=(1 if z["_wk"][kw] == "H" else -1) * dirn if kw >= 0 else 0,
                    wk_depth=((z["_wp"][kw] - entry) * dirn / abs(z["_wp"][kw] - z["_wp"][kw - 1])
                              if kw >= 1 and (1 if z["_wk"][kw] == "H" else -1) == dirn else np.nan),
+                   **week_phase(z, kw, entry, dirn),
                    sr_dist=min((abs(p - entry) for p in z["_levs"]), default=np.nan) / z["atr_d"],
                    body=abs(c[i] - o[i]) / rngc)
         cost = cost_price(sym)
