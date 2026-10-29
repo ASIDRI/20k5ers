@@ -418,3 +418,32 @@ van de week mee (`htf = 1`). Portefeuille: max. één open positie per valuta (`
 Geslaagd als in 2015-2020 én 2021-2025 elk: uitstap a of c gemiddeld >= +0,10R met >= 100 trades en PF >= 1,2, én de
 portefeuille bij 1% risico max DD <= 15% en 5ers-EV > +1% per challenge. Dan één keer 2005-2014 met dezelfde lat
 (let op: 2005-2014 is al eens gezien voor de weekversie, dus minder zuiver dan een echte slotkluis).
+
+### Uitkomst test 7 (2015-2025, 30 assets): verworpen
+Alles: P1 1125 trades a -0,07R, P2 885 trades a -0,09R. Met de vooraf gekozen filters (cont + lvl + weektrend mee):
+P1 542 trades, winnend 33%, a -0,08 / b -0,08 / c -0,09R (PF 0,86); P2 383 trades, a -0,05 / b -0,03 / c -0,03R.
+Eén tijdframe lager verdwijnt de kleine voorsprong van de weekversie: winnend ±33% tegen break-even ±37% (RR ±1,7).
+
+## Video 8 (FTMO-interview, https://www.youtube.com/watch?v=yFm1ouJUCSE, vanaf 11:30)
+
+Swing trader uit Antwerpen, zelfde top-down school (S/R, structuur, impuls/correctie, fib, H&S, bullish N):
+- Maand: grote S/R-zone met een geschiedenis van sterke reacties; structuur draait (impulsen nu in de nieuwe richting).
+- Week: impuls + 3-poot correctie; fib 0,618 / 0,786; uitbreiding -0,27 als doel; bullish candle bij -0,27 bevestigt.
+- Dag: eerst een omkeerpatroon (inv. H&S na "momentum vertraagt": impulsen worden kleiner), daarna een voortzetting:
+  bullish N = 5 poten, hogere toppen én hogere bodems, poot 3 impulsief. Fib van de hogere bodem naar de hogere top;
+  **TP = -0,27** (dag-TP). Dagzone: van 0,618 tot de eerste structuur eronder. Wachten tot de markt naar de zone komt.
+- 4 uur: na de aanraking van de zone "vertraging": 3 candles die de zone respecteren, waarvan minstens één bullish;
+  limietorder op het lichaam van die candles, **SL onder de laagste wick + 10 pips**; bijschalen op een patroon in een
+  patroon (2 uur). Stop naar break-even na een deel winst, of onder de volgende structuur; niet hebberig: uit op -0,27.
+- 1-1,5% risico, weinig trades (14 in de getoonde periode, 71% winnend dankzij veel break-even), geen nieuws/indicatoren.
+
+## Test 8 (vooraf vastgelegd, 2026-10-29): de regels van video 8
+
+`research/strategy/test8.py`: dagpoten (zigzag test 5); bullish N / bearish V = voortzetting (`cont`) vanaf een hogere
+bodem (`hl`); fib over de poot, TP -0,27; zone van 0,618 tot het vorige topje (de gebroken top), begrensd tussen 0,618
+en 1 (anders 0,786); 4u-instap: >= 3 candles sinds de aanraking zonder slot voorbij de zone, minstens één in de
+richting; limiet op de open van de laatste candle in de richting; SL laagste wick sinds de aanraking + 10 pips.
+Ongeldig bij een 4u-slot voorbij de zone, TP vóór de vulling, of na 26 dagcandles. Uitstap (a) TP/SL, (b) idem met stop
+naar instap bij +2R (of halfweg als dat dichter is). Filter: `cont` + `hl` + weektrend mee (`htf = 1`).
+Geslaagd als in 2015-2020 én 2021-2025 elk: a of b gemiddeld >= +0,10R, >= 100 trades, PF >= 1,2. Kosten per symbool.
+Rookproef EURUSD: mediane RR ±11 (zeer krappe stop), ±11% winnend; dat volgt uit de regels zoals beschreven.
