@@ -728,3 +728,8 @@ Nu: XAU 0,1, XAG 0,01, NAS100/SPX500 1,0. Eerdere tests gebruikten die instrumen
 
 **Test 20b (vooraf vastgelegd):** precies dezelfde regel en lat op instrumenten buiten de 30: XAUUSD, XAGUSD,
 NAS100USD, SPX500USD (5ers-instrumenten met bekende kosten). Gerapporteerd apart en samen met de 30.
+
+### Uitkomst test 20b (goud, zilver, NAS100, SPX500): te weinig trades om iets te zeggen
+Regel, `R_t020`: 49 trades, -0,03 / +0,37 / -0,08R (t 0,3). Samen met de 30 (34 instrumenten, 527 trades):
++0,03 (PF 1,05) / +0,03 (PF 1,04) / +0,21R (PF 1,34), t 1,05; met het beheer van de trader +0,05 / +0,05 / +0,22R
+(t 1,25). Positief in alle drie de periodes, maar nog niet sterk genoeg (t < 2); de laatste vijf jaar duidelijk beter.
