@@ -638,3 +638,7 @@ Eén positie per richting, `R_t020`: 2005-14 125 trades -0,08R (PF 0,89); 2015-2
 -0,34R (PF 0,56); samen t -1,3. Alle setups: -0,09 / -0,11 / -0,13R. Verdere doelen slechter (-0,65 en -1: -0,14 tot
 -0,48R). Ook in 2021-25, waar de drie voorbeelden liggen, negatief: de voorbeelden zijn de winnaars uit ±10 trades per
 jaar die er hetzelfde uitzien. Andere paren niet meer getest (de regel faalt al op NZDCAD).
+
+Dossier voor de trader: `docs/dossier_nzdcad.pdf` (`dossier_t17.py`): de 23 NZDCAD-trades van 2023-2025 die de motor
+neemt (5 winnaars op -0,2), één pagina per trade met fib, instap, SL en TP. Vraag: welke zou je nemen, welke niet,
+en waarom - dat verschil is wat de regels nog missen.
