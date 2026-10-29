@@ -358,3 +358,18 @@ geslaagd lijkt, moet die eerst opnieuw vooraf vastgelegd worden en door de slotk
 
 Met samenloop (niveau, OB of FVG in de zone) beter dan zonder (b: -0,05 / +0,03 tegen -0,22 / -0,38), maar niet positief
 genoeg. FVG in de zone (b): +0,22 / +0,04 tegen -0,40 / -0,16 zonder; aanwijzing, ±120 trades per periode.
+
+## Test 5: correcties van de trader op het dossier (vooraf vastgelegd, 2026-10-29)
+
+Opmerkingen bij `docs/dossier_setups.pdf`: (1) de prijs mag tussen 0,618 en 1,1 komen en met wicks de low nemen en
+toch een goede setup zijn; (2) AUDNZD 2017 is geen short maar een long met de fib vanaf de low van dec. 2016/jan. 2017
+naar de top, ±1:1 teruggetrokken, daarna duidelijk gestegen.
+
+Regels (`research/strategy/test5.py`): poten op de week (zigzag: keerpunt bevestigd na 2 week-ATR terug; poot >= 4
+week-ATR); richting = de laatste grote poot; fib over die poot; zone 0,618-1,1; instap op een afwijzingscandle op de dag
+in de zone; **SL voorbij het 1,1-niveau** (0,2 dag-ATR); ongeldig bij een dagslot voorbij 1,1, als -0,25 eerst komt, of
+na 26 weken. Winnend = -0,25 vóór de SL. Uitstap a/b/c zoals test 4. Controle: AUDNZD 2017 wordt nu gevonden als long
+(instap 4 juni 2017) en wint (+3,1R).
+
+Geslaagd als (na kosten, 30 assets) in 2015-2020 én 2021-2025 elk: uitstap a, b of c gemiddeld >= +0,10R met >= 100
+trades, PF >= 1,2, en winnend boven break-even. Dan één keer de slotkluis 2005-2014 (28 forex), met dezelfde criteria.
