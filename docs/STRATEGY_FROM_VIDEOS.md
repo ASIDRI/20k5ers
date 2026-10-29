@@ -468,3 +468,7 @@ Gekozen op 2015-2020: f110 + t27be, poot >= 5,44 dag-ATR en >= 17 dagen van de t
 
 **Vooraf vastgelegd voor 2021-2025** (`t9_discover.py --confirm R_f110_t27be "leg_atr >= 5.44 & retr_days >= 17"`):
 geslaagd als gemiddeld >= +0,10R, PF >= 1,2 en >= 80 trades. Daarna één keer 2005-2014 met dezelfde lat.
+
+### Uitkomst test 9 bevestiging 2021-2025: geslaagd
+Regel: 139 trades, winnend 33%, **+0,15R, PF 1,31** (lat +0,10R, PF 1,2, >= 80 trades). Alles zonder regel: -0,07R.
+Per jaar (som R): 2021 +8,5, 2022 +5,7, 2023 +0,9, 2024 -5,4, 2025 +10,9. Volgende stap: 2005-2014, één keer.
