@@ -494,3 +494,40 @@ Regel (week-correctie 0,5-0,886 + vertraging), `R_f110_t27be`: 2005-14 133 trade
 -0,02R; 2021-25 38 trades -0,28R. Samen 229 trades, winnend 26%, t -0,7. Met bullish N erbij: slechter (-0,02 tot
 -0,31R). Ook elk kenmerk apart en elk doel (0, -0,27) blijft rond of onder nul. De week-context uit video 8 voegt op
 de dag/4u-instap niets toe.
+
+## Video 9 ("De makkelijkste manier om te starten met traden als beginner", zelfde school als video 8)
+
+`research/videos/video9/` (transcript + 294 screenshots). Kern (vanaf 38:00):
+- Basis: candles, impuls/correctie ("kracht naar boven, traag naar beneden"), marktstructuur (HH/HL). Correctie herken
+  je aan veel tijd, weinig prijs. Break of structure ≠ trendwissel: pas vanaf de tweede lower low.
+- Week = bias, in 4 fases: 1 correctie (tegen de trend, strenger), 2 impuls (met de trend), 3 pauze/omkeer bij de
+  vorige top (niet handelen, tenzij de dag/4u het aangeeft), 4 extensie (met de trend). Paren zonder duidelijke
+  HH/HL-structuur overslaan.
+- Dag = patroon: H&S en inverse H&S (omkeer; zone op de body van schouder 1), bullish N / bearish V (voortzetting;
+  HH/HL, derde poot impulsief). Fib van de wick van het uiterste naar de body van het begin; zone onder 0,618 tot de
+  eerste structuur of het 1-niveau; TP -0,27 (anders -0,68).
+- 4 uur = instap, drie manieren: vertraging (3 candles respecteren de zone, minstens één van de andere kleur; order
+  op de body, SL onder de laagste wick + 5-10 pips), een 4u bullish N, of (meest gebruikt) een 4u inverse H&S.
+  Stop naar break-even zodra de trade loopt.
+
+## De eigen trades van de trader (2026-10-29, vijf grafieken)
+
+EURUSD D1 (long, juni 2025: fib 1,1395 -> 1,1625, limiet 1,14765, SL 1,1355, TP -1 = 1,18745, RR 3,3), EURUSD W1
+(long: 1,1172 -> 1,1830, limiet 1,13929, TP -0,28, RR 2,3), EURAUD D1 (short dec. 2025: limiet 1,77675, TP -1,618),
+GBPAUD D1 (short: limiet 2,04388, TP -1,618), AUDCAD W1 (long: 0,8985 -> 0,922, limiet 0,90695, SL 0,89453,
+TP -1,618, RR 4,7). Gemeen: **de poot breekt een sleutelniveau** ("Breaker", "KEY", maand/week S/R); fib over die
+poot; **limietorder rond 0,618-0,68, precies op de retest van het gebroken niveau**; SL net voorbij 1 / de wick van de
+start; **ver doel (-1 of -1,618)**. Geen 4u-bevestiging in deze voorbeelden; dag of week.
+
+## Test 11 (vooraf vastgelegd, 2026-10-29): break & retest in de golden pocket (de eigen trades)
+
+`research/strategy/test11.py --tf D1|W1`: top = kleine swing (1 candle aan elke kant); die top breekt een eerdere
+swing S (2 candles aan elke kant, S nog intact: geen slot voorbij zijn body); start van de poot = het uiterste tussen S
+en de top; fib 1 = body van de start, 0 = wick van de top; S (body of wick) ligt tussen 0,5 en 0,786 (de retest).
+Limiet op 0,65 vanaf de candle na de top; SL wick van de start - 0,1 ATR; nieuwe top vóór de vulling verschuift fib en
+order; vervalt bij een slot voorbij 1 of na 40 candles. Controle op de voorbeelden: EURUSD D1 exact (instap 1,14790,
+SL 1,13625, +3,3R op -1), EURUSD W1 exact, EURAUD D1 zelfde poot (data stopt half dec. 2025), AUDCAD W1 zelfde zone
+maar start enkele weken eerder, GBPAUD D1 niet gevonden.
+**Beslissend: `R_t1` (doel -1, geen break-even).** Gerapporteerd: -0,27 / -0,618 / -1,618 en met break-even.
+Geslaagd als, 30 assets, kosten per symbool, in elke periode (2005-14, 2015-20, 2021-25) gemiddeld >= +0,10R en
+PF >= 1,2; D1 >= 100 trades per periode; W1 samen >= 60 trades (zelfde lat per periode).
