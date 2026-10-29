@@ -38,3 +38,18 @@ De enige positieve cellen (4u: terugkeer in een FVG tegen de week-/maandtrend, n
 en FVG-terugkeer, op of naast S/R van maand/week, met of tegen de trend: geen van deze signalen voorspelt de
 volgende candles beter dan toeval, op week, dag of 4u. Op 4u maken de kosten (10% van een ATR per trade) een
 edge bovendien zeer moeilijk.
+
+## Fase 2b: systematische regels als portefeuille op de daggrafiek (na kosten, risico afgestemd op volatiliteit)
+
+`research/rnd/systematic.py`. Families: momentum 3/6/12 maanden, Donchian-uitbraak 20/55, video-terugval in de
+12-maandentrend (eigen ontwerp), RSI(2)-terugkeer in de 200-dagentrend.
+
+- **28 forex-paren, 2015-2025:** alle families negatief in beide periodes (Sharpe -0,9 tot +0,3).
+  Controle van de motor op 2006-2014: momentum verdiende in 2006-2009 (Sharpe 0,61) en niet meer daarna, zoals
+  bekend uit de literatuur. *Daarmee is 2005-2014 voor deze families gezien en geen onaangeroerde slotkluis meer.*
+- **Indices, goud, zilver, olie, crypto (D1 uit eigen M15), 2015-2025:** momentum en uitbraak positief in beide
+  periodes (Sharpe 0,4-1,0), maar **kopen en houden doet even goed of beter** (0,68 / 1,05). De shorts verliezen; de
+  winst is de stijging van die markten (beta), geen voorspellend voordeel. De trendfilter voegt weinig toe
+  (lang-only momentum 0,80-0,87 / 1,13-1,21 tegen kopen en houden 0,68 / 1,05).
+- Per index wisselend tussen de periodes (bv. RSI(2)-dip kopen op SPX500: 0,04 / 0,99; video-terugval: 0,49 / 0,50,
+  per dag in de markt nauwelijks beter dan kopen en houden). NAS100-data 2021-2025 verdacht (kopen en houden Sharpe -0,04).
