@@ -531,3 +531,12 @@ maar start enkele weken eerder, GBPAUD D1 niet gevonden.
 **Beslissend: `R_t1` (doel -1, geen break-even).** Gerapporteerd: -0,27 / -0,618 / -1,618 en met break-even.
 Geslaagd als, 30 assets, kosten per symbool, in elke periode (2005-14, 2015-20, 2021-25) gemiddeld >= +0,10R en
 PF >= 1,2; D1 >= 100 trades per periode; W1 samen >= 60 trades (zelfde lat per periode).
+
+### Uitkomst test 11 (2005-2025, 30 assets): verworpen
+D1: 15.843 trades (±25 per asset per jaar), `R_t1`: 2005-14 -0,00R (PF 1,00), 2015-20 -0,11R (PF 0,87), 2021-25
+-0,09R (PF 0,89); winnend ±23% bij mediane RR 3,4; t -3,4. Geen enkel doel of break-even-variant positief in alle
+periodes. Met maand/week-S/R in de pocket (`htf`): -0,03R.
+W1: 2.581 trades, `R_t1`: -0,02 / -0,13 / +0,19R; alleen 2021-25 positief (alle doelen), samen ±0 (t -0,35).
+De vijf voorbeelden van de trader zijn winnaars uit een veel grotere verzameling setups die er mechanisch hetzelfde
+uitzien: de code vindt ±25 setups per paar per jaar, de trader neemt er een paar. Wat die selectie maakt (week-fase,
+welk niveau "KEY" is) zit niet in de regels zoals ze nu beschreven zijn.
