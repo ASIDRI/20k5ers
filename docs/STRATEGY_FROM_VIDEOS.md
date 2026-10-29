@@ -472,3 +472,8 @@ geslaagd als gemiddeld >= +0,10R, PF >= 1,2 en >= 80 trades. Daarna één keer 2
 ### Uitkomst test 9 bevestiging 2021-2025: geslaagd
 Regel: 139 trades, winnend 33%, **+0,15R, PF 1,31** (lat +0,10R, PF 1,2, >= 80 trades). Alles zonder regel: -0,07R.
 Per jaar (som R): 2021 +8,5, 2022 +5,7, 2023 +0,9, 2024 -5,4, 2025 +10,9. Volgende stap: 2005-2014, één keer.
+
+### Uitkomst test 9 slotkluis 2005-2014 (28 forex; geen olie vóór 2015): verworpen
+Regel: 297 trades, winnend 28%, **-0,04R, PF 0,93** (t -0,5). Alles zonder regel: -0,07R. Per jaar sterk wisselend
+(2007 -11,5R, 2010 -20,3R, 2013-14 +7R). Over de drie periodes samen ±+0,08R: de voorsprong van 2015-2025 is
+grotendeels selectie (gekozen op 2015-2020) en houdt niet stand op tien andere jaren.

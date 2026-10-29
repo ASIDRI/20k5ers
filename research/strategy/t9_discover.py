@@ -29,7 +29,7 @@ def cell(x):
 
 
 def load(prefix):
-    f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{prefix}*.csv"))])
+    f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{prefix}*.csv")) if p.stat().st_size > 1])
     return f[f.result == "gevuld"].copy()
 
 
