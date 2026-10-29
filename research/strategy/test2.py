@@ -30,6 +30,7 @@ from candle_avail import complete_times  # noqa: E402
 N_SWING, FORCE, FORCE_N = 2, 1.5, 10
 SL_BUF_ATR4 = 0.2       # SL buffer in 4h ATR
 EXPIRY_DAYS = 20
+STRUCT_TF, ENTRY_TF = "D1", "H4"  # test 4: W1 / D1 (--struct-tf, --entry-tf)
 COST = json.loads((HERE.parent / "costs.json").read_text())  # adverse pips per symbol (spread + slippage)
 
 
@@ -41,8 +42,8 @@ def cost_price(sym):
 
 
 def daily_zones(sym, start, end):
-    d = load(sym, "D1")
-    d["done"] = complete_times(d["time"], "D1")
+    d = load(sym, STRUCT_TF)
+    d["done"] = complete_times(d["time"], STRUCT_TF)
     lv = Levels(sym)
     o, h, l, c = (d[k].values for k in ("open", "high", "low", "close"))
     body = np.abs(c - o)
@@ -150,7 +151,8 @@ def trade_zone(z, h4):
             risk = abs(entry - sl)
             if risk <= 0 or (z["tp1"] - entry) * dirn <= 0:
                 return dict(result="ongeldig")
-            return dict(result="gevuld", entry=entry, sl=sl, risk=risk, fill=str(pd.Timestamp(t[i]).date()),
+            rr1 = abs(z["tp1"] - entry) / risk
+            return dict(result="gevuld", entry=entry, sl=sl, risk=risk, rr1=rr1, fill=str(pd.Timestamp(t[i]).date()),
                         **manage(dirn, entry, sl, risk, z, h, l, i + 1))
     return dict(result="open")
 
@@ -169,7 +171,7 @@ def manage(dirn, entry, sl, risk, z, h, l, start):
 
 
 def run(sym, start, end):
-    h4 = load(sym, "H4")
+    h4 = load(sym, ENTRY_TF)
     tr = np.r_[np.nan, np.maximum(h4.high.values[1:], h4.close.values[:-1]) - np.minimum(h4.low.values[1:], h4.close.values[:-1])]
     h4["atr"] = pd.Series(tr).rolling(14).mean().values
     rows = []
@@ -179,7 +181,9 @@ def run(sym, start, end):
         z = dict(z, **r)
         if r["result"] == "gevuld":
             z["R_cost"] = cp / r["risk"]
-            z["Rnet"] = r["R"] - z["R_cost"]
+            z["Rnet"] = r["R"] - z["R_cost"]  # exit (b): half at -0.25, SL to entry, rest at -0.65 / next level
+            z["win"] = bool(r["tp1_hit"])  # winning setup: -0.25 reached before the SL
+            z["Rnet_a"] = (r["rr1"] if r["tp1_hit"] else -1.0) - z["R_cost"]  # exit (a): all out at -0.25
         rows.append(z)
     return pd.DataFrame(rows)
 
@@ -189,8 +193,12 @@ if __name__ == "__main__":
     ap.add_argument("symbols", nargs="+")
     ap.add_argument("--start", default="2015-03-01")
     ap.add_argument("--end", default="2025-12-31")
+    ap.add_argument("--struct-tf", default="D1", choices=["D1", "W1"])
+    ap.add_argument("--entry-tf", default="H4", choices=["H4", "D1"])
+    ap.add_argument("--expiry-days", type=int, default=20)
     ap.add_argument("--prefix", default="", help="prefix for the output files (keeps other runs)")
     a = ap.parse_args()
+    STRUCT_TF, ENTRY_TF, EXPIRY_DAYS = a.struct_tf, a.entry_tf, a.expiry_days
     out = HERE / "out"
     out.mkdir(exist_ok=True)
     allz = []
@@ -220,3 +228,17 @@ if __name__ == "__main__":
     m = (f.samenloop == "ja") & (f.htf_mee == "week+maand mee")
     print(f[m].groupby("half")["Rnet"].agg(["count", "mean", "sum"]).round(3).to_string())
     print("\nper jaar (som Rnet, trades):", f.assign(y=f.date.str[:4]).groupby("y")["Rnet"].agg(["sum", "count"]).round(1).to_dict("index"))
+
+    print("\n##### OORDEEL (criteria test 4; winnend = -0,25 vóór SL)")
+    for half, g in f.groupby("half"):
+        n, win = len(g), g["win"].mean()
+        be = 1 / (1 + g["rr1"].mean())
+        pf = lambda x: x[x > 0].sum() / -x[x < 0].sum()  # noqa: E731
+        ma, mb = g["Rnet_a"].mean(), g["Rnet"].mean()
+        ok = [n >= 100 and max(ma, mb) >= 0.10, win > be, max(pf(g["Rnet_a"]), pf(g["Rnet"])) >= 1.2]
+        print(f"{half}: trades {n}, winnend {win*100:.1f}% (break-even {be*100:.1f}%, gem. winst/risico op -0,25 {g['rr1'].mean():.2f}), "
+              f"uitstap a {ma:+.3f}R (PF {pf(g['Rnet_a']):.2f}), uitstap b {mb:+.3f}R (PF {pf(g['Rnet']):.2f}) -> "
+              f"{'ok' if all(ok) else 'niet gehaald'} {ok}")
+    for col in ["samenloop", "htf_mee"]:
+        print(f"\n--- {col} (winnend % / uitstap a / uitstap b)")
+        print(f.groupby([col, "half"]).agg(n=("win", "size"), winnend=("win", "mean"), a=("Rnet_a", "mean"), b=("Rnet", "mean")).round(3).to_string())
