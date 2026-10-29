@@ -550,3 +550,9 @@ twee toppen én bodems hoger (lager); fase 1 correctie, 2 impuls, 3 pauze (binne
 in fase 1. Dagpatroon: bullish N / bearish V (`cont & hl`).
 Regel: `wk_ok & cont & hl`. Alle drie de periodes, 30 assets, kosten per symbool. Geslaagd als in elke periode
 gemiddeld >= +0,10R en PF >= 1,2, samen >= 120 trades. Gerapporteerd: per fase, en zonder `cont & hl`.
+
+### Uitkomst test 12 (2005-2025, 30 assets): verworpen
+Regel `wk_ok & cont & hl`, `R_f110_t27be`: 2005-14 643 trades -0,10R (PF 0,81); 2015-20 319 trades -0,05R (PF 0,90);
+2021-25 246 trades -0,04R (PF 0,92); samen 1.208 trades, winnend 24%, t -2,2. Per week-fase: geen enkele fase
+positief in alle drie de periodes (fase 2 alleen in 2021-25 +0,24R; fase 1 tegen de trend het zwakst; geen duidelijke
+trend het slechtst, zoals de video zegt, maar ook de toegestane fases blijven negatief).
