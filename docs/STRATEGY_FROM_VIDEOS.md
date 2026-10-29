@@ -578,3 +578,15 @@ Regel `broke & pocket & ma == -1`, `R_w_t1`: 2021-2025 700 trades -0,14R (PF 0,8
 -0,03R (PF 0,96). Samen -0,06R (t -1,7). De "tegen de trend"-voorsprong van 2015-2020 was toeval in die periode.
 Blijvend uit deze test: de afzonderlijke regels van de setup (break van structuur, retest in de pocket) veranderen de
 uitkomst nauwelijks, en herverankeren bij een nieuwe top maakt het slechter.
+
+## Test 15 (vooraf vastgelegd, 2026-10-29): VectorVest-achtige trend (RT + MTI) als filter en op zich
+
+Op vraag van de trader (VectorVest: "na 5 handelsdagen hoger = up", RT, MTI). De formules van VectorVest zijn niet
+openbaar; benadering in `research/strategy/rt.py`: rt5 (slot / slot 5 dagen eerder), rt (3-daags EMA van het
+geometrisch gemiddelde over 5/10/20 dagen), rtw (week, 1/2/4 weken), mti = valutasterkte (gemiddelde log-rt van de 28
+paren per valuta, basis min quote). Regel: alle vier in de handelsrichting.
+Getest zonder ontdekking, alle drie de periodes:
+(a) op de setups van de trader (test 13 D1, `broke & pocket`, `R_w_t1`); (b) op video 9 (test 12, `wk_ok & cont & hl`,
+`R_f110_t27be`). Geslaagd als elke periode gemiddeld >= +0,05R met PF >= 1,05 en samen t >= 2,0.
+(c) op zich: long als alle vier up, short als alle vier down, anders vlak; dagelijks, kosten per wissel. Geslaagd als
+elke periode positief na kosten en Sharpe samen >= 0,5.
