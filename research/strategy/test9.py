@@ -15,6 +15,9 @@ Features at the entry (all known then): depth (fib level of the entry), leg_atr,
 cont, hl, lvl, mn, htf (weekly trend), wk_last (the last completed weekly leg points in the trade direction),
 sr_dist (nearest monthly/weekly level, in daily ATR), hour, d1_ma (daily close vs its 50-day mean, in the trade
 direction), body (rejection candle body / range).
+Test 10 (video 8 context, also known at the entry): wk_depth = how far price has corrected the last completed weekly
+leg (0 = its end, 1 = its start; NaN when that leg points against the trade); decel = the last counter-move on the
+daily is smaller than the one before it (corrections getting smaller).
 """
 import argparse
 import sys
@@ -49,14 +52,16 @@ def zones(sym, start, end):
     wturns, _ = legs(w)
     w_done = np.array([w["done"][ci].value for ci, *_ in wturns])
     w_kind = np.array([k for *_, k in wturns])
+    w_px = np.array([p for _, _, p, _ in wturns])
     lv = Levels(sym)
     turns, a1 = legs(d1)
     t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
     out = []
-    for k in range(3, len(turns)):
+    for k in range(4, len(turns)):
         ci, ti, p_end, kind = turns[k]
         _, si, p_start, _ = turns[k - 1]
         p_prev, p_prev_start = turns[k - 2][2], turns[k - 3][2]
+        counter_last, counter_before = abs(p_start - p_prev), abs(p_prev_start - turns[k - 4][2])
         ready = d1["done"][ci]
         if ready < t0 or ready >= t1:
             continue
@@ -73,7 +78,8 @@ def zones(sym, start, end):
                         lvl=any(min(z1, z2) <= p <= max(z1, z2) for p in levs),
                         mn=lv.trend(ready, "MN") * dirn, htf=lv.trend(ready, "W1") * dirn,
                         d1_ma=int(np.sign(d1.close.values[ci] - ma50[ci]) * dirn) if not np.isnan(ma50[ci]) else 0,
-                        _levs=levs, _wd=w_done, _wk=w_kind))
+                        decel=bool(counter_last < counter_before),
+                        _levs=levs, _wd=w_done, _wk=w_kind, _wp=w_px))
     return out
 
 
@@ -127,6 +133,8 @@ def trade(z, d, sym):
                    depth=(z["top"] - entry) * dirn / z["rng"],
                    retr_days=(pd.Timestamp(t[i]).tz_localize("UTC") - z["top_t"]).days, wait_bars=i - a,
                    wk_last=(1 if z["_wk"][kw] == "H" else -1) * dirn if kw >= 0 else 0,
+                   wk_depth=((z["_wp"][kw] - entry) * dirn / abs(z["_wp"][kw] - z["_wp"][kw - 1])
+                             if kw >= 1 and (1 if z["_wk"][kw] == "H" else -1) == dirn else np.nan),
                    sr_dist=min((abs(p - entry) for p in z["_levs"]), default=np.nan) / z["atr_d"],
                    body=abs(c[i] - o[i]) / rngc)
         cost = cost_price(sym)

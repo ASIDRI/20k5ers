@@ -477,3 +477,14 @@ Per jaar (som R): 2021 +8,5, 2022 +5,7, 2023 +0,9, 2024 -5,4, 2025 +10,9. Volgen
 Regel: 297 trades, winnend 28%, **-0,04R, PF 0,93** (t -0,5). Alles zonder regel: -0,07R. Per jaar sterk wisselend
 (2007 -11,5R, 2010 -20,3R, 2013-14 +7R). Over de drie periodes samen ±+0,08R: de voorsprong van 2015-2025 is
 grotendeels selectie (gekozen op 2015-2020) en houdt niet stand op tien andere jaren.
+
+## Test 10 (vooraf vastgelegd, 2026-10-29): de context van video 8 op dag + 4 uur
+
+Zelfde motor als test 9 (`test9.py`, stop f110, doel -0,27, stop naar instap halfweg = `R_f110_t27be`), met twee
+kenmerken uit video 8 die test 8 miste:
+- **week-correctie in de fib**: de laatste afgeronde weekpoot wijst in de handelsrichting en de prijs heeft die poot
+  voor 0,5-0,886 gecorrigeerd (`0.5 <= wk_depth <= 0.886`): de daginstap is het einde van de weekcorrectie;
+- **vertraging**: de laatste tegenbeweging op de dag is kleiner dan de vorige (`decel`).
+Regel: `0.5 <= wk_depth <= 0.886 & decel`. Daarnaast gerapporteerd (niet beslissend): met bullish N (`cont & hl`).
+Getest op alle drie de periodes tegelijk (2005-2014, 2015-2020, 2021-2025), 30 assets, kosten per symbool.
+Geslaagd als in elke periode gemiddeld >= +0,10R en PF >= 1,2, en samen >= 120 trades.
