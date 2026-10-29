@@ -715,3 +715,16 @@ short 24 mrt (-1R) die de trader niet nam (bullish context).
 **Beslissend: `wk_struct == 1 & htf_sup`** (weekstructuur in de handelsrichting én een week/maand-S/R tussen fib 1
 en de instap), één positie per richting, `R_t020`, 30 assets, 2005-2025. Geslaagd als elke periode gemiddeld > 0
 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: elk deel apart en alle grote poten.
+
+### Uitkomst test 20: niet geslaagd volgens de lat, wel het beste tot nu toe
+Regel `wk_struct == 1 & htf_sup`, één positie per richting, 483 trades (0,8 per paar per jaar):
+`R_t020` +0,04R (PF 1,06) / -0,01R (PF 0,99) / +0,24R (PF 1,41), t 1,0 -> lat niet gehaald (2015-20 ±0, t < 2).
+Met het beheer van de trader (helft op -0,2, SL naar oude top, rest -1): +0,06 / +0,02 / +0,26R, t 1,2.
+Elk deel apart beter dan alle grote poten (-0,00 / -0,02 / +0,14R); alleen S/R: +0,02 / +0,05 / +0,19R (t 1,3).
+Eerste versie die in alle drie de periodes ≥ 0 is met het beheer van de trader, maar nog niet sterk genoeg.
+
+Correctie kosten: `test2.cost_price` gebruikte een pip van 0,0001 voor goud, zilver en indexen (kosten veel te laag).
+Nu: XAU 0,1, XAG 0,01, NAS100/SPX500 1,0. Eerdere tests gebruikten die instrumenten niet.
+
+**Test 20b (vooraf vastgelegd):** precies dezelfde regel en lat op instrumenten buiten de 30: XAUUSD, XAGUSD,
+NAS100USD, SPX500USD (5ers-instrumenten met bekende kosten). Gerapporteerd apart en samen met de 30.

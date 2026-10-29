@@ -37,7 +37,8 @@ COST = json.loads((HERE.parent / "costs.json").read_text())  # adverse pips per 
 def cost_price(sym):
     u = sym.replace("_", "").upper()
     pips = next((v for k, v in sorted(COST.items(), key=lambda kv: -len(kv[0])) if k in u), 1.5)
-    pip = 0.01 if ("JPY" in u or u.startswith("XTI")) else (1.0 if u.startswith("UK100") else 0.0001)
+    pip = (0.01 if ("JPY" in u or u.startswith(("XTI", "XAG"))) else 0.1 if u.startswith("XAU")
+           else 1.0 if u.startswith(("UK100", "NAS100", "SPX500", "US500")) else 0.0001)
     return 2 * pips * pip  # entry and exit
 
 
