@@ -392,3 +392,17 @@ winnend %, per jaar.
 192 trades, winnend 39%: a +0,15R (PF 1,24), b +0,11R (PF 1,18), **c +0,09R (PF 1,15)**; lat voor c was +0,10R en PF 1,2.
 Wel: positief in alle drie de periodes (2005-14, 2015-20, 2021-25), ±430 trades; samen nog niet significant (t ±1,4).
 Volgende ronde: nieuw dossier van deze versie, correcties van de trader, opnieuw vastleggen en testen.
+
+## S1 als portefeuille (2005-2025, 30 assets): te traag en te veel tegelijk open voor de 5ers
+
+S1 = test 5 + de drie video-filters. `research/strategy/s1_portfolio.py`: vast risico per trade (% van de start-
+balans), dagelijks gewaardeerd op de slotkoers, kosten bij instap, slechtste intradag = alle open posities tegelijk op
+hun ergste punt (voorzichtig; de ladder wordt niet gedeeltelijk gesloten in de waardering).
+- ±420 trades in 21 jaar (±20 per jaar), mediane looptijd **±190 dagen**, gemiddeld **14 posities tegelijk open**
+  (max ±40, sterk gecorreleerd: veel USD-paren in dezelfde richting).
+- Per 1% risico: uitstap c +1,6%/jaar, max DD -29% (ook op slotkoersen -29%); uitstap a +2,4%/jaar, max DD -23%.
+  Zeer ongelijk per jaar (2007 +17R, 2020 +28R, 2013 -12R).
+- 5ers-challenge (start elke maand, +8% / +5%, -10% statisch, -5% per dag): bij 0,5-2% risico slaagt 2-50% afhankelijk
+  van periode, mediaan 1-7 jaar per challenge; EV per challenge tussen -0,5% en +0,7% van het account = nul.
+Conclusie: de kleine voorsprong per trade (+0,1 tot +0,15R) is echt in alle drie de periodes, maar met trades van een
+half jaar en een gecorreleerde stapel open posities levert hij geen bruikbaar rendement/risico op voor een prop-account.

@@ -128,9 +128,36 @@ def trade(z, d):
                 return dict(result="ongeldig")
             zz = dict(z, tp1=z["tp1"], tp2=z["tp2"])
             m = manage(dirn, entry, sl, risk, zz, h, l, i + 1)
+            ea, ec = exits(dirn, entry, sl, risk, zz, h, l, i + 1)
+            day = lambda j: str(pd.Timestamp(t[j]).date()) if j is not None else None  # noqa: E731
             return dict(result="gevuld", entry=entry, sl=sl, risk=risk, rr1=abs(z["tp1"] - entry) / risk,
+                        exit_a=day(ea), exit_c=day(ec),
                         fill=str(pd.Timestamp(t[i]).date()), R_c=ladder(dirn, entry, sl, risk, zz, h, l, i + 1), **m)
     return dict(result="open")
+
+
+def exits(dirn, entry, sl, risk, z, h, l, start):
+    """Exit bar index for (a) all out at -0.25 and (c) the fib ladder, with the same rules as manage/ladder."""
+    rng = abs(z["top"] - z["ext"])
+    tps = [z["top"] + dirn * e * rng for e in (0.25, 0.5, 0.618, 1.0)]
+    ea = ec = None
+    k, stop = 0, sl
+    for i in range(start, len(h)):
+        adv, fav = (l[i], h[i]) if dirn == 1 else (h[i], l[i])
+        if ea is None and (((adv <= sl) if dirn == 1 else (adv >= sl)) or ((fav >= tps[0]) if dirn == 1 else (fav <= tps[0]))):
+            ea = i
+        if ec is None:
+            if (adv <= stop) if dirn == 1 else (adv >= stop):
+                ec = i
+            else:
+                while k < 4 and ((fav >= tps[k]) if dirn == 1 else (fav <= tps[k])):
+                    stop = entry if k == 0 else tps[k - 1]
+                    k += 1
+                if k == 4:
+                    ec = i
+        if ea is not None and ec is not None:
+            break
+    return ea, ec
 
 
 def run(sym, start, end):
