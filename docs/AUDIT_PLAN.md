@@ -107,7 +107,7 @@ Per versie A/B/C in één tabel, wat de beste versie is na het dichten van het l
 |---|---|
 | 0 | V1 t/m V9 uitgepakt en geïnventariseerd. Koersdata van V3 byte voor byte gelijk aan nu. |
 | 1 | Test 1 candles: 1.200 gevallen, 0 lek, 0 onnodige vertraging. Test 2 klok: 11.612 dagcandles openen om middernacht servertijd, 2.346 scans op de live-tijden, 0 fout. Test 3 broker: 3 van 6 gelijk aan MT5, 3 bekende gunstige afwijkingen; met `BROKER_STRICT=1` 6 van 6 (nog niet standaard, zodat lopende runs niet van regels wisselen). Test 4 (5ers-meting) volgt. Test 5 wacht op MT5-afschriften. |
-| 2 | 2023 klaar voor A en B van V3 t/m V10 (tabel `phase2_table.json`). Lopend: B over 2016-2024 voor V4 t/m V10; C met de eigen live-bot voor V7, V8, V9; C van de huidige bot met de parameters van V7. |
+| 2 | Afgerond. B (alleen afgesloten candles) over 2016-2024 voor V5-V10: per versie 6 à 8 van de 9 jaren rond -8 à -10% (de bot stopt op de verlieslimiet), 1 à 4 jaren positief (uitschieters +16 à +52%, uitvoer met 5ers-scaling, niet nagerekend). C (eigen live-bot in de replay) V7-V9 en V10: bijna elk jaar -5,5% (permanente noodstop). Geen enkele versie is zonder lek over meerdere jaren winstgevend. Verder onderzoek naar een edge: `docs/RND_PLAN.md`. |
 | 3-5 | Nog niet gestart |
 
 ### Resultaten 2023 (rendement over het jaar)
