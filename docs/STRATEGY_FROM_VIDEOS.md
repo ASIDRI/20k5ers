@@ -632,3 +632,9 @@ Controle: short feb. 2024 gevonden (+1,9R op -0,2), long 2024 gevonden (vulling 
 gemiddeld >= +0,05R met PF >= 1,05 en samen t >= 2,0. Daarna zelfde regel op de andere paren (buiten NZDCAD
 gekozen): samen gemiddeld > 0 met t >= 2,0. Let op: NZDCAD is door de trader gekozen en de voorbeelden liggen in
 2023-2024 (periode 2021-25).
+
+### Uitkomst test 17 (NZDCAD 2005-2025): verworpen
+Eén positie per richting, `R_t020`: 2005-14 125 trades -0,08R (PF 0,89); 2015-20 67 trades -0,01R; 2021-25 47 trades
+-0,34R (PF 0,56); samen t -1,3. Alle setups: -0,09 / -0,11 / -0,13R. Verdere doelen slechter (-0,65 en -1: -0,14 tot
+-0,48R). Ook in 2021-25, waar de drie voorbeelden liggen, negatief: de voorbeelden zijn de winnaars uit ±10 trades per
+jaar die er hetzelfde uitzien. Andere paren niet meer getest (de regel faalt al op NZDCAD).
