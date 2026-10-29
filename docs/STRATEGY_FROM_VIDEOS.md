@@ -609,3 +609,7 @@ de video). Gerapporteerd: -0,68, -0,27 met break-even, en alle setups. Geslaagd 
 **Test 16 - DEW** (VectorVest "Daily Early Warning", niet openbaar; benadering in `rt.py`): de valutasterkte (mti)
 draait vandaag in de handelsrichting terwijl rt5 al zo wijst. Als filter (`vv_dew == 1`) op de setups van de trader
 en op video 9, en op zich (dag na het signaal long/short); zelfde latten als test 15.
+
+### Uitkomst test 16 (DEW): verworpen
+Filter op de setups van de trader: -0,05 / -0,12 / -0,11R (t -3,7); op video 9: -0,21 / -0,09 / -0,37R (t -3,3).
+Op zich: -1,6% / -2,7% / -3,7% per jaar na kosten (Sharpe -0,35 / -0,75 / -1,22).
