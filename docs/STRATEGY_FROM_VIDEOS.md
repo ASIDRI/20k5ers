@@ -488,3 +488,9 @@ kenmerken uit video 8 die test 8 miste:
 Regel: `0.5 <= wk_depth <= 0.886 & decel`. Daarnaast gerapporteerd (niet beslissend): met bullish N (`cont & hl`).
 Getest op alle drie de periodes tegelijk (2005-2014, 2015-2020, 2021-2025), 30 assets, kosten per symbool.
 Geslaagd als in elke periode gemiddeld >= +0,10R en PF >= 1,2, en samen >= 120 trades.
+
+### Uitkomst test 10 (2005-2025, 30 assets): verworpen
+Regel (week-correctie 0,5-0,886 + vertraging), `R_f110_t27be`: 2005-14 133 trades -0,01R (PF 0,98); 2015-20 58 trades
+-0,02R; 2021-25 38 trades -0,28R. Samen 229 trades, winnend 26%, t -0,7. Met bullish N erbij: slechter (-0,02 tot
+-0,31R). Ook elk kenmerk apart en elk doel (0, -0,27) blijft rond of onder nul. De week-context uit video 8 voegt op
+de dag/4u-instap niets toe.
