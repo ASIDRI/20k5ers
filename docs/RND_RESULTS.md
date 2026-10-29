@@ -91,3 +91,21 @@ Gemeten verlies tijdens de dag: mediaan 1,4-1,7 keer het slot-tot-slotverlies (d
 
 Startdata overlappen en vallen in een stijgende markt; de dagdatatest op 2005-2014 (met 2008) was ook positief.
 Nog te verifiëren: tijdslimiet/inactiviteitsregels en hefboom per instrument bij de 5ers.
+
+## Fase P1: drie paren in kaart (`research/rnd/pair_diag.py`, M15 2015-2025, beide periodes)
+
+| | EURUSD | AUDNZD | USDJPY |
+|---|---|---|---|
+| Uurbasis | geen | **terugkeer**: ac1 -0,044 / -0,063; VR20 0,89 / 0,84 | geen |
+| S/R maand/week keert (vs willekeurig) | 50,6 vs 54,6 / 52,3 vs 45,9 (wisselt) | **51,9 vs 48,2 / 54,5 vs 49,4** | 46,3 vs 45,8 / 42,5 vs 49,2 (breekt eerder) |
+| Tijd | 11u UTC -0,9 / -1,35 bp (t -3,3 / -5,1), kleiner dan kosten 1,8 bp | geen | geen |
+| Kosten heen en terug | 1,8 bp | 3,3 bp | 1,8 bp |
+
+## Fase P2 (vooraf vastgelegd, 2026-10-29): AUDNZD terugkeer op uurbasis
+
+Signaal op een gesloten uurcandle: z = (slot - gemiddelde N uur) / stdev N uur, N in {20, 50}; |z| >= 2 -> trade tegen de
+uitrekking in, instap op de open van het volgende uur; uitstap bij terugkeer naar het gemiddelde (gemeten op het slot)
+of na 24 uur; SL 2 uur-ATR. Kosten 3,3 bp per trade. Variant: alleen bij een S/R-niveau van maand/week (binnen 0,5 dag-ATR).
+4 varianten (N x met/zonder S/R) in het register.
+Geslaagd als een variant in 2015-2020 t >= 3 haalt op het nettoresultaat per trade, en in 2021-2025 hetzelfde teken heeft
+met minstens de helft van het effect; daarna slotkluis op 4u-data 2005-2014 (eigen vastlegging).
