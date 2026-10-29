@@ -373,3 +373,17 @@ na 26 weken. Winnend = -0,25 vóór de SL. Uitstap a/b/c zoals test 4. Controle:
 
 Geslaagd als (na kosten, 30 assets) in 2015-2020 én 2021-2025 elk: uitstap a, b of c gemiddeld >= +0,10R met >= 100
 trades, PF >= 1,2, en winnend boven break-even. Dan één keer de slotkluis 2005-2014 (28 forex), met dezelfde criteria.
+
+### Uitkomst test 5 (2015-2025, 30 assets): alles samen rond break-even; de video-filters wijzen consequent goed
+
+Alles: P1 236 trades, a -0,02 / b -0,07 / c -0,06R; P2 169 trades, a -0,07 / b +0,03 / c +0,03R.
+Met **voortzetting + S/R in de zone + maandtrend mee** (alle drie video-regels, vooraf bekend):
+P1 142 trades, winnend 42%, a +0,12 / b +0,08 (PF 1,15) / c +0,11R (PF 1,20); P2 98 trades, winnend 40%,
+a +0,06 / b +0,15 (PF 1,30) / c +0,18R (PF 1,36). Per paar te weinig trades (±1 per paar per jaar).
+
+## Test 6 (vooraf vastgelegd, 2026-10-29): slotkluis 2005-2014 voor test 5 + de drie video-filters
+
+Exact test 5 (`test5.py`, ongewijzigd), alleen trades met voortzetting (`cont`), S/R van maand/week in de zone (`lvl`)
+en maandtrend mee (`mn = 1`). 28 forex-paren, 2005-01-01 tot 2014-12-31, kosten per symbool.
+Geslaagd als uitstap c (fib-ladder) gemiddeld >= +0,10R, PF >= 1,2, met >= 100 trades; daarnaast gerapporteerd: a en b,
+winnend %, per jaar.
