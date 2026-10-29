@@ -30,8 +30,7 @@ from candle_avail import complete_times  # noqa: E402
 N_SWING, FORCE, FORCE_N = 2, 1.5, 10
 SL_BUF_ATR4 = 0.2       # SL buffer in 4h ATR
 EXPIRY_DAYS = 20
-COST = json.loads((HERE.parents[1] / "backtest" / "output" / "replay" / "live_env.json").read_text())["SLIPPAGE_MAP"]
-COST = json.loads(COST)
+COST = json.loads((HERE.parent / "costs.json").read_text())  # adverse pips per symbol (spread + slippage)
 
 
 def cost_price(sym):

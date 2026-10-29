@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-LIVE REPLAY: run the real, unmodified main_live_bot.py against recorded prices.
+LIVE REPLAY: run a real, unmodified live bot (main_live_bot.py under --code-root) against recorded prices.
+The previous bot and its strategy were retired on 2026-10-29; the harness stays for the next live bot.
 
 Nothing in main_live_bot.py is changed or copied. This harness:
 
@@ -136,10 +137,8 @@ def main():
     import types
     sys.modules.setdefault("MetaTrader5", types.ModuleType("MetaTrader5"))
 
-    import main_live_bot as live
-    import strategy_core as _sc
+    import main_live_bot as live  # the live bot under test (--code-root); the old one was retired on 2026-10-29
     assert Path(live.__file__).resolve().parent == code_root, live.__file__
-    assert Path(_sc.__file__).resolve().parent == code_root, _sc.__file__
     import logging
     logging.getLogger("tradr").setLevel(logging.INFO if args.verbose else logging.WARNING)
     for h in logging.getLogger("tradr").handlers:

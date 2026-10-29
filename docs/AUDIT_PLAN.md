@@ -1,5 +1,8 @@
 # Audit: backtest tegenover live, versie per versie
 
+> **Afgesloten (2026-10-29).** Geen enkele oude versie (V1-V10) was zonder lek winstgevend; de oude bot en strategie
+> zijn daarna uit de repo gehaald. Dit document blijft als verslag. De testomgeving (fase 1) wordt verder gebruikt.
+
 Doel: voor elke belangrijke versie van de bot vaststellen of zijn backtest hetzelfde doet als de
 live-bot van die versie zou doen op MT5, op onze eigen historische data. Pas daarna optimaliseren,
 en alleen op een motor die aantoonbaar gelijk loopt met live.

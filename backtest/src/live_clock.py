@@ -1,26 +1,18 @@
 """
-The LIVE bot's own clock rules, loaded from main_live_bot.py itself (not copied), so the backtest
-cannot drift from them: broker time (New York + DST), rollover window, nightly de-risk window and
+The live clock rules from server_clock.py (shared with the live bot), so the backtest cannot drift from them: broker time (New York + DST), rollover window, nightly de-risk window and
 the server time used for the daily scan.
 
 LIVE_TIMING=1 (default) makes the backtest use these; LIVE_TIMING=0 restores the old fixed-UTC timing.
 """
 import os
-import re
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-_SRC = (Path(__file__).resolve().parent.parent.parent / "main_live_bot.py").read_text(encoding="utf-8")
-_NS = {"os": os, "datetime": datetime, "timedelta": timedelta, "timezone": timezone}
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+import server_clock as _sc  # noqa: E402  (one definition for the test environment and the live bot)
 
-# constants + helper functions, verbatim from the live source
-_a = _SRC.index('W5_BROKER_TZ = os.getenv("W5_BROKER_TZ"')
-_b = _SRC.index("def _w5_set_clock_corr(")
-exec(_SRC[_a:_b], _NS)
-for _name in ("_w5_server_tz",):
-    _m = re.search(rf"^def {_name}\(.*?(?=\n\n\n)", _SRC, re.S | re.M)
-    exec(_m.group(0), _NS)
-
+_NS = vars(_sc)
 in_rollover = _NS["_w5_in_rollover"]
 derisk_now = _NS["_w5_derisk_now"]
 broker_now = _NS["_w5_broker_now"]

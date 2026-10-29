@@ -1,5 +1,8 @@
 # 20k5ers bot op een Windows-VM zetten
 
+> **Buiten dienst (2026-10-29):** de oude bot en zijn strategie zijn uit de repo gehaald. `start_live.bat` start
+> niets meer. Deze handleiding blijft voor de volgende bot (Python, MT5, `.env`, limiet-tools).
+
 Alles hieronder typ je in de **Opdrachtprompt** (`cmd`), tenzij er "Kladblok" staat.
 Op een server zonder `winget`: gebruik de downloadlinks bij stap 1.
 
