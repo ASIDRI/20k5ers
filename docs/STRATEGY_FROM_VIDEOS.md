@@ -453,3 +453,18 @@ Alles: P1 963 trades, winnend 7,1% (break-even 7,4%, mediane RR 12,6), a -0,21R;
 Filter cont + hl + weektrend: P1 480 trades a -0,02 / b -0,02R; P2 349 trades a -0,42 / b -0,27R.
 De krappe stop (laagste 4u-wick + 10 pips) geeft een hoge RR, maar de trefkans zakt evenredig: wat overblijft is toeval
 min kosten. Bij RR > 10 kosten spread en slippage ook meer R per trade.
+
+## Test 9 (2026-10-29): dag + 4 uur, ontdekking op 2015-2020, daarna vooraf vastgelegd
+
+Op verzoek van de trader: geen trades op de week; setup op de dag, instap op de 4 uur. `research/strategy/test9.py`:
+dagpoten (zigzag), zone 0,618-1,1, eerste 4u-afwijzingscandle in de zone; per trade drie stops (f110 / wick / f100)
+x drie doelen (0 / -0,27 / -0,27 met stop naar instap halfweg) en kenmerken die bij de instap bekend zijn.
+Ontdekking (`t9_discover.py`, alleen 2015-2020, 1129 trades): alles -0,03 tot -0,22R; stop f110 is de beste; krappe
+wick-stop slecht. Duidelijk verschil per kenmerk: **grote poot** (leg_atr hoog) en **trage correctie** (retr_days hoog,
+wait_bars hoog) positief; diep (> 0,64) en snelle terugval negatief. Dat is "impuls en correctie" uit de video's:
+een impulsieve poot, gevolgd door een trage, corrigerende terugval.
+Gekozen op 2015-2020: f110 + t27be, poot >= 5,44 dag-ATR en >= 17 dagen van de top tot de instap:
+190 trades, +0,22R, PF 1,53 (ontdekking, dus optimistisch).
+
+**Vooraf vastgelegd voor 2021-2025** (`t9_discover.py --confirm R_f110_t27be "leg_atr >= 5.44 & retr_days >= 17"`):
+geslaagd als gemiddeld >= +0,10R, PF >= 1,2 en >= 80 trades. Daarna één keer 2005-2014 met dezelfde lat.
