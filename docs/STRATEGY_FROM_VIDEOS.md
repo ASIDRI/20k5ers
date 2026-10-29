@@ -447,3 +447,9 @@ Ongeldig bij een 4u-slot voorbij de zone, TP vóór de vulling, of na 26 dagcand
 naar instap bij +2R (of halfweg als dat dichter is). Filter: `cont` + `hl` + weektrend mee (`htf = 1`).
 Geslaagd als in 2015-2020 én 2021-2025 elk: a of b gemiddeld >= +0,10R, >= 100 trades, PF >= 1,2. Kosten per symbool.
 Rookproef EURUSD: mediane RR ±11 (zeer krappe stop), ±11% winnend; dat volgt uit de regels zoals beschreven.
+
+### Uitkomst test 8 (2015-2025, 30 assets): verworpen
+Alles: P1 963 trades, winnend 7,1% (break-even 7,4%, mediane RR 12,6), a -0,21R; P2 764 trades, a -0,33R.
+Filter cont + hl + weektrend: P1 480 trades a -0,02 / b -0,02R; P2 349 trades a -0,42 / b -0,27R.
+De krappe stop (laagste 4u-wick + 10 pips) geeft een hoge RR, maar de trefkans zakt evenredig: wat overblijft is toeval
+min kosten. Bij RR > 10 kosten spread en slippage ook meer R per trade.
