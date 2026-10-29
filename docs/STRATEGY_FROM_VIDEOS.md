@@ -556,3 +556,19 @@ Regel `wk_ok & cont & hl`, `R_f110_t27be`: 2005-14 643 trades -0,10R (PF 0,81); 
 2021-25 246 trades -0,04R (PF 0,92); samen 1.208 trades, winnend 24%, t -2,2. Per week-fase: geen enkele fase
 positief in alle drie de periodes (fase 2 alleen in 2021-25 +0,24R; fase 1 tegen de trend het zwakst; geen duidelijke
 trend het slechtst, zoals de video zegt, maar ook de toegestane fases blijven negatief).
+
+## Test 13 (2026-10-29): de setups van de trader, regels uit en aan, ontdekking op 2015-2020
+
+`research/strategy/test13.py` (zelfde motor als test 11, maar elke regel als kolom; EURUSD D1 juni 2025 nog steeds
+exact gevonden, +3,3R) en `t13_discover.py` (alleen 2015-2020). D1, 5.423 trades in 2015-2020:
+- Regels uitzetten verandert weinig: alle regels -0,11R; zonder pocket-eis -0,11; zonder break-eis -0,10.
+  Herverankeren bij een nieuwe top kost geld (met: -0,16R, zonder: -0,05R).
+- Wat wel scheidt: de trend op de eigen grafiek. Instap **tegen** de 50-candle-gemiddelde (long terwijl de prijs nog
+  onder het gemiddelde zit = de eerste break na een daling, een omkeer) +0,07 tot +0,12R; **met** de trend -0,21R.
+  Zelfde richting voor week- en maandtrend. Met de regels van de trader erbij (break + pocket): +0,12R, PF 1,16.
+- W1: niets duidelijk en weinig trades.
+Let op: de vijf voorbeelden van de trader zijn trades **met** de trend; volgens 2015-2020 is dat de zwakke kant.
+
+**Vooraf vastgelegd** (D1, `R_w_t1`, regel `broke & pocket & ma == -1`): ontdekking 964 trades +0,12R PF 1,16.
+Lat (lager dan eerder, omdat dit een andere vraag is: heeft deze vorm van de setup überhaupt een voorsprong?):
+2021-2025 en 2005-2014 elk gemiddeld > 0 met PF >= 1,05, en samen (die twee periodes) t >= 2,0.
