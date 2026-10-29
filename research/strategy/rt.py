@@ -8,7 +8,9 @@ VectorVest's RT and MTI formulas are not public; this is an approximation, on co
 - rtw = the same on weekly candles, n = 1, 2, 4 weeks;
 - mti: forex has no single market, so the market-timing part becomes currency strength: per currency the mean log rt
   over the 28 pairs of EUR GBP AUD NZD USD CAD CHF JPY (as base +, as quote -); for a pair, strength(base) -
-  strength(quote) (> 0 = up).
+  strength(quote) (> 0 = up);
+- dew (Daily Early Warning, test 16): the currency strength turns in the trade direction today (mti higher than
+  yesterday for a long) while rt5 already points that way.
 All four are taken in the trade direction (+1 agrees, -1 against). A setup dated D uses the last candles completed
 before D 00:00 UTC.
 """
@@ -71,13 +73,14 @@ def table():
     for p, x in s.items():
         x = x.set_index("done").reindex(idx).ffill()
         x["mti"] = stren[p[:3]] - stren[p[3:]]
+        x["dew"] = np.sign(x.mti.diff()) * (np.sign(x.mti.diff()) == np.sign(x.rt5 - 1))
         out[p] = x
     return out
 
 
 def attach(trades, tab):
     """Add vv_rt5, vv_rt, vv_rtw, vv_mti (+1 / -1 in the trade direction, 0 unknown) to a trades table."""
-    cols = {k: [] for k in ("vv_rt5", "vv_rt", "vv_rtw", "vv_mti")}
+    cols = {k: [] for k in ("vv_rt5", "vv_rt", "vv_rtw", "vv_mti", "vv_dew")}
     for _, t in trades.iterrows():
         x = tab.get(t.sym)
         k = -1 if x is None else int(x.index.searchsorted(pd.Timestamp(t.date, tz="UTC"))) - 1
@@ -86,9 +89,21 @@ def attach(trades, tab):
                 v.append(0)
             continue
         r = x.iloc[k]
-        for name, val, ref in (("vv_rt5", r.rt5, 1), ("vv_rt", r.rt, 1), ("vv_rtw", r.rtw, 1), ("vv_mti", r.mti, 0)):
+        for name, val, ref in (("vv_rt5", r.rt5, 1), ("vv_rt", r.rt, 1), ("vv_rtw", r.rtw, 1), ("vv_mti", r.mti, 0),
+                               ("vv_dew", r.dew, 0)):
             cols[name].append(0 if pd.isna(val) else int(np.sign(val - ref) * t.dir))
     return trades.assign(**cols)
+
+
+def standalone_dew(tab):
+    """DEW on its own: long the day after a dew up, short after a dew down, else flat; costs per change."""
+    rows = []
+    for p, x in tab.items():
+        pos = x.dew.fillna(0)
+        ret = x.close.pct_change().shift(-1)
+        cost = cost_price(p) / x.close / 2 * pos.diff().abs().fillna(0)
+        rows.append(pd.DataFrame({"sym": p, "pnl": pos * ret - cost, "pos": pos}, index=x.index))
+    return pd.concat(rows)
 
 
 def standalone(tab):
@@ -115,7 +130,7 @@ if __name__ == "__main__":
                               ("video 9 (test 12)", T9.load("t12_"), "wk_ok & cont & hl", "R_f110_t27be")):
         f = attach(f.query(base).copy(), tab)
         print(f"\n### {lab}: {base}")
-        for name, rule in (("zonder VV", "index == index"), ("met VV (alle 4 mee)", vv)):
+        for name, rule in (("zonder VV", "index == index"), ("met VV (alle 4 mee)", vv), ("met DEW mee", "vv_dew == 1")):
             out, pooled = [], []
             for p, a, b in P:
                 x = f[(f.date >= a) & (f.date < b)].query(rule)[col].dropna()
@@ -123,13 +138,14 @@ if __name__ == "__main__":
                 out.append(f"{p} {T13.cell(x)}")
             x = pd.concat(pooled)
             print(f"  {name:22} " + " | ".join(out) + f" | t {x.mean() / x.std() * np.sqrt(len(x)):.2f}")
-        for c in ("vv_rt5", "vv_rt", "vv_rtw", "vv_mti"):
+        for c in ("vv_rt5", "vv_rt", "vv_rtw", "vv_mti", "vv_dew"):
             g = f.groupby(c)[col].mean().round(3).to_dict()
             print(f"  {c}: {g}")
-    s = standalone(tab).dropna()
-    print("\n### VectorVest-stijl op zich (alle 4 mee: long/short, anders vlak), per dag, na kosten")
-    for p, a, b in P:
-        g = s[(s.index >= a) & (s.index < b)]
-        daily = g.groupby(level=0).pnl.mean()
-        print(f"  {p}: in de markt {g.pos.ne(0).mean()*100:.0f}% van de dagen, gem {daily.mean()*1e4:+.2f}bp/dag, "
-              f"per jaar {daily.mean()*252*100:+.2f}%, Sharpe {daily.mean()/daily.std()*np.sqrt(252):+.2f}")
+    for lab, s in (("VectorVest-stijl op zich (alle 4 mee: long/short, anders vlak)", standalone(tab).dropna()),
+                   ("DEW op zich (dag na het signaal)", standalone_dew(tab).dropna())):
+        print(f"\n### {lab}, per dag, na kosten")
+        for p, a, b in P:
+            g = s[(s.index >= a) & (s.index < b)]
+            daily = g.groupby(level=0).pnl.mean()
+            print(f"  {p}: in de markt {g.pos.ne(0).mean()*100:.0f}% van de dagen, gem {daily.mean()*1e4:+.2f}bp/dag, "
+                  f"per jaar {daily.mean()*252*100:+.2f}%, Sharpe {daily.mean()/daily.std()*np.sqrt(252):+.2f}")

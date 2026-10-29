@@ -596,3 +596,16 @@ elke periode positief na kosten en Sharpe samen >= 0,5.
 (t -3,6). (b) Video 9: zonder -0,10 / -0,05 / -0,04R; met -0,11 / -0,11 / -0,03R. (c) Op zich, 28 paren: -1,0% /
 -2,7% / -2,6% per jaar na kosten (Sharpe -0,25 / -0,79 / -0,90). Een korte trend (5-20 dagen) mee hebben helpt niet;
 eerder het omgekeerde (niet vastgelegd, dus geen conclusie).
+
+## Test 14 en 16 (vooraf vastgelegd, 2026-10-29)
+
+**Test 14 - video 9 puur, met zijn meest gebruikte instap (4u inverse H&S)**, `research/strategy/test14.py`: dagzone en
+week-fase als test 12; 4u-swings (2 candles aan elke kant) vanaf 10 candles voor de aanraking: linkerschouder, top,
+hoofd (lager, in de zone), top, rechterschouder (hoger dan het hoofd); instap op het slot boven de laatste top (de
+nek); SL onder de rechterschouder - 10 pips; doel dag -0,27. Beslissend: `R_hs_t27` met `wk_ok & cont & hl` (zoals
+de video). Gerapporteerd: -0,68, -0,27 met break-even, en alle setups. Geslaagd als elke periode (2005-14, 2015-20,
+2021-25) gemiddeld >= +0,05R met PF >= 1,05 en samen t >= 2,0. Rookproef EURUSD+GBPAUD: mediane RR 4,6.
+
+**Test 16 - DEW** (VectorVest "Daily Early Warning", niet openbaar; benadering in `rt.py`): de valutasterkte (mti)
+draait vandaag in de handelsrichting terwijl rt5 al zo wijst. Als filter (`vv_dew == 1`) op de setups van de trader
+en op video 9, en op zich (dag na het signaal long/short); zelfde latten als test 15.
