@@ -348,3 +348,13 @@ Geslaagd als, na kosten, in **2015-2020 én 2021-2025** apart:
 3. profit factor >= 1,2.
 Varianten (samenloop met S/R, met/tegen trend) worden gerapporteerd maar tellen niet als aparte kans; als er één
 geslaagd lijkt, moet die eerst opnieuw vooraf vastgelegd worden en door de slotkluis 2005-2014.
+
+### Uitkomst test 4 (30 assets, na kosten): niet gehaald
+
+| Periode | Trades | Winnend (-0,25 vóór SL) | Break-even | a: alles op -0,25 | b: helft + rest | c: ladder -0,25/-0,5/-0,618/-1 |
+|---|---|---|---|---|---|---|
+| 2015-20 | 262 | 13,4% | 12,5% | -0,07R (PF 0,93) | -0,09R (PF 0,90) | -0,13R (PF 0,85) |
+| 2021-25 | 242 | 15,3% | 13,4% | -0,14R (PF 0,84) | -0,08R (PF 0,91) | -0,14R (PF 0,84) |
+
+Met samenloop (niveau, OB of FVG in de zone) beter dan zonder (b: -0,05 / +0,03 tegen -0,22 / -0,38), maar niet positief
+genoeg. FVG in de zone (b): +0,22 / +0,04 tegen -0,40 / -0,16 zonder; aanwijzing, ±120 trades per periode.
