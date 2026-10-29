@@ -109,3 +109,19 @@ of na 24 uur; SL 2 uur-ATR. Kosten 3,3 bp per trade. Variant: alleen bij een S/R
 4 varianten (N x met/zonder S/R) in het register.
 Geslaagd als een variant in 2015-2020 t >= 3 haalt op het nettoresultaat per trade, en in 2021-2025 hetzelfde teken heeft
 met minstens de helft van het effect; daarna slotkluis op 4u-data 2005-2014 (eigen vastlegging).
+
+### P2 uitkomst: verworpen
+AUDNZD terugkeer op uurbasis: alle 4 varianten -2 à -4 bp per trade na kosten in beide periodes (1.000-1.700 trades);
+vóór kosten +0,6 à +1,2 bp: de terugkeer bestaat, maar is kleiner dan de spread (3,3 bp). Op 4u (8 varianten): niets
+betrouwbaar positief; 2021-2025 alles negatief. S/R-samenloop telkens +1 à 2 bp, binnen de ruis.
+
+## Fase P3 (vooraf vastgelegd, 2026-10-29): per paar op de daggrafiek, slotkluis 2005-2014
+
+Gevonden op 2015-2025 (Sharpe na kosten, periode 1 / 2): AUDNZD trendvolgen consequent negatief (12 mnd -0,89 / -0,54;
+uitbraak 55 d -0,67 / -0,61), dus het **omgekeerde** (range faden) positief; USDJPY momentum 3 mnd +0,50 / +0,96.
+Uit 42 bekeken cellen; t-waarden onder 3. Daarom één test op 2005-2014 (opgeslagen D1, nooit per paar bekeken):
+- R1 AUDNZD: verkoop na een slot boven de hoogste high van 55 dagen, koop na een slot onder de laagste low; vasthouden tot de omgekeerde uitbraak.
+- R2 AUDNZD: positie tegen de richting van het 12-maandenrendement.
+- R3 USDJPY: positie in de richting van het 3-maandenrendement.
+Zelfde motor (`systematic.py`), kosten, risico per instrument 10%/jaar. Geslaagd per regel als in 2005-2014: Sharpe >= 0,3
+en winst in minstens 6 van de 10 jaren. Een geslaagde regel gaat door naar fase 4 (robuustheid) en de replay.
