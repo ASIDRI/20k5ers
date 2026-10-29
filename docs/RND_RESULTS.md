@@ -53,3 +53,24 @@ edge bovendien zeer moeilijk.
   (lang-only momentum 0,80-0,87 / 1,13-1,21 tegen kopen en houden 0,68 / 1,05).
 - Per index wisselend tussen de periodes (bv. RSI(2)-dip kopen op SPX500: 0,04 / 0,99; video-terugval: 0,49 / 0,50,
   per dag in de markt nauwelijks beter dan kopen en houden). NAS100-data 2021-2025 verdacht (kopen en houden Sharpe -0,04).
+
+## Fase 2c: de edge zit in de prop-firm-deal (`research/rnd/prop_ev.py`)
+
+Model 5ers High Stakes: stap 1 +8%, stap 2 +5%, breach bij -10% van de start of -5% van de dagstart; funded: 80% van
+de winst, uitbetaling telkens bij +4%, 2 jaar. Fee als fractie van het account. Strategieën: dagrendementen na kosten
+van een mand (SPX500, NAS100, UK100, goud, zilver), risico afgestemd op een jaarvolatiliteit. 'zero' = zelfde mand
+zonder drift (puur het effect van de grenzen).
+
+| Strategie, 6-10% vol, fee 0,5% | Kans stap 1+2 | EV per challenge (% van account) |
+|---|---|---|
+| nul-edge (geen drift) | 32-45% | +1,4 à +1,6 |
+| kopen en houden | 64-91% | +8,8 à +9,3 |
+| trend long-only (12 mnd) | 43-57% | +4,3 à +4,5 |
+| momentum 6 mnd long/short | 60-83% | +6,1 à +6,8 |
+
+Zelfde test op **2005-2014** (met 2008; SPX500, NAS100, goud, zilver): trend long-only 6% vol +7,8%, momentum
+long/short +6,6 à +7,0%, kopen en houden +5,2 à +7,4%, nul-edge +0,5 à +1,5%.
+
+**Gevoelig voor het verlies tijdens de dag** (factor op het slot-tot-slotverlies): bij 1,5-2 blijft EV positief
+(fee 1%: +2 à +5%), bij 3 rond nul of negatief. Lager risico (6-10% per jaar) is steeds beter dan 15-20%.
+Volgende stap: meten met de echte 15-minutendata en een plafond op de hefboom, in plaats van een factor aan te nemen.
