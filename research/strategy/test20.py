@@ -1,0 +1,133 @@
+"""Test 20: only the big legs (the trader's GBPNZD long Aug-Sep 2026), with the entry timing of test 19.
+
+    python research/strategy/test20.py SYM [SYM ...] --start 2005-01-01 --end 2025-12-31 [--prefix t20_]
+
+1. Legs: daily zigzag (test5.legs) with a turn confirmed after REV = 3 daily ATR back and a leg of at least LEG = 6
+   daily ATR; fib 1 = the leg's start (wick), 0 = its end (wick). Known from the candle that confirms the turn.
+2. Entry: the first daily rejection candle in the zone (long: low at or below the 0.618 level, close above its open
+   in the upper 40% of its range, the close between the 0.5 and 0.786 levels), at its close. Before the first touch a
+   new high moves 0 (and the zone) with it; after a touch a new high ends the setup. Void: a close beyond fib 1, or
+   EXPIRY daily candles after the last re-anchor.
+3. Stop: beyond fib 1 by 0.1 ATR. Exits: -0.2 (R_t020, decisive), -0.27, -0.65, and half at -0.2 with the stop to
+   the old high and the rest to -1 (R_m_top_1). Costs per symbol. touch_n = earlier candles in the zone.
+4. Context (the trader: "boven weekly & monthly S/R, weekly market structure bullish"): wk_struct = the weekly
+   zigzag (2 weekly ATR turns) made higher highs and higher lows (lower for a short) - last two confirmed turns of
+   each kind, known at the entry; htf_sup = a monthly/weekly S/R level between fib 1 and the entry (price above it
+   for a long, below it for a short).
+"""
+import argparse
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE), str(HERE.parents[1] / "backtest" / "src")]
+from setup_study import load, Levels  # noqa: E402
+from candle_avail import complete_times  # noqa: E402
+from test2 import cost_price  # noqa: E402
+import test5  # noqa: E402
+from test18 import follow, managed  # noqa: E402
+
+REV, LEG, EXPIRY = 3.0, 6.0, 40
+TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
+
+
+def run(sym, start, end):
+    d = load(sym, "D1")
+    d["done"] = complete_times(d["time"], "D1")
+    o, h, l, c, t = (d[k].values for k in ("open", "high", "low", "close", "time"))
+    w = load(sym, "W1")
+    w["done"] = complete_times(w["time"], "W1")
+    test5.REV, test5.LEG = 2.0, 4.0
+    wt, _ = test5.legs(w)
+    w_done = np.array([w["done"][ci].value for ci, *_ in wt])
+    w_kind = np.array([kk for *_, kk in wt])
+    w_px = np.array([p for _, _, p, _ in wt])
+    lv = Levels(sym)
+    test5.REV, test5.LEG = REV, LEG
+    turns, atr = test5.legs(d)
+    cost = cost_price(sym)
+    t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
+    rows = []
+    for k in range(1, len(turns)):
+        ci, ti, p_end, kind = turns[k]
+        _, si, p_start, _ = turns[k - 1]
+        ready = d["done"][ci]
+        if ready < t0 or ready >= t1:
+            continue
+        dirn = 1 if kind == "H" else -1
+        top, b1 = p_end, p_start
+        rng = (top - b1) * dirn
+        if rng < LEG * atr[ci]:
+            continue
+        ext, opp = (h, l) if dirn == 1 else (l, h)
+        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(t[si])[:10], top_t=str(t[ti])[:10],
+                   b1=b1, top=top, rng=rng, rng_atr=rng / atr[ci])
+        res, f, deadline, touched, touch_n = "verlopen", ci, ci + 1 + EXPIRY, False, 0
+        entry = None
+        while f + 1 < min(deadline, len(d)):
+            f += 1
+            if (c[f] - b1) * dirn < 0:
+                res = "ongeldig"
+                break
+            if (ext[f] - top) * dirn > 0:
+                if touched:
+                    res = "weggelopen"
+                    break
+                top = ext[f]
+                rng = (top - b1) * dirn
+                row.update(top=top, rng=rng, top_t=str(t[f])[:10], reanchored=True)
+                deadline = f + 1 + EXPIRY
+                continue
+            near = top - dirn * 0.618 * rng
+            if (opp[f] - near) * dirn <= 0:
+                span = h[f] - l[f]
+                rej = span > 0 and ((c[f] > o[f] and c[f] - l[f] >= 0.6 * span) if dirn == 1
+                                    else (c[f] < o[f] and h[f] - c[f] >= 0.6 * span))
+                cf = (top - c[f]) * dirn / rng
+                if rej and 0.5 <= cf <= 0.786:
+                    res, entry = "gevuld", c[f]
+                    break
+                touched = True
+                touch_n += 1
+        if res != "gevuld":
+            rows.append(dict(row, result=res))
+            continue
+        kw = int(np.searchsorted(w_done, pd.Timestamp(t[f]).tz_localize("UTC").value, side="right")) - 1
+        hs, ls = w_px[:kw + 1][w_kind[:kw + 1] == "H"], w_px[:kw + 1][w_kind[:kw + 1] == "L"]
+        T = 0
+        if len(hs) >= 2 and len(ls) >= 2:
+            T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
+        levs = [p for p, _ in lv.at(pd.Timestamp(t[f]).tz_localize("UTC"))]
+        lo_, hi_ = sorted([b1, entry])
+        row.update(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
+        sl = b1 - dirn * 0.1 * atr[f]
+        risk = abs(entry - sl)
+        row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, sl=sl, touch_n=touch_n,
+                   entry_fib=(top - entry) * dirn / rng, R_cost=cost / risk)
+        for name, x in TPS.items():
+            r, j = follow(dirn, entry, sl, top + dirn * x * rng, None, h, l, f + 1)
+            row[f"R_{name}"] = r - cost / risk
+            row[f"x_{name}"] = str(t[j])[:10] if j is not None else None
+        row["R_m_top_1"] = managed(dirn, entry, sl, top, rng, 0.2, "top", 1.0, h, l, f + 1) - cost / risk
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("symbols", nargs="+")
+    ap.add_argument("--start", default="2005-01-01")
+    ap.add_argument("--end", default="2025-12-31")
+    ap.add_argument("--prefix", default="t20_")
+    a = ap.parse_args()
+    for s in a.symbols:
+        try:
+            df = run(s, a.start, a.end)
+        except Exception as e:  # noqa
+            print(f"{s}: overgeslagen ({type(e).__name__}: {e})", flush=True)
+            continue
+        df.to_csv(HERE / "out" / f"{a.prefix}{s}.csv", index=False)
+        print(f"{s}: {len(df)} poten, {int((df.result == 'gevuld').sum()) if len(df) else 0} trades", flush=True)

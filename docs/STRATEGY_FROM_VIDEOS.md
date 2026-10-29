@@ -694,3 +694,24 @@ instap 13 feb (slot 0,8126), +1,15R op -0,2.
 **Beslissend: D1, 30 assets, één positie per richting, `R_t020`.** Geslaagd als elke periode (2005-14, 2015-20,
 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: `touch_n` (eerste aanraking of later),
 `at_lvl`, krappe SL, beheer, W1.
+
+### Uitkomst test 19 (instapmoment): verworpen
+D1, één positie per richting, `R_t020`: -0,01 / -0,08 / -0,10R (t -2,5); W1: -0,07 / +0,02 / +0,09R. Eerste
+aanraking of later (`touch_n`) maakt weinig uit.
+
+## GBPNZD 2026 (de trader: "er zijn er maar 2")
+
+Trader: long maart 2026 (kleine poot, instap 2,256, SL 2,23295, TP = BoS 2,32089, RR 2,8) en long aug-sep 2026 (poot
+1 juni 2,2466 -> 7 juli 2,3555, instap 2,28456, SL 2,25626 onder de BoS, TP -0,2 = 2,37691, RR 3,3). Context: boven
+week- en maand-S/R, weekstructuur bullish -> alleen longs. Motor test 19 nam er 8 (andere, kleinere poten).
+Een daily zigzag met keerpunten na 3 dag-ATR vindt de grote poot exact (28 mei 2,2444 -> 6 juli 2,3534).
+
+## Test 20 (vooraf vastgelegd, 2026-10-29): alleen de grote poten + de context van de trader
+
+`research/strategy/test20.py`: daily zigzag (keerpunt na 3 ATR, poot >= 6 ATR); instap als test 19 (dag-
+afwijzingscandle, slot tussen 0,5 en 0,786); SL voorbij 1 (0,1 ATR); doel -0,2. Controle GBPNZD 2026 (Yahoo-data):
+long poot 28 mei -> 6 juli, instap 3 aug 2,2887, TP -0,2 op 27 okt: +1,89R (de trade van de trader); daarnaast een
+short 24 mrt (-1R) die de trader niet nam (bullish context).
+**Beslissend: `wk_struct == 1 & htf_sup`** (weekstructuur in de handelsrichting én een week/maand-S/R tussen fib 1
+en de instap), één positie per richting, `R_t020`, 30 assets, 2005-2025. Geslaagd als elke periode gemiddeld > 0
+met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: elk deel apart en alle grote poten.
