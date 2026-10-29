@@ -153,6 +153,7 @@ def trade_zone(z, h4):
                 return dict(result="ongeldig")
             rr1 = abs(z["tp1"] - entry) / risk
             return dict(result="gevuld", entry=entry, sl=sl, risk=risk, rr1=rr1, fill=str(pd.Timestamp(t[i]).date()),
+                        R_c=ladder(dirn, entry, sl, risk, z, h, l, i + 1),
                         **manage(dirn, entry, sl, risk, z, h, l, i + 1))
     return dict(result="open")
 
@@ -170,6 +171,29 @@ def manage(dirn, entry, sl, risk, z, h, l, start):
     return dict(R=R, tp1_hit=tp1_hit)
 
 
+LADDER = (0.25, 0.5, 0.618, 1.0)  # exit (c): equal parts at these fib extensions
+
+
+def ladder(dirn, entry, sl, risk, z, h, l, start):
+    """Exit (c): a quarter at each of -0.25/-0.5/-0.618/-1; after the first target SL to entry, after each further
+    target SL to the previous target. A bar reaching a target and the stop counts as the stop (the safe side)."""
+    rng = abs(z["top"] - z["ext"])
+    tps = [z["top"] + dirn * e * rng for e in LADDER]
+    part = 1.0 / len(tps)
+    R, k, stop = 0.0, 0, sl
+    for i in range(start, len(h)):
+        adv, fav = (l[i], h[i]) if dirn == 1 else (h[i], l[i])
+        if (adv <= stop) if dirn == 1 else (adv >= stop):
+            return R + (1 - k * part) * (stop - entry) / risk * dirn
+        while k < len(tps) and ((fav >= tps[k]) if dirn == 1 else (fav <= tps[k])):
+            R += part * abs(tps[k] - entry) / risk
+            stop = entry if k == 0 else tps[k - 1]
+            k += 1
+        if k == len(tps):
+            return R
+    return R
+
+
 def run(sym, start, end):
     h4 = load(sym, ENTRY_TF)
     tr = np.r_[np.nan, np.maximum(h4.high.values[1:], h4.close.values[:-1]) - np.minimum(h4.low.values[1:], h4.close.values[:-1])]
@@ -184,6 +208,7 @@ def run(sym, start, end):
             z["Rnet"] = r["R"] - z["R_cost"]  # exit (b): half at -0.25, SL to entry, rest at -0.65 / next level
             z["win"] = bool(r["tp1_hit"])  # winning setup: -0.25 reached before the SL
             z["Rnet_a"] = (r["rr1"] if r["tp1_hit"] else -1.0) - z["R_cost"]  # exit (a): all out at -0.25
+            z["Rnet_c"] = r["R_c"] - z["R_cost"]  # exit (c): fib ladder -0.25/-0.5/-0.618/-1
         rows.append(z)
     return pd.DataFrame(rows)
 
@@ -237,8 +262,9 @@ if __name__ == "__main__":
         ma, mb = g["Rnet_a"].mean(), g["Rnet"].mean()
         ok = [n >= 100 and max(ma, mb) >= 0.10, win > be, max(pf(g["Rnet_a"]), pf(g["Rnet"])) >= 1.2]
         print(f"{half}: trades {n}, winnend {win*100:.1f}% (break-even {be*100:.1f}%, gem. winst/risico op -0,25 {g['rr1'].mean():.2f}), "
-              f"uitstap a {ma:+.3f}R (PF {pf(g['Rnet_a']):.2f}), uitstap b {mb:+.3f}R (PF {pf(g['Rnet']):.2f}) -> "
+              f"uitstap a {ma:+.3f}R (PF {pf(g['Rnet_a']):.2f}), uitstap b {mb:+.3f}R (PF {pf(g['Rnet']):.2f}), "
+              f"[nieuw] ladder c {g['Rnet_c'].mean():+.3f}R (PF {pf(g['Rnet_c']):.2f}) -> "
               f"{'ok' if all(ok) else 'niet gehaald'} {ok}")
     for col in ["samenloop", "htf_mee"]:
         print(f"\n--- {col} (winnend % / uitstap a / uitstap b)")
-        print(f.groupby([col, "half"]).agg(n=("win", "size"), winnend=("win", "mean"), a=("Rnet_a", "mean"), b=("Rnet", "mean")).round(3).to_string())
+        print(f.groupby([col, "half"]).agg(n=("win", "size"), winnend=("win", "mean"), a=("Rnet_a", "mean"), b=("Rnet", "mean"), c=("Rnet_c", "mean")).round(3).to_string())
