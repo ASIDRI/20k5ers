@@ -590,3 +590,9 @@ Getest zonder ontdekking, alle drie de periodes:
 `R_f110_t27be`). Geslaagd als elke periode gemiddeld >= +0,05R met PF >= 1,05 en samen t >= 2,0.
 (c) op zich: long als alle vier up, short als alle vier down, anders vlak; dagelijks, kosten per wissel. Geslaagd als
 elke periode positief na kosten en Sharpe samen >= 0,5.
+
+### Uitkomst test 15: verworpen
+(a) Setups van de trader: zonder VV -0,04 / -0,11 / -0,08R; met alle vier VV-signalen mee -0,07 / -0,15 / -0,05R
+(t -3,6). (b) Video 9: zonder -0,10 / -0,05 / -0,04R; met -0,11 / -0,11 / -0,03R. (c) Op zich, 28 paren: -1,0% /
+-2,7% / -2,6% per jaar na kosten (Sharpe -0,25 / -0,79 / -0,90). Een korte trend (5-20 dagen) mee hebben helpt niet;
+eerder het omgekeerde (niet vastgelegd, dus geen conclusie).
