@@ -406,3 +406,15 @@ hun ergste punt (voorzichtig; de ladder wordt niet gedeeltelijk gesloten in de w
   van periode, mediaan 1-7 jaar per challenge; EV per challenge tussen -0,5% en +0,7% van het account = nul.
 Conclusie: de kleine voorsprong per trade (+0,1 tot +0,15R) is echt in alle drie de periodes, maar met trades van een
 half jaar en een gecorreleerde stapel open posities levert hij geen bruikbaar rendement/risico op voor een prop-account.
+
+## Test 7 (vooraf vastgelegd, 2026-10-29): S1 één tijdframe lager - poten op de dag, instap op de 4 uur
+
+Exact de regels van test 5, één tijdframe lager (`test5.py --struct D1 --entry H4`): zigzag op dagcandles (keerpunt na
+2 dag-ATR terug, poot >= 4 dag-ATR), fib 0,618-1,1 over de laatste grote poot, instap op een afwijzingscandle op de
+4 uur in de zone, SL voorbij 1,1 (0,2 x 4u-ATR), ongeldig bij een 4u-slot voorbij 1,1, als -0,25 eerst komt, of na 26
+dagcandles. Filters zoals S1, één tijdframe lager: voortzetting (`cont`), S/R van maand/week in de zone (`lvl`), trend
+van de week mee (`htf = 1`). Portefeuille: max. één open positie per valuta (`s1_portfolio.py --trend htf --one-per-ccy`).
+30 assets, kosten per symbool. Ontwikkeling 2015-2020, bevestiging 2021-2025.
+Geslaagd als in 2015-2020 én 2021-2025 elk: uitstap a of c gemiddeld >= +0,10R met >= 100 trades en PF >= 1,2, én de
+portefeuille bij 1% risico max DD <= 15% en 5ers-EV > +1% per challenge. Dan één keer 2005-2014 met dezelfde lat
+(let op: 2005-2014 is al eens gezien voor de weekversie, dus minder zuiver dan een echte slotkluis).

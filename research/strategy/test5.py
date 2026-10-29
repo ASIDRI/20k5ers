@@ -1,6 +1,6 @@
 """Test 5: the trader's corrections (2026-10-29) on the dossier.
 
-    python research/strategy/test5.py SYM [SYM ...] --start 2015-03-01 [--prefix t5_]
+    python research/strategy/test5.py SYM [SYM ...] --start 2015-03-01 [--prefix t5_] [--struct D1 --entry H4]
 
 1. Legs, not small swings: a zigzag on WEEKLY candles; a turn is confirmed once price comes back REV x weekly ATR
    from the extreme (known only from that week on). A leg = the move between two confirmed turns, at least
@@ -15,7 +15,10 @@
 4. Win = -0.25 reached before the stop. Exits reported: (a) all at -0.25, (b) half at -0.25 + stop to entry + rest at
    -0.65 or the next S/R level, (c) ladder -0.25/-0.5/-0.618/-1.
 Tags: 'cont' = the leg broke the previous leg's extreme (continuation, bullish N / bearish V), else reversal;
-'lvl' = a monthly/weekly S/R level inside the zone; 'mn' = monthly trend in the trade direction.
+'lvl' = a monthly/weekly S/R level inside the zone; 'mn' = monthly trend in the trade direction; 'htf' = trend of the
+timeframe above the legs in the trade direction (MN for weekly legs, W1 for daily legs).
+Test 7: the same one timeframe lower (--struct D1 --entry H4): legs on daily candles, entry and void on 4-hour candles,
+expiry after EXPIRY structure candles.
 """
 import argparse
 import sys
@@ -30,7 +33,10 @@ from setup_study import load, Levels  # noqa: E402
 from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price, manage, ladder  # noqa: E402
 
-REV, LEG, EXPIRY_W = 2.0, 4.0, 26
+REV, LEG, EXPIRY = 2.0, 4.0, 26  # expiry in structure candles
+STRUCT, ENTRY = "W1", "D1"
+SPAN = {"W1": pd.Timedelta(weeks=1), "D1": pd.Timedelta(days=7 / 5)}
+HTF = {"W1": "MN", "D1": "W1"}
 SL_MODE = "fib110"  # "fib110": stop just beyond the 1.1 level (the low may be swept); "extreme": just beyond the zone low so far
 
 
@@ -65,8 +71,8 @@ def legs(w):
 
 
 def zones(sym, start, end):
-    w = load(sym, "W1")
-    w["done"] = complete_times(w["time"], "W1")
+    w = load(sym, STRUCT)
+    w["done"] = complete_times(w["time"], STRUCT)
     lv = Levels(sym)
     turns, atr = legs(w)
     t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
@@ -92,14 +98,14 @@ def zones(sym, start, end):
                         tp2=(min(nxt) if dirn == 1 else max(nxt)) if nxt else top + dirn * 0.65 * rng,
                         cont=bool((p_end - p_prev) * dirn > 0),
                         lvl=any(z_lo <= p <= z_hi for p, _ in levs),
-                        mn=lv.trend(ready, "MN") * dirn))
+                        mn=lv.trend(ready, "MN") * dirn, htf=lv.trend(ready, HTF[STRUCT]) * dirn))
     return out
 
 
 def trade(z, d):
     dirn = z["dir"]
     a = int(np.searchsorted(d["time"].values, np.datetime64(z["ready"].tz_convert(None))))
-    end = z["ready"] + pd.Timedelta(weeks=EXPIRY_W)
+    end = z["ready"] + EXPIRY * SPAN[STRUCT]
     o, h, l, c, t, atr = (d[k].values for k in ("open", "high", "low", "close", "time", "atr"))
     inv = z["top"] - dirn * 1.1 * z["rng"]  # 1.1 level
     extreme = None
@@ -161,7 +167,7 @@ def exits(dirn, entry, sl, risk, z, h, l, start):
 
 
 def run(sym, start, end):
-    d = load(sym, "D1")
+    d = load(sym, ENTRY)
     tr = np.r_[np.nan, np.maximum(d.high.values[1:], d.close.values[:-1]) - np.minimum(d.low.values[1:], d.close.values[:-1])]
     d["atr"] = pd.Series(tr).rolling(14).mean().values
     cp = cost_price(sym)
@@ -187,8 +193,10 @@ if __name__ == "__main__":
     ap.add_argument("--prefix", default="t5_")
     ap.add_argument("--split", default="2021-01-01")
     ap.add_argument("--sl", default="fib110", choices=["fib110", "extreme"])
+    ap.add_argument("--struct", default="W1", choices=["W1", "D1"])
+    ap.add_argument("--entry", default="D1", choices=["D1", "H4"])
     a = ap.parse_args()
-    SL_MODE = a.sl
+    SL_MODE, STRUCT, ENTRY = a.sl, a.struct, a.entry
     out = HERE / "out"
     allz = []
     for s in a.symbols:
@@ -210,7 +218,7 @@ if __name__ == "__main__":
         print(f"{half}: trades {len(g)}, winnend {g.win.mean()*100:.1f}% (break-even {be*100:.1f}%), "
               f"a {g.Rnet_a.mean():+.3f}R PF {pf(g.Rnet_a):.2f} | b {g.Rnet.mean():+.3f}R PF {pf(g.Rnet):.2f} | "
               f"c {g.Rnet_c.mean():+.3f}R PF {pf(g.Rnet_c):.2f}")
-    for col in ["cont", "lvl", "mn", "dir"]:
+    for col in ["cont", "lvl", "mn", "htf", "dir"]:
         print(f"\n--- {col}")
         print(f.groupby([col, "half"]).agg(n=("win", "size"), winnend=("win", "mean"), a=("Rnet_a", "mean"),
                                            b=("Rnet", "mean"), c=("Rnet_c", "mean")).round(3).to_string())

@@ -1,8 +1,11 @@
 """S1 as a portfolio: equity curve 2005-2025 and the 5ers challenge on it.
 
-    python research/strategy/s1_portfolio.py [--prefix s1_] [--exit c] [--risks 0.005,0.01,0.015,0.02]
+    python research/strategy/s1_portfolio.py [--prefix s1_] [--exit c] [--risks 0.005,0.01,0.015,0.02] [--trend htf]
+                                             [--one-per-ccy]
 
-S1 = test5.py trades with all three video filters (cont, lvl, mn == 1), from research/strategy/out/<prefix>*.csv.
+S1 = test5.py trades with all three video filters (cont, lvl, mn == 1), from research/strategy/out/<prefix>*.csv
+(test 7: --trend htf, the trend one timeframe above the legs). --one-per-ccy: a trade is skipped while another open
+trade shares a currency with it (taken in order of fill; the same day: the order of the files).
 Every trade risks a fixed fraction r of the starting balance (no compounding). Marked to market on daily closes from
 the fill until the exit day; on the exit day the trade is worth its booked R (exit a or c). Costs at the fill.
 Worst intraday equity = close equity minus each open trade's adverse move that day (all at once; conservative), each
@@ -28,10 +31,27 @@ PERIODS = [("2005-14", "2005-01-01", "2015-01-01"), ("2015-20", "2015-01-01", "2
            ("2021-25", "2021-01-01", "2026-01-01")]
 
 
-def trades(prefix):
+def trades(prefix, trend="mn"):
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{prefix}*.csv"))])
-    f = f[(f.result == "gevuld") & f.cont & f.lvl & (f.mn == 1)].copy()
-    return f.reset_index(drop=True)
+    f = f[(f.result == "gevuld") & f.cont & f.lvl & (f[trend] == 1)].copy()
+    return f.sort_values("fill", kind="stable").reset_index(drop=True)
+
+
+def ccys(sym):
+    return set(sym.split("_")) if "_" in sym else {sym[:3], sym[3:]}
+
+
+def one_per_ccy(f, ex):
+    keep, open_ = [], []  # open_: (exit day, currencies)
+    for k, t in f.iterrows():
+        if not isinstance(t[f"exit_{ex}"], str):
+            continue
+        open_ = [(x, c) for x, c in open_ if x > t.fill]
+        if any(c & ccys(t.sym) for _, c in open_):
+            continue
+        keep.append(k)
+        open_.append((t[f"exit_{ex}"], ccys(t.sym)))
+    return f.loc[keep].reset_index(drop=True)
 
 
 def matrix(f, ex):
@@ -118,8 +138,13 @@ if __name__ == "__main__":
     ap.add_argument("--withdraw", type=float, default=0.04)
     ap.add_argument("--horizon", type=int, default=504)
     ap.add_argument("--fee", type=float, default=0.005)
+    ap.add_argument("--trend", default="mn", choices=["mn", "htf"])
+    ap.add_argument("--one-per-ccy", action="store_true")
     a = ap.parse_args()
-    f, V, D, days = matrix(trades(a.prefix), a.exit)
+    f = trades(a.prefix, a.trend)
+    if a.one_per_ccy:
+        f = one_per_ccy(f, a.exit)
+    f, V, D, days = matrix(f, a.exit)
     fill_i = np.searchsorted(days, f.fill.values)
     R = V.sum(0)  # cumulative R, all trades
     print(f"S1 exit {a.exit}: {len(f)} trades, {f.sym.nunique()} assets, gem {f['Rnet_' + a.exit].mean():+.3f}R")
