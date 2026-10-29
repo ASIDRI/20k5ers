@@ -613,3 +613,10 @@ en op video 9, en op zich (dag na het signaal long/short); zelfde latten als tes
 ### Uitkomst test 16 (DEW): verworpen
 Filter op de setups van de trader: -0,05 / -0,12 / -0,11R (t -3,7); op video 9: -0,21 / -0,09 / -0,37R (t -3,3).
 Op zich: -1,6% / -2,7% / -3,7% per jaar na kosten (Sharpe -0,35 / -0,75 / -1,22).
+
+### Uitkomst test 14 (video 9 met 4u inverse H&S): verworpen
+Beslissend `wk_ok & cont & hl`, `R_hs_t27`: 2005-14 224 trades +0,02R (PF 1,03); 2015-20 114 trades +0,22R (PF 1,27);
+2021-25 74 trades **-0,56R** (PF 0,40); samen t -0,25. Mediane RR 4,2, winnend ±21%.
+Alle setups met deze instap (zonder week-fase en N/V): +0,08 / +0,08 / -0,06R (t 0,95) - de minst slechte instap tot
+nu toe, maar niet significant en negatief in de laatste vijf jaar. De filters uit de video (week-fase, bullish N)
+maken het hier niet beter.
