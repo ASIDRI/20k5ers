@@ -88,13 +88,77 @@ def plot_trade(ax, z, w, lv):
                  fontsize=8, color=UP if (z.result == "gevuld" and z.win) else (DN if z.result == "gevuld" else "#666"))
 
 
+def plot_leg(ax, z, w, lv):
+    """Test 5 setups: the weekly leg, fib 0/0.618/1/1.1, zone, entry, stop, targets, and the tags."""
+    t = lambda s: pd.Timestamp(s) if pd.Timestamp(s).tzinfo else pd.Timestamp(s).tz_localize("UTC")  # noqa: E731
+    idx = lambda ts: int(w.time.searchsorted(t(ts), side="right")) - 1  # noqa: E731
+    si, ti = idx(z.start_t), idx(z.top_t)
+    fi = idx(z.fill) if isinstance(z.fill, str) else None
+    a = max(0, si - 20)
+    b = min(len(w), (fi if fi is not None else ti) + 20)
+    candles(ax, w, a, b)
+    for p, tf in lv.at(t(z.ready)):
+        if w.low[a:b].min() * 0.98 <= p <= w.high[a:b].max() * 1.02:
+            ax.axhline(p, color="#999", lw=0.8)
+            ax.text(a, p, f" {tf} {p:.5g}", fontsize=6, color="#666", va="bottom")
+    d, rng = z.dir, z.rng
+    ax.plot([si, ti], [z.ext, z.top], color="#1f6fd1", lw=1.2, ls=":")
+    ax.axhspan(min(z.z1, z.z2), max(z.z1, z.z2), xmin=(ti - a) / max(1, b - a), color="#f2c94c", alpha=0.35)
+    for f_, lab, col in [(0, "0", "#888"), (0.618, "0,618", "#888"), (1.0, "1", "#888"), (1.1, "1,1", "#888"),
+                         (-0.25, "-0,25", UP), (-0.5, "-0,5", UP), (-0.618, "-0,618", UP), (-1.0, "-1", UP)]:
+        y = z.top - d * f_ * rng
+        ax.hlines(y, ti, b - 1, color=col, ls="--", lw=0.7)
+        ax.text(b - 1, y, f" {lab}", fontsize=6, va="center", color=col)
+    if fi is not None and z.result == "gevuld":
+        ax.plot([fi], [z.entry], "^" if d == 1 else "v", color="#1f6fd1", ms=9)
+        ax.hlines(z.sl, fi, b - 1, color=DN, lw=1.0)
+        res = f"{'WINNEND' if z.win else 'VERLIES'}, ladder {z.Rnet_c:+.1f}R"
+    else:
+        res = f"geen trade ({z.result})"
+    ticks = list(range(a, b, max(1, (b - a) // 6)))
+    ax.set_xticks(ticks, [w.time[i].strftime("%b %y") for i in ticks], fontsize=7)
+    ax.tick_params(axis="y", labelsize=7)
+    tags = ", ".join(k for k, v in (("voortzetting", z.cont), ("S/R in zone", z.lvl), ("maand mee", z.mn == 1)) if v) or "geen filter"
+    ok = z.result == "gevuld" and z.win
+    ax.set_title(f"#{z.nr} {z.sym} {'LONG' if d == 1 else 'SHORT'}  poot {str(z.start_t)[:10]} -> {str(z.top_t)[:10]}  instap {z.fill if isinstance(z.fill, str) else '-'}  |  {res}  |  {tags}",
+                 fontsize=8, color=UP if ok else (DN if z.result == "gevuld" else "#666"))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--prefix", default="viz_")
     ap.add_argument("--pairs", default="EURUSD,AUDNZD,USDJPY")
     ap.add_argument("--out", default=str(HERE.parents[1] / "docs" / "dossier_setups.pdf"))
     ap.add_argument("--all-zones", action="store_true", help="also the setups that never filled")
+    ap.add_argument("--test5", action="store_true", help="files out/<prefix><SYM>.csv from test5.py")
     a = ap.parse_args()
+    if a.test5:
+        zs = pd.concat(pd.read_csv(HERE / "out" / f"{a.prefix}{s}.csv") for s in a.pairs.split(","))
+        zs = zs[zs.result == "gevuld"].sort_values(["sym", "date"]).reset_index(drop=True)
+        zs["nr"] = range(1, len(zs) + 1)
+        with PdfPages(a.out) as pdf:
+            fig = plt.figure(figsize=(11.7, 8.3))
+            fig.text(0.05, 0.95, "Dossier ronde 2: test 5 met jouw correcties (poten op de week, zone 0,618-1,1, SL voorbij 1,1)", fontsize=13, va="top")
+            fig.text(0.05, 0.88, "Per trade: de poot (blauwe stippellijn), fib 0 / 0,618 / 1 / 1,1, zone (geel), instap (driehoek), SL (rood),\n"
+                     "doelen -0,25 / -0,5 / -0,618 / -1 (groen), S/R maand/week die de code toen kende (grijs).\n"
+                     "Titel: nummer, richting, de poot, instapdatum, uitkomst (ladder), en welke video-filters kloppen.\n\n"
+                     "Vraag: welke nummers zou jij NIET nemen, of ANDERS (andere poot, ander niveau, andere instap)?", fontsize=10, va="top")
+            f = zs
+            txt = "\n".join(f"{s}: {len(g)} trades, winnend {g.win.mean()*100:.0f}%, ladder gemiddeld {g.Rnet_c.mean():+.2f}R" for s, g in f.groupby("sym"))
+            fig.text(0.05, 0.5, txt, fontsize=10, va="top")
+            pdf.savefig(fig); plt.close(fig)
+            cache = {}
+            for k in range(0, len(zs), 2):
+                fig, axs = plt.subplots(2, 1, figsize=(11.7, 8.3))
+                for ax, (_, z) in zip(axs, zs.iloc[k:k + 2].iterrows()):
+                    if z.sym not in cache:
+                        cache[z.sym] = (load(z.sym, "W1"), Levels(z.sym))
+                    plot_leg(ax, z, *cache[z.sym])
+                if len(zs.iloc[k:k + 2]) == 1:
+                    axs[1].axis("off")
+                fig.tight_layout(); pdf.savefig(fig); plt.close(fig)
+        print(f"{len(zs)} trades -> {a.out}")
+        sys.exit(0)
     zs = pd.concat(pd.read_csv(HERE / "out" / f"{a.prefix}test2_{s}.csv") for s in a.pairs.split(","))
     if not a.all_zones:
         zs = zs[zs.result == "gevuld"]

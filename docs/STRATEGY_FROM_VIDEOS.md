@@ -387,3 +387,8 @@ Exact test 5 (`test5.py`, ongewijzigd), alleen trades met voortzetting (`cont`),
 en maandtrend mee (`mn = 1`). 28 forex-paren, 2005-01-01 tot 2014-12-31, kosten per symbool.
 Geslaagd als uitstap c (fib-ladder) gemiddeld >= +0,10R, PF >= 1,2, met >= 100 trades; daarnaast gerapporteerd: a en b,
 winnend %, per jaar.
+
+### Uitkomst test 6 (slotkluis 2005-2014): verworpen volgens de vastgelegde lat, maar positief
+192 trades, winnend 39%: a +0,15R (PF 1,24), b +0,11R (PF 1,18), **c +0,09R (PF 1,15)**; lat voor c was +0,10R en PF 1,2.
+Wel: positief in alle drie de periodes (2005-14, 2015-20, 2021-25), ±430 trades; samen nog niet significant (t ±1,4).
+Volgende ronde: nieuw dossier van deze versie, correcties van de trader, opnieuw vastleggen en testen.
