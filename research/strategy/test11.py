@@ -12,8 +12,9 @@ On one timeframe (D1 or W1), point in time:
    Tag 'htf': a monthly/weekly S/R level also lies between 0.5 and 0.786.
 3. Order: a limit buy at the 0.65 level from the candle after H is confirmed. Stop beneath the WICK low of the
    leg-start candle minus 0.1 ATR. A new high above H before the fill moves the fib (0) and the order with it
-   (as the trader redraws). Cancelled when a candle closes below fib 1 or after EXPIRY candles. A candle that fills and touches the stop counts as a loss.
-4. Exits per trade: targets -0.27 / -0.618 / -1 / -1.618 (R_t027 ... R_t1618), each also with the stop to entry
+   (as the trader redraws). Cancelled when a candle closes below fib 1 or after EXPIRY candles (with --reset-expiry
+   counted from the last re-anchor, test 17). A candle that fills and touches the stop counts as a loss.
+4. Exits per trade: targets -0.2 / -0.27 / -0.65 / -0.618 / -1 / -1.618 (R_t027 ... R_t1618), each also with the stop to entry
    once price trades at the old high (0) (R_..._be). A candle touching stop and target counts as the stop.
 """
 import argparse
@@ -30,7 +31,8 @@ from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
 
 K, KS, ENTRY, EXPIRY, LOOKBACK = 2, 1, 0.65, 40, 120  # KS: swing size for the leg start
-TPS = {"t027": 0.27, "t0618": 0.618, "t1": 1.0, "t1618": 1.618}
+TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65, "t0618": 0.618, "t1": 1.0, "t1618": 1.618}
+RESET_EXPIRY = False  # --reset-expiry (test 17): a re-anchored order gets EXPIRY candles again
 
 
 def swings(h, l, k=K):
@@ -120,8 +122,9 @@ def run(sym, tf, start, end):
             if ((opp[i + 1:ready_i + 1] - entry) * dirn <= 0).any():
                 rows.append(dict(row, result="te laat"))
                 continue
-            res, f = "verlopen", ready_i
-            for f in range(ready_i + 1, min(ready_i + 1 + EXPIRY, len(d))):
+            res, f, deadline = "verlopen", ready_i, ready_i + 1 + EXPIRY
+            while f + 1 < min(deadline, len(d)):
+                f += 1
                 if (opp[f] - entry) * dirn <= 0:
                     res = "gevuld"
                     break
@@ -133,6 +136,8 @@ def run(sym, tf, start, end):
                     rng = (top - b1) * dirn
                     entry = top - dirn * ENTRY * rng
                     row.update(top=top, rng=rng, entry=entry, top_t=str(t[f])[:10], reanchored=True)
+                    if RESET_EXPIRY:
+                        deadline = f + 1 + EXPIRY
             busy[j] = f
             if res != "gevuld":
                 rows.append(dict(row, result=res))
@@ -143,6 +148,7 @@ def run(sym, tf, start, end):
                 for name in TPS:
                     row[f"R_{name}"] = row[f"R_{name}_be"] = -1.0 - cost / risk
                 row["exit"] = row["fill"]
+                row.update({f"x_{name}": row["fill"] for name in TPS})
                 rows.append(row)
                 continue
             for name, x in TPS.items():
@@ -150,8 +156,10 @@ def run(sym, tf, start, end):
                 for be, suffix in ((None, ""), (top, "_be")):
                     r, k = follow(dirn, entry, sl, tp, be, h, l, f + 1)
                     row[f"R_{name}{suffix}"] = r - cost / risk
-                    if name == "t1" and not suffix:
-                        row["exit"] = str(t[k])[:10] if k is not None else None
+                    if not suffix:
+                        row[f"x_{name}"] = str(t[k])[:10] if k is not None else None
+                        if name == "t1":
+                            row["exit"] = row["x_t1"]
             rows.append(row)
     return pd.DataFrame(rows)
 
@@ -163,7 +171,9 @@ if __name__ == "__main__":
     ap.add_argument("--start", default="2005-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default=None)
+    ap.add_argument("--reset-expiry", action="store_true")
     a = ap.parse_args()
+    RESET_EXPIRY = a.reset_expiry
     prefix = a.prefix or f"t11{a.tf[0].lower()}_"
     for s in a.symbols:
         try:

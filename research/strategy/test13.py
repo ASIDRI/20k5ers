@@ -12,7 +12,7 @@ pocket (S in 0.5-0.786), htf (a monthly/weekly S/R level in 0.5-0.786), rng_atr,
 candle), wk_trend / wk_phase / wk_ok (video 9, from the weekly zigzag), mn / wk (monthly / weekly trend in the trade
 direction), ma (close vs its 50-candle mean in the trade direction). Known later: reanchored, fill_bars.
 Exits: stop w (wick of the start - 0.1 ATR) or x (fib 1 - 1 ATR, wider) x targets -0.27 / -0.618 / -1 / -1.618;
--1 also with the stop to entry at the old high: R_<stop>_<target>[_be], net of costs.
+-1 also with the stop to entry at the old high: R_<stop>_<target>[_be], net of costs. Also -0.2 and -0.65 (NZDCAD trades).
 """
 import argparse
 import sys
@@ -30,7 +30,7 @@ from test5 import legs  # noqa: E402
 from test9 import week_phase  # noqa: E402
 
 K, KS, ENTRY, EXPIRY, LOOKBACK = 2, 1, 0.65, 40, 120  # KS: swing size for the leg start
-TPS = {"t027": 0.27, "t0618": 0.618, "t1": 1.0, "t1618": 1.618}
+TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65, "t0618": 0.618, "t1": 1.0, "t1618": 1.618}
 
 
 def swings(h, l, k=K):

@@ -620,3 +620,15 @@ Beslissend `wk_ok & cont & hl`, `R_hs_t27`: 2005-14 224 trades +0,02R (PF 1,03);
 Alle setups met deze instap (zonder week-fase en N/V): +0,08 / +0,08 / -0,06R (t 0,95) - de minst slechte instap tot
 nu toe, maar niet significant en negatief in de laatste vijf jaar. De filters uit de video (week-fase, bullish N)
 maken het hier niet beter.
+
+## Test 17 (vooraf vastgelegd, 2026-10-29): NZDCAD, de drie trades van de trader
+
+Drie NZDCAD D1-trades (long okt. 2023 -> -0,65, short feb. 2024 -> ±-0,28 op week-S/R, long midden 2024: zone
+gerespecteerd, prijs exact tot -0,2). Motor test 11 (`test11.py --reset-expiry`: herverankeren geeft de order
+opnieuw 40 candles) met extra doelen -0,2 en -0,65; één positie per richting tegelijk (`t17_eval.py`).
+Controle: short feb. 2024 gevonden (+1,9R op -0,2), long 2024 gevonden (vulling 21 juli, +2,1R op -0,2; verliest op
+-0,27 en verder), long okt. 2023 net niet (poot start 0,7995 i.p.v. 0,7965, SL te krap, uitgestopt).
+**Beslissend: NZDCAD, `R_t020`, één positie per richting.** Geslaagd als elke periode (2005-14, 2015-20, 2021-25)
+gemiddeld >= +0,05R met PF >= 1,05 en samen t >= 2,0. Daarna zelfde regel op de andere paren (buiten NZDCAD
+gekozen): samen gemiddeld > 0 met t >= 2,0. Let op: NZDCAD is door de trader gekozen en de voorbeelden liggen in
+2023-2024 (periode 2021-25).
