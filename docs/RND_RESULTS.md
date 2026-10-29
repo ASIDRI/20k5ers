@@ -74,3 +74,20 @@ long/short +6,6 à +7,0%, kopen en houden +5,2 à +7,4%, nul-edge +0,5 à +1,5%.
 **Gevoelig voor het verlies tijdens de dag** (factor op het slot-tot-slotverlies): bij 1,5-2 blijft EV positief
 (fee 1%: +2 à +5%), bij 3 rond nul of negatief. Lager risico (6-10% per jaar) is steeds beter dan 15-20%.
 Volgende stap: meten met de echte 15-minutendata en een plafond op de hefboom, in plaats van een factor aan te nemen.
+
+### Gemeten op het echte 15-minutenpad (`research/rnd/prop_m15.py`, 2015-2025, hefboomplafond 3, fee 0,5%)
+
+Equity elke 15 minuten op de slechtste prijs van elke candle, alle instrumenten tegelijk op hun slechtst (voorzichtig).
+Gemeten verlies tijdens de dag: mediaan 1,4-1,7 keer het slot-tot-slotverlies (de eerder aangenomen 1,5 klopte).
+
+| Strategie | Vol | Geslaagd (stap 1+2) | Breach | Mediaan dagen | EV per challenge | Slechtste dag |
+|---|---|---|---|---|---|---|
+| trend long-only | 5% | 100% | 0% | 531 | +7,0% | -4,0% |
+| trend long-only | 6% | 98% | 2% | 418 | +9,0% | -4,8% |
+| trend long-only | 8% | 84% | 16% | 252 | +11,0% | -6,4% |
+| kopen en houden | 6% | 100% | 0% | 461 | +9,5% | -4,0% |
+| momentum 6 mnd l/s | 6% | 78% | 22% | 566 | +6,6% | -4,5% |
+| video-terugval long | 6% | 53% | 47% | 392 | +2,2% | -6,0% |
+
+Startdata overlappen en vallen in een stijgende markt; de dagdatatest op 2005-2014 (met 2008) was ook positief.
+Nog te verifiëren: tijdslimiet/inactiviteitsregels en hefboom per instrument bij de 5ers.
