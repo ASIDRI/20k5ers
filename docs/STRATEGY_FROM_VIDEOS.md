@@ -676,3 +676,21 @@ Instap en SL van de trader liggen dicht bij die van de motor (instap 0,62-0,69, 
 EURAUD 1,80). Verschillen: (1) welke poot (startpunt) - kost NZDCAD okt-23; (2) orders van de trader blijven langer
 staan (GBPAUD, AUDCAD); (3) het doel verschilt per trade (-0,22 tot -1,83). De regels zelf zijn niet fout; de motor
 neemt alleen ook alle andere setups die er hetzelfde uitzien.
+
+### Uitkomst test 18 (beheer): verbetert iets, maakt niet winstgevend
+D1, één positie per richting (2005-14 / 2015-20 / 2021-25): helft op -0,2, SL naar oude top, rest -1: +0,00 / -0,03 /
+-0,05R; volledig -0,2: -0,01 / -0,03 / -0,06R; -0,27 met break-even: -0,01 / -0,03 / -0,05R; doel op het eerste
+maand/week-niveau: -0,01 / -0,02 / -0,21R. W1 op -0,2: -0,06 / -0,01 / +0,21R (alleen recent positief).
+Het verschil zit dus vóór de instap: welke setups en wanneer.
+
+## Test 19 (vooraf vastgelegd, 2026-10-29): instapmoment ("timing wanneer je erin gaat")
+
+Voorbeeld van de trader: NZDCAD long begin 2025 - zone 0,618-0,796 op de week-S/R 0,8077, niet bij de eerste
+aanraking in, wel bij de candle die met een wick in de zone komt en terug omhoog sluit (pijl rond 3 maart), daarna tot
+-0,65. `research/strategy/test19.py`: poten en uitstappen als test 18, maar geen blinde limiet: instap op het slot van
+de eerste dag-afwijzingscandle (wick tot 0,618 of dieper, slot boven de open in de bovenste 40% van de candle, slot
+tussen 0,5 en 0,786). Na een aanraking beëindigt een nieuwe top de setup. Controle: NZDCAD-poot jan-feb 2025 gevonden,
+instap 13 feb (slot 0,8126), +1,15R op -0,2.
+**Beslissend: D1, 30 assets, één positie per richting, `R_t020`.** Geslaagd als elke periode (2005-14, 2015-20,
+2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: `touch_n` (eerste aanraking of later),
+`at_lvl`, krappe SL, beheer, W1.

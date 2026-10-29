@@ -30,7 +30,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     fs = [pd.read_csv(p) for p in sorted((HERE / "out").glob(f"t18{a.tf[0].lower()}_*.csv")) if p.stat().st_size > 1]
     f = pd.concat(fs)
-    f = f[f.result == "gevuld"]
+    f = f[f.result == "gevuld"].reset_index(drop=True)
     if a.one:
         f = one_per_dir(f, "t020")
     if a.confirm:

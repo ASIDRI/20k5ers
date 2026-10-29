@@ -21,6 +21,7 @@ def pf(x):
 
 
 def one_per_dir(f, tp):
+    f = f.reset_index(drop=True)
     keep, open_until = [], {}
     for k, t in f.sort_values(["fill", "date"]).iterrows():
         key = (t.sym, t.dir)
