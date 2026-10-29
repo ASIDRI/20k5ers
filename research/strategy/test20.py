@@ -8,7 +8,8 @@
    in the upper 40% of its range, the close between the 0.5 and 0.786 levels), at its close. Before the first touch a
    new high moves 0 (and the zone) with it; after a touch a new high ends the setup. Void: a close beyond fib 1, or
    EXPIRY daily candles after the last re-anchor.
-3. Stop: beyond fib 1 by 0.1 ATR. Exits: -0.2 (R_t020, decisive), -0.27, -0.65, and half at -0.2 with the stop to
+   (--band sets that range; --rev / --leg the zigzag; test 21 grid.)
+3. Stop: beyond fib 1 by 0.1 ATR (R_*) and by 0.5 ATR (R_w_*). Exits: -0.2 (R_t020, decisive), -0.27, -0.65, and half at -0.2 with the stop to
    the old high and the rest to -1 (R_m_top_1). Costs per symbol. touch_n = earlier candles in the zone.
 4. Context (the trader: "boven weekly & monthly S/R, weekly market structure bullish"): wk_struct = the weekly
    zigzag (2 weekly ATR turns) made higher highs and higher lows (lower for a short) - last two confirmed turns of
@@ -31,6 +32,8 @@ import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY = 3.0, 6.0, 40
+BAND = (0.5, 0.786)  # where the close of the rejection candle must sit (fib)
+SL_BUF = (0.1, 0.5)  # stop beyond fib 1 by these ATR multiples; the first is the main one (R_*), the second R_w_*
 TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
 
 
@@ -87,7 +90,7 @@ def run(sym, start, end):
                 rej = span > 0 and ((c[f] > o[f] and c[f] - l[f] >= 0.6 * span) if dirn == 1
                                     else (c[f] < o[f] and h[f] - c[f] >= 0.6 * span))
                 cf = (top - c[f]) * dirn / rng
-                if rej and 0.5 <= cf <= 0.786:
+                if rej and BAND[0] <= cf <= BAND[1]:
                     res, entry = "gevuld", c[f]
                     break
                 touched = True
@@ -103,15 +106,18 @@ def run(sym, start, end):
         levs = [p for p, _ in lv.at(pd.Timestamp(t[f]).tz_localize("UTC"))]
         lo_, hi_ = sorted([b1, entry])
         row.update(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
-        sl = b1 - dirn * 0.1 * atr[f]
-        risk = abs(entry - sl)
-        row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, sl=sl, touch_n=touch_n,
-                   entry_fib=(top - entry) * dirn / rng, R_cost=cost / risk)
-        for name, x in TPS.items():
-            r, j = follow(dirn, entry, sl, top + dirn * x * rng, None, h, l, f + 1)
-            row[f"R_{name}"] = r - cost / risk
-            row[f"x_{name}"] = str(t[j])[:10] if j is not None else None
-        row["R_m_top_1"] = managed(dirn, entry, sl, top, rng, 0.2, "top", 1.0, h, l, f + 1) - cost / risk
+        row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, touch_n=touch_n)
+        for pre, buf in zip(("R_", "R_w_"), SL_BUF):
+            sl = b1 - dirn * buf * atr[f]
+            risk = abs(entry - sl)
+            if pre == "R_":
+                row.update(sl=sl, entry_fib=(top - entry) * dirn / rng, R_cost=cost / risk)
+            for name, x in TPS.items():
+                r, j = follow(dirn, entry, sl, top + dirn * x * rng, None, h, l, f + 1)
+                row[f"{pre}{name}"] = r - cost / risk
+                if pre == "R_":
+                    row[f"x_{name}"] = str(t[j])[:10] if j is not None else None
+            row[f"{pre}m_top_1"] = managed(dirn, entry, sl, top, rng, 0.2, "top", 1.0, h, l, f + 1) - cost / risk
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -122,7 +128,11 @@ if __name__ == "__main__":
     ap.add_argument("--start", default="2005-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default="t20_")
+    ap.add_argument("--rev", type=float, default=REV)
+    ap.add_argument("--leg", type=float, default=LEG)
+    ap.add_argument("--band", default=f"{BAND[0]},{BAND[1]}")
     a = ap.parse_args()
+    REV, LEG, BAND = a.rev, a.leg, tuple(float(x) for x in a.band.split(","))
     for s in a.symbols:
         try:
             df = run(s, a.start, a.end)

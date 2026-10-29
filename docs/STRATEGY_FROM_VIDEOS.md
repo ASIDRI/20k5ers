@@ -733,3 +733,15 @@ NAS100USD, SPX500USD (5ers-instrumenten met bekende kosten). Gerapporteerd apart
 Regel, `R_t020`: 49 trades, -0,03 / +0,37 / -0,08R (t 0,3). Samen met de 30 (34 instrumenten, 527 trades):
 +0,03 (PF 1,05) / +0,03 (PF 1,04) / +0,21R (PF 1,34), t 1,05; met het beheer van de trader +0,05 / +0,05 / +0,22R
 (t 1,25). Positief in alle drie de periodes, maar nog niet sterk genoeg (t < 2); de laatste vijf jaar duidelijk beter.
+
+## Test 21 (vooraf vastgelegd, 2026-10-29): test 20 optimaliseren over meerdere assets
+
+Op vraag van de trader. Rooster (`t21_grid.sh`, `test20.py --rev --leg --band`): keerpunt REV 2 / 2,5 / 3 / 4 dag-ATR,
+poot LEG 4 / 6 / 8 ATR, slot afwijzingscandle in 0,5-0,786 / 0,382-0,786 / 0,5-0,886, SL-buffer 0,1 / 0,5 ATR,
+uitstap -0,2 / -0,27 / -0,65 / helft -0,2 + SL oude top + rest -1, filter geen / week / S/R / week+S/R
+(36 x 2 x 4 x 4 = 1.152 combinaties), 34 instrumenten (de 30 + goud, zilver, NAS100, SPX500), één positie per richting.
+**Kiezen** (`t21_select.py`): alleen op de helft van de instrumenten (even posities alfabetisch) en alleen 2005-2018;
+de combinatie met het hoogste gemiddelde bij >= 150 trades. **Valideren**: precies die combinatie op de andere helft
+(2005-2018) en op alle instrumenten 2019-2025. Geslaagd als beide gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+Let op: 2019-2025 is voor de basisversie (test 20) al gezien; de andere helft van de instrumenten in 2005-2018 is de
+zuiverste controle.
