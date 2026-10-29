@@ -331,3 +331,20 @@ Anders: verworpen, en dan wordt deze methode niet verder gebruikt voor de bot.
 
 Het voordeel van "tegen de trend" uit 2015-2025 komt in 2005-2014 niet terug. Volgens de vooraf vastgelegde
 regel wordt deze methode niet verder gebruikt voor de bot.
+
+## Test 4: structuur op de week, instap na reactie op de dag (vooraf vastgelegd, 2026-10-29)
+
+Zoals in de video's van boven naar beneden: breuk (BOS) en fib op de **weekgrafiek** (1 = swing-wick, 0 = top-wick),
+zone 0,618-0,796; instap pas na een **afwijzingscandle op de daggrafiek** in de zone; SL voorbij de laagste wick in de
+zone (0,2 dag-ATR buffer); setup vervalt bij een dagslot voorbij fib 1, als -0,25 eerst wordt geraakt, of na 60 dagen.
+30 assets (28 forex, olie, UK100), kosten per symbool.
+
+**Winnende setup = -0,25 geraakt vóór de SL** (definitie van de gebruiker). Twee uitstapmanieren worden gerapporteerd:
+(a) alles dicht op -0,25; (b) helft op -0,25, SL naar instap, rest op -0,65 of het volgende niveau.
+
+Geslaagd als, na kosten, in **2015-2020 én 2021-2025** apart:
+1. gemiddeld >= +0,10R per trade (uitstap a of b), met minstens 100 trades per periode;
+2. winnende setups boven het break-evenpercentage van die periode (1 / (1 + gemiddelde winst/risico op -0,25));
+3. profit factor >= 1,2.
+Varianten (samenloop met S/R, met/tegen trend) worden gerapporteerd maar tellen niet als aparte kans; als er één
+geslaagd lijkt, moet die eerst opnieuw vooraf vastgelegd worden en door de slotkluis 2005-2014.
