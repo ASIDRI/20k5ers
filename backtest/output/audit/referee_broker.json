@@ -15,17 +15,17 @@
   ""
  ],
  [
-  "PASS",
+  "KNOWN",
   "fill bar that also crosses the SL stops the trade in that bar",
   "the stop is only checked from the next bar on; real price may have hit the SL after the fill"
  ],
  [
-  "PASS",
+  "KNOWN",
   "buy limit above the market is rejected",
   "accepted and filled at 1.1050 on the next bar (the live client never sends this: it picks LIMIT/STOP from the tick)"
  ],
  [
-  "PASS",
+  "KNOWN",
   "sell TP needs the ask to reach it",
   "TP taken when the bid low touches it: optimistic by one spread on sell TPs and sell stops"
  ]
