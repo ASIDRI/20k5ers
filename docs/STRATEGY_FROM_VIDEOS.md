@@ -642,3 +642,19 @@ jaar die er hetzelfde uitzien. Andere paren niet meer getest (de regel faalt al 
 Dossier voor de trader: `docs/dossier_nzdcad.pdf` (`dossier_t17.py`): de 23 NZDCAD-trades van 2023-2025 die de motor
 neemt (5 winnaars op -0,2), één pagina per trade met fib, instap, SL en TP. Vraag: welke zou je nemen, welke niet,
 en waarom - dat verschil is wat de regels nog missen.
+
+## Jouw trades nagerekend (`research/strategy/trader_trades.py`, niveaus afgelezen van de screenshots)
+
+Met de eigen instap/SL/TP van de trader: EURUSD D1 jun-25 +3,28R (TP -1), NZDCAD okt-23 +2,68R, NZDCAD feb-24 +2,81R,
+NZDCAD jun-24 +6,6R (SL aangenomen 0,807); EURUSD W1, GBPAUD D1, AUDCAD W1 lopen nog in de data (SL niet geraakt);
+EURAUD dec-25 nog niet gevuld. Verschillen met de motor: SL ruimer (onder het échte uiterste van de basis), doel op
+een week/maand-niveau, deel winst op de eerste TP en daarna SL in winst.
+
+## Test 18 (2026-10-29): het beheer van de trader
+
+`research/strategy/test18.py` (motor test 11 met --reset-expiry): per trade de helft dicht op TP1 (-0,2 of -0,27),
+SL naar de instap of de oude top (fib 0), rest naar -0,65 / -1 / -1,618 of trailen onder elke nieuwe swing
+(`R_m_<tp1>_<lock>_<tp2>`); daarnaast het hele doel op het eerste maand/week-niveau voorbij -0,2 (`R_lvl`).
+Werkwijze vooraf vastgelegd: beste beheer kiezen op 2015-2020 (D1, 30 assets, alle setups én één positie per
+richting); dan dat ene beheer vastleggen en controleren op 2021-2025 en 2005-2014 (elk > 0 met PF >= 1,05, samen
+t >= 2,0).
