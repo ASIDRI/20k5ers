@@ -93,6 +93,8 @@ def daily_zones(sym, start, end):
             nxt = [p for p, _ in levs if (p - (top + dirn * 0.25 * rng)) * dirn > 0 and (p - (top + dirn * 0.65 * rng)) * dirn < 0]
             tp2 = (min(nxt) if dirn == 1 else max(nxt)) if nxt else top + dirn * 0.65 * rng
             zones.append(dict(sym=sym, dir=dirn, kind=w["kind"], date=str(t.date()), ready=d["done"][i],
+                              key=w["key"], key_t=d["time"][w["key_i"]], bos_t=d["time"][w["bos_i"]],
+                              ext_t=d["time"][w["ext_i"]], top_t=d["time"][top_i],
                               z1=z1, z2=z2, ext=ext, top=top, tp1=top + dirn * 0.25 * rng, tp2=tp2,
                               lvl=lvl_in, ob=ov(ob), fvg=ov(fvg), wk=lv.trend(d["done"][i], "W1") * dirn,
                               mn=lv.trend(d["done"][i], "MN") * dirn, atr=atr[i]))
@@ -113,7 +115,8 @@ def daily_zones(sym, start, end):
                 ext = h[ext_i]
             if broke:
                 waiting = [x for x in waiting if x["dir"] != dirn]
-                waiting.append(dict(dir=dirn, ext=ext, ext_i=ext_i, bos_i=i, kind="bos"))
+                waiting.append(dict(dir=dirn, ext=ext, ext_i=ext_i, bos_i=i, kind="bos", key_i=key_i,
+                                    key=h[key_i] if dirn == 1 else l[key_i]))
     return zones
 
 
