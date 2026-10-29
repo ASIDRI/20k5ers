@@ -658,3 +658,21 @@ SL naar de instap of de oude top (fib 0), rest naar -0,65 / -1 / -1,618 of trail
 Werkwijze vooraf vastgelegd: beste beheer kiezen op 2015-2020 (D1, 30 assets, alle setups én één positie per
 richting); dan dat ene beheer vastleggen en controleren op 2021-2025 en 2005-2014 (elk > 0 met PF >= 1,05, samen
 t >= 2,0).
+
+## Alle setups van de trader naast de motor (`compare_setups.py`, `docs/vergelijking_setups.pdf`)
+
+| trade | jouw instap (fib) | jouw SL (fib) | jouw TP (ext) | jij | motor: zelfde poot? | motor met jouw TP |
+|---|---|---|---|---|---|---|
+| EURUSD D1 long jun-25 | 0,646 | 1,17 | -1,08 | +3,28R | ja (afstand 0,04) | +3,40R |
+| EURUSD W1 long jul-25 | 0,665 | 1,09 | -0,29 | loopt | ja (0,01) | loopt |
+| EURAUD D1 short dec-25 | 0,688 | 1,80 | -1,47 | nog niet gevuld | ja (0,09) | niet gevuld (data stopt) |
+| GBPAUD D1 short nov-25 | 0,615 | 1,20 | -1,72 | loopt | nee (0,31) | niet gevuld |
+| AUDCAD W1 long sep-25 | 0,640 | 1,17 | -1,83 | loopt | half (0,42; start eerder) | verlopen |
+| NZDCAD D1 long okt-23 | 0,645 | 1,15 | -0,71 | +2,68R | bijna (start 0,7995 i.p.v. 0,7965) | -1R (SL te krap) |
+| NZDCAD D1 short feb-24 | 0,693 | 1,05 | -0,32 | +2,81R | ja (0,08) | +2,27R |
+| NZDCAD D1 long jun-24 | 0,87 | 1,04 | -0,22 | +6,6R | ja (0,04) | +2,13R |
+
+Instap en SL van de trader liggen dicht bij die van de motor (instap 0,62-0,69, SL 1,04-1,20 in fib, uitschieter
+EURAUD 1,80). Verschillen: (1) welke poot (startpunt) - kost NZDCAD okt-23; (2) orders van de trader blijven langer
+staan (GBPAUD, AUDCAD); (3) het doel verschilt per trade (-0,22 tot -1,83). De regels zelf zijn niet fout; de motor
+neemt alleen ook alle andere setups die er hetzelfde uitzien.
