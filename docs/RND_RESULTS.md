@@ -125,3 +125,11 @@ Uit 42 bekeken cellen; t-waarden onder 3. Daarom één test op 2005-2014 (opgesl
 - R3 USDJPY: positie in de richting van het 3-maandenrendement.
 Zelfde motor (`systematic.py`), kosten, risico per instrument 10%/jaar. Geslaagd per regel als in 2005-2014: Sharpe >= 0,3
 en winst in minstens 6 van de 10 jaren. Een geslaagde regel gaat door naar fase 4 (robuustheid) en de replay.
+
+### P3 uitkomst (2005-2014): alle drie verworpen
+| Regel | Sharpe | Jaren winst |
+|---|---|---|
+| R1 AUDNZD range faden (55 d) | -0,19 | 5/10 |
+| R2 AUDNZD tegen 12-mnd-trend | +0,21 | 5/10 |
+| R3 USDJPY 3-mnd-momentum | +0,14 | 4/10 |
+Wat in 2015-2025 per paar goed oogde, houdt in de tien jaren daarvoor niet stand (te klein en wisselend van jaar tot jaar).
