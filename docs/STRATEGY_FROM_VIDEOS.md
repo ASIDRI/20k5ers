@@ -572,3 +572,9 @@ Let op: de vijf voorbeelden van de trader zijn trades **met** de trend; volgens 
 **Vooraf vastgelegd** (D1, `R_w_t1`, regel `broke & pocket & ma == -1`): ontdekking 964 trades +0,12R PF 1,16.
 Lat (lager dan eerder, omdat dit een andere vraag is: heeft deze vorm van de setup überhaupt een voorsprong?):
 2021-2025 en 2005-2014 elk gemiddeld > 0 met PF >= 1,05, en samen (die twee periodes) t >= 2,0.
+
+### Uitkomst test 13: verworpen
+Regel `broke & pocket & ma == -1`, `R_w_t1`: 2021-2025 700 trades -0,14R (PF 0,83, t -2,1); 2005-2014 1.698 trades
+-0,03R (PF 0,96). Samen -0,06R (t -1,7). De "tegen de trend"-voorsprong van 2015-2020 was toeval in die periode.
+Blijvend uit deze test: de afzonderlijke regels van de setup (break van structuur, retest in de pocket) veranderen de
+uitkomst nauwelijks, en herverankeren bij een nieuwe top maakt het slechter.
