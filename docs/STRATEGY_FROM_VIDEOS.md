@@ -753,3 +753,13 @@ trades); alle instrumenten 2019-2025 **-0,08R** (PF 0,89, 252 trades); samen +0,
 72% van de 864 combinaties met >= 150 trades was positief op de training, maar de uitkomsten wisselen per helft van
 de instrumenten en per periode (bv. week+S/R-filter: A +0,03 tot +0,24R, B -0,04 tot -0,10R, 2019-25 +0,10 tot
 +0,36R). Verschillen van ±0,1R bij ±300 trades vallen binnen het toeval (standaardfout ±0,07R).
+
+## Vooruit meten (vanaf 2026-10-29)
+
+`research/strategy/scan.py`: test 20 op de 28 forexparen met dagdata t/m gisteren (opgeslagen candles + Yahoo),
+schrijft `docs/scan/scan_<datum>.md` (actieve setups met zone, SL, TP; trades sinds 2026-01-01) en vult
+`docs/scan/journal.csv` aan (datum waarop elke trade voor het eerst gezien is). Vastgelegd: de vooruit-meting telt
+alleen trades met `gezien` >= 2026-10-29 en `regel = ja` (weekstructuur + week/maand-S/R), volledig op -0,2; na 50
+afgesloten trades beoordelen (gemiddeld > 0, PF >= 1,05). Eerste scan: 2026 tot nu, regel = ja: 9 afgesloten,
++2,30R (4 winnaars); zonder regel (alle 49): 33 afgesloten, -10,53R. Let op: GBPNZD-candle van 28 okt. 2026 bij Yahoo
+heeft een piek tot 2,3809 (broker: 2,3769).

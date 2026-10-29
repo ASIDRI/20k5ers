@@ -15,6 +15,8 @@
    zigzag (2 weekly ATR turns) made higher highs and higher lows (lower for a short) - last two confirmed turns of
    each kind, known at the entry; htf_sup = a monthly/weekly S/R level between fib 1 and the entry (price above it
    for a long, below it for a short).
+5. A setup still waiting when the data ends is "actief" (with its zone, stop, -0.2 and the context now): for the
+   scanner (scan.py).
 """
 import argparse
 import sys
@@ -95,17 +97,27 @@ def run(sym, start, end):
                     break
                 touched = True
                 touch_n += 1
+        def context(i, price):
+            """Weekly structure and monthly/weekly S/R between fib 1 and `price`, as known at candle i."""
+            kw = int(np.searchsorted(w_done, pd.Timestamp(t[i]).tz_localize("UTC").value, side="right")) - 1
+            hs, ls = w_px[:kw + 1][w_kind[:kw + 1] == "H"], w_px[:kw + 1][w_kind[:kw + 1] == "L"]
+            T = 0
+            if len(hs) >= 2 and len(ls) >= 2:
+                T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
+            levs = [p for p, _ in lv.at(pd.Timestamp(t[i]).tz_localize("UTC"))]
+            lo_, hi_ = sorted([b1, price])
+            return dict(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
+
+        if res == "verlopen" and f + 1 >= len(d) and f + 1 < deadline:
+            # the data ended while the setup was still waiting for its rejection candle: live
+            res = "actief"
+            row.update(zone_0618=top - dirn * 0.618 * rng, zone_0786=top - dirn * 0.786 * rng,
+                       sl=b1 - dirn * SL_BUF[0] * atr[f], tp_020=top + dirn * 0.2 * rng, touch_n=touch_n,
+                       nog_candles=deadline - f - 1, **context(f, top - dirn * 0.618 * rng))
         if res != "gevuld":
             rows.append(dict(row, result=res))
             continue
-        kw = int(np.searchsorted(w_done, pd.Timestamp(t[f]).tz_localize("UTC").value, side="right")) - 1
-        hs, ls = w_px[:kw + 1][w_kind[:kw + 1] == "H"], w_px[:kw + 1][w_kind[:kw + 1] == "L"]
-        T = 0
-        if len(hs) >= 2 and len(ls) >= 2:
-            T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
-        levs = [p for p, _ in lv.at(pd.Timestamp(t[f]).tz_localize("UTC"))]
-        lo_, hi_ = sorted([b1, entry])
-        row.update(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
+        row.update(**context(f, entry))
         row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, touch_n=touch_n)
         for pre, buf in zip(("R_", "R_w_"), SL_BUF):
             sl = b1 - dirn * buf * atr[f]
