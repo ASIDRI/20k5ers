@@ -937,3 +937,10 @@ trades sinds 2026-01-01) en `docs/scan/journal24.csv`. Eerste scan, 2026: alle 4
 -0,2 (9 winnaars); met de regel van test 20 (week + S/R): 11 trades, +15,0R (4 winnaars). Breakaway komt in de
 Yahoo-data van 2026 bijna niet voor (1 van 45; in de backtest ±50%); dat kenmerk is in de live-scan nog niet
 betrouwbaar.
+
+## Test 27 (vooraf vastgelegd, 2026-10-30): alleen handelen als de strategie zelf recent werkt
+
+Elke test is positief in 2021-2025 en zwak daarvoor. Is dat vooraf te zien? Regel: een trade alleen nemen als de
+laatste 20 afgesloten trades van dezelfde regel (alle instrumenten; afgesloten vóór de vuldag) samen >= 0R waren.
+Toegepast op (a) test 20 regel (week + S/R), `R_m_top_1`; (b) test 24 (4u-bevestiging) + regel, `R_t020`; één positie
+per richting. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
