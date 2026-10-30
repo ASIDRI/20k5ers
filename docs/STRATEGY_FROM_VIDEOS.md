@@ -919,3 +919,12 @@ onder de high (geen breakaway) -> short, SL boven de sweep-high (+ 0,1 x de sess
 Eerste trigger van de dag, vóór 15:00, RR >= 1, uit op doel/SL/16:00. Kosten per symbool. Beslissend: alle trades.
 Geslaagd als elke periode (2015-18, 2019-22, 2023-26) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
 Gerapporteerd: met/tegen de dag-bias (slot vorige dag boven/onder 20-daags gemiddelde).
+
+### Uitkomst test 26: verworpen (kosten)
+Alle trades: 2015-18 -0,80R (1.501) / 2019-22 -0,21R (1.514) / 2023-26 -0,36R (706); met dag-bias even slecht.
+Bruto (zonder kosten) wel licht positief in 10 van 12 jaren (+0,04 tot +0,24R), maar de stop is klein (mediaan
+3-20 indexpunten) en de kosten (SPX500 2,4, NAS100 5 punten heen en terug) kosten 0,2-1,0R per trade.
+**Test 26b (vooraf vastgelegd):** alleen trades met een risico van minstens 10x de kosten (kosten <= 0,1R). Zelfde
+lat.
+Uitkomst 26b: verworpen - 251 trades: -0,04 / -0,08 / -0,09R (t -0,9). De trades met een grotere stop (vooral 2020-22)
+zijn ook bruto niet winstgevend; het bruto voordeel van de kleine trades verdwijnt in de kosten.
