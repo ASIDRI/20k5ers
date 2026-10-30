@@ -41,6 +41,8 @@ CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a
 # above the previous high, still at or below fib 0.382) instead of the limit
 CONFL = False  # --confl (test 44): limit at the BoS (key) level or a weekly S/R cluster inside fib 0.618-0.796 (the
 # first one price reaches); no such level -> no trade
+BASE = False  # --base (test 45): the base / S/R zone formed before the BoS (>= 2 daily swing points within 0.5 ATR);
+# on the return into it a daily rejection candle (hammer / pin bar or engulfing) confirms, entry at its close
 REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
 # of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
@@ -94,6 +96,55 @@ def trend_at(st, ts):
     if len(hs) < 2 or len(ls) < 2:
         return 0
     return 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
+
+
+def rejection(o, h, l, c, f, dirn):
+    """Daily confirmation in the trade direction: hammer / pin bar (wick against the trade >= half the candle, close in
+    the outer 40%) or an engulfing candle."""
+    O, H, L, C = (o[f], h[f], l[f], c[f]) if dirn == 1 else (-o[f], -l[f], -h[f], -c[f])
+    span = H - L
+    if span <= 0:
+        return False
+    pin = min(O, C) - L >= 0.5 * span and C - L >= 0.6 * span
+    po, pc = (o[f - 1], c[f - 1]) if dirn == 1 else (-o[f - 1], -c[f - 1])
+    engulf = C > O and pc < po and C > po and O <= pc
+    return pin or engulf
+
+
+def base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng):
+    """The S/R zone the leg broke out of (the trader's demand / supply zone before the BoS): >= 3 daily swing points
+    (highs and lows, 2 candles each side) within 0.5 ATR, from 30 candles before the leg start to the break of the key
+    level, whose middle lies at fib 0.382-0.81. Returns (near edge, far edge) of the one price reaches first."""
+    # the break: the last daily close in the leg beyond the most recent swing point on the same side (the trader's BoS
+    # line, e.g. EURAUD 1.7591 in June 2025), else the key level
+    ext = h if dirn == 1 else l
+    br, sw = None, None
+    for j in range(max(si - 30, 4), ti + 1):
+        i = j - 2
+        if ext[i] == (ext[i - 2:i + 3].max() if dirn == 1 else ext[i - 2:i + 3].min()):
+            sw = ext[i]
+        if j > si and sw is not None and (c[j] - sw) * dirn > 0:
+            br = j
+    if br is None and key is not None:
+        br = next((j for j in range(si, ti + 1) if (c[j] - key) * dirn > 0), None)
+    if br is None:
+        return None
+    pts = []
+    for i in range(max(si - 30, 2), max(br, ti - 1)):  # swing points of the base, up to the extreme
+        if h[i] == h[i - 2:i + 3].max():
+            pts.append(h[i])
+        if l[i] == l[i - 2:i + 3].min():
+            pts.append(l[i])
+    best = None
+    for p in pts:
+        m = [q for q in pts if abs(q - p) <= 0.5 * A]
+        mid = float(np.mean(m))
+        fb = (top - mid) * dirn / rng
+        if len(m) >= 2 and 0.382 <= fb <= 0.81:
+            near, far = (max(m), min(m)) if dirn == 1 else (min(m), max(m))
+            if best is None or (near - best[0]) * dirn > 0:
+                best = (near, far)
+    return best
 
 
 def run(sym, tf, start, end):
@@ -176,6 +227,14 @@ def run(sym, tf, start, end):
         row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(g.time.values[si])[:10],
                    top_t=str(g.time.values[ti])[:10], b1=b1, w1=w1, top=top, rng=rng, has_ob=bool(obs), ob_t=ob_t, bos=bos, shift=shift,
                    n_ob=len(obs), entry=entry, sl=sl, conf=conf is not None, origin_sr=origin_sr, entry_fib=(top - entry) * dirn / rng)
+        zone = None
+        if BASE:
+            zone = base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None
+            if zone is None:
+                rows.append(dict(row, result="geen basis"))
+                continue
+            entry = zone[0]
+            row.update(zone_near=zone[0], zone_far=zone[1], entry=entry)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
         res, touched = "verlopen", False
@@ -199,6 +258,16 @@ def run(sym, tf, start, end):
                     continue
                 res = "weggelopen"
                 break
+            if BASE:
+                if (c[f] - zone[1]) * dirn < -0.5 * A:  # closed clearly through the zone: it did not hold
+                    res = "ongeldig"
+                    break
+                if rejection(o, h, l, c, f, dirn) and ((l[f] if dirn == 1 else h[f]) - zone[0]) * dirn <= 0.1 * A \
+                        and (c[f] - zone[1]) * dirn > 0 and (top - c[f]) * dirn >= 0.2 * rng:
+                    res = "gevuld"
+                    break
+                f += 1
+                continue
             if not CONFIRM and ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0:
                 res = "gevuld"
                 break
@@ -217,7 +286,7 @@ def run(sym, tf, start, end):
         if res != "gevuld":
             rows.append(dict(row, result=res))
             continue
-        fill = c[f] if CONFIRM else (entry if ((o[f] - entry) * dirn >= 0) else o[f])  # a gap through the limit: the open
+        fill = c[f] if (CONFIRM or BASE) else (entry if ((o[f] - entry) * dirn >= 0) else o[f])  # a gap through the limit: the open
         risk = abs(fill - sl)
         ts = pd.Timestamp(dt[f]).tz_localize("UTC")
         lo_, hi_ = sorted([b1, fill])
@@ -230,7 +299,7 @@ def run(sym, tf, start, end):
             wi = int(np.searchsorted(wkt, top_day, side="right")) - 1
             ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
             row["w_rej"] = any((ext - p) * dirn > 0 and (cl - p) * dirn < 0 for p in clus(ts))
-        hit_sl = not CONFIRM and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
+        hit_sl = not (CONFIRM or BASE) and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
         for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
             row[f"R_{name}"] = r - cost / risk
@@ -252,8 +321,9 @@ if __name__ == "__main__":
     ap.add_argument("--confirm", action="store_true")
     ap.add_argument("--reanchor", action="store_true")
     ap.add_argument("--confl", action="store_true")
+    ap.add_argument("--base", action="store_true")
     a = ap.parse_args()
-    SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL = a.sweep, a.entry, a.confirm, a.reanchor, a.confl
+    SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL, BASE = a.sweep, a.entry, a.confirm, a.reanchor, a.confl, a.base
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)

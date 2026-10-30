@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 44: BoS + confluentie-instap + weekbias": "bos & hi_bias == 1",
+RULES = {"test 45: basis-zone + dagbevestiging + weekbias": "hi_bias == 1",
+         "basis-zone + dagbevestiging + weekbias + grote BoS": "hi_bias == 1 & bos",
+"test 44: BoS + confluentie-instap + weekbias": "bos & hi_bias == 1",
          "BoS + confluentie-instap": "bos", "BoS + confluentie + weekbias + fib 1 op HTF-S/R": "bos & hi_bias == 1 & origin_sr",
          "BoS + confluentie + fib 1 op HTF-S/R": "bos & origin_sr",
 "test 43: BoS + weekly S/R + weekbias, zonder week-sweep op de top": "bos & wk_sr & hi_bias == 1 & ~w_rej",

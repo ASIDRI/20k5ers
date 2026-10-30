@@ -1345,3 +1345,20 @@ binnen 0,5 ATR van een weekly cluster of maand/week-niveau (gerapporteerd).
 (t 1,1); holdout +0,05 / -0,01 / -0,09R. Met fib 1 op HTF-S/R erbij (de jun-24-trade): 823 trades, +0,20 / -0,00 /
 +0,07R (t 2,0), holdout +0,02 / -0,01 / +0,02R -> ook niet. De instap op het samenvallende niveau i.p.v. 0,66 verandert
 het totaal nauwelijks (alle setups +0,01 / +0,01 / -0,02R).
+
+## EURAUD jun-25 van de trader en test 45 (vooraf vastgelegd): de basis vóór de BoS + bevestigingscandle
+De trader (EURAUD 1D, poot half mei -> begin juni 2025): "what you also see is the little supply/demand S/R zone it
+creates before the BOS. If price then turns back towards that level it bounces. Here the 0.5 fib held as support.
+When you have a daily reaction like this, this hammer on the daily & then a push it shows where the market wants to
+go. So you have to incorporate candle stick patterns like hammer, pin bar ... this gives you confirmation."
+**Test 45** (`test36.py --tf D1 --reanchor --base`): dagpoten 2 / 4. De basis = >= 2 dag-swingpunten (highs en lows,
+2 candles elke kant) binnen 0,5 ATR, van 30 candles vóór de start van de poot tot de top, waarvan het midden op fib
+0,382-0,81 ligt (de eerste die de prijs bereikt). De breuk = het laatste slot in de poot voorbij de meest recente
+swing aan dezelfde kant (de kleine BoS-lijn van de trader). Instap op het slot van een dag-bevestigingscandle
+(hammer / pin bar: wick tegen de trade >= de helft van de candle, slot in de buitenste 40%; of engulfing) waarvan de
+extreme de zone raakt (tot 0,1 ATR) en het slot boven de zone blijft, met nog >= 0,2 van de poot tot fib 0. Vervalt
+bij een slot 0,5 ATR door de zone of voorbij fib 1; fib 0 verleggen bij een nieuwe extreme vóór de aanraking. SL 0,1
+ATR voorbij de wick van fib 1, TP -0,2. Afgestemd op 3 voorbeelden (EURAUD jun-25 nu exact gevonden: basis
+1,7464-1,7474, hammer 9 juni, instap 1,7518), dus de holdout telt mee.
+**Beslissend: `hi_bias == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0,
+PF >= 1,05, t >= 2,0; holdout elke periode > 0).
