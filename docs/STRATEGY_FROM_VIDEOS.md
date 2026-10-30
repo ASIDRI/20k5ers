@@ -1025,3 +1025,17 @@ Kleinere poten (2 / 4), continuation + regel, `R_m_top_1`: 682 trades (1,0 per p
 Grote poten (3 / 6), continuation + regel: 417 trades (0,6 per paar per jaar), +0,16 / +0,03 / +0,14R (PF 1,26 /
 1,04 / 1,23, t 1,6) - de beste per trade, maar minder trades. Meer poten (kleiner) geeft ±1,7x zoveel trades, maar de
 periode 2015-2020 wordt dan ±0 of negatief.
+
+## Test 32 (vooraf vastgelegd, 2026-10-30): 4u-instap binnen de continuation-context (fib body -> wick)
+
+De trader koos "2 en 3": (2) de 4u-bevestiging van test 24 als instap binnen de dagcontext van test 31, (3) de
+scanners omzetten. `test24.py --fib bodywick`: grote dagpoten (3 / 6); fib 1 = body van de startcandle, 0 = wick van
+het einde (zoals 30b). Op 4u: aanraking 0,618 van die fib; bevestiging = na de laagste 4u-low sinds de aanraking (L*)
+een 4u-slot boven de laatste 4u-swingtop van vóór L*; instap op dat slot als RR >= 1,5 tot -0,2; SL 0,1 dag-ATR
+onder L*. Onder de body van fib 1 maar boven de wick van de startcandle is toegestaan; onder die wick alleen na een
+sweep van een eerdere dag-low (liquiditeit), ongeldig > 1 ATR onder die low (zonder eerdere low: 0,1 ATR onder de wick).
+Kolom `cont` als test 31.
+**Beslissend: `cont & wk_struct == 1 & htf_sup`, `R_m_top_1` (half op -0,2, stop naar de oude top, rest -1), één
+positie per richting, 33 instrumenten met 4u-data, 2005-2025.** Geslaagd als elke periode (2005-14, 2015-20,
+2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: zonder S/R-eis, regel zonder continuation,
+`R_t020`, en de vergelijking met de dag-afwijzingscandle van 30b / 31 (zelfde poten).
