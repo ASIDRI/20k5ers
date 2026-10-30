@@ -85,7 +85,7 @@ def evaluate(data, prm):
     f, O, H, L, C, sig = data
     m = mask(f, prm)
     if m.sum() == 0:
-        return pd.Series(dtype=float)
+        return pd.Series(dtype=float, index=pd.Index([], dtype=object))
     s = {k: v[m] for k, v in sig.items()}
     R = simulate(s["gi"], s["end"], s["dirn"], s["inval"], s["atr"], s["dur"], s["cost"], s["key"], O, H, L, C,
                  prm["s"], prm["e"], prm["k"], prm["be"] if prm["be_on"] else 0.0, int(prm["H"]), int(sig["key"].max()) + 1)

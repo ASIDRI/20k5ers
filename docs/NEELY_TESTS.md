@@ -251,3 +251,24 @@ ruimte tot T1. Optuna (TPE, seed 0, 500 trials per tijdframe, dag en week apart)
    drie samen moeten t >= 2,0 halen.
 
 Een cel die beide haalt, is een kandidaat voor papertrading. Het is nog geen bewezen edge.
+
+### Uitkomst test N4: verworpen in stap 1 (beide cellen); holdout niet gebruikt
+Run: `python research/neely/n4_optuna.py --trials 500` (35 seconden; parameters in `research/neely/out/n4_best.json`).
+
+| Tijdframe | Signalen | Beste op 2005-14 | 2005-14 (gezien) | 2015-20 | 2021-25 | t 2015-25 |
+|---|---|---|---|---|---|---|
+| Dag | 92.121 | t 3,72 | +0,19R (431, PF 1,43) | -0,15R (121, PF 0,75) | -0,18R (88, PF 0,71) | -2,2 |
+| Week | 18.215 | t 4,61 | +0,44R (653, PF 1,64) | -0,23R (397, PF 0,71) | +0,04R (299, PF 1,05) | -1,5 |
+
+- Dag: Optuna koos contracting triangles plus zigzags (geen flats), Similarity >= 0,60, een patroon >= 2,4 ATR en een
+  bevestiging binnen 3 candles, minstens 0,83 ATR voorbij de lijn. Daarbij een stop 1,4 ATR voorbij het
+  ongeldigheidspunt en een doel van 1,1R.
+- Week: triangles plus flats, startlijsten aan, een doel van 5R.
+- De twee tijdframes kozen dus verschillende setups, en geen van beide hield stand. Hoe meer vrijheid Optuna kreeg,
+  hoe mooier 2005-2014 (t 3,7-4,6) en hoe slechter de jaren daarna. Dat is overfitting.
+- De 31 holdout-instrumenten van test 33 zijn **niet** gebruikt en blijven onaangeroerd.
+
+**Stand na N1-N4.** Vaste boekregels (N1), een telling over meerdere graden (N2), geoptimaliseerde stops en doelen
+(N3) en geoptimaliseerde signalen en setups (N4): geen enkele versie houdt stand buiten de data waarop ze gekozen is.
+De Neely-patronen (hoofdstuk 2-5, plus deze reconstructie van 6-12) voorspellen op deze data geen beweging waaraan na
+kosten iets te verdienen is.
