@@ -15,6 +15,7 @@ The simulator steps through M15 bars to simulate real-time price movement.
 
 import os
 import pandas as pd
+from candle_avail import filter_completed
 import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -36,6 +37,36 @@ log = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════════════════════════
 # DATA CLASSES - EXACT SAME AS tradr/mt5/client.py
 # ═══════════════════════════════════════════════════════════════════════════
+
+_TF_DURATION = {"M15": pd.Timedelta(minutes=15), "H1": pd.Timedelta(hours=1), "H4": pd.Timedelta(hours=4),
+                "D1": pd.Timedelta(hours=24), "W1": pd.Timedelta(days=7), "MN": pd.Timedelta(days=31)}
+
+
+def _drop_forming_bar(df, tf, end_ts):
+    """The rule used from 2026-10-27 to 2026-10-28: drop the last row if 'stamp + duration' is after now.
+    WRONG on the forex MN files (stamped at month END, so every completed month stayed hidden a month
+    longer). Kept only so HTF_NO_LOOKAHEAD=crude reproduces the results of those two days."""
+    dur = _TF_DURATION.get(tf)
+    if dur is None or df.empty:
+        return df
+    if df['time'].iloc[-1] + dur > end_ts:
+        return df.iloc[:-1]
+    return df
+
+
+def _lookahead_mode(tf):
+    """HTF_NO_LOOKAHEAD: 1 (default) = completed candles only, like the real MT5Client (copy_rates_from_pos
+    position 1), with each file's own stamp convention (candle_avail.py); 0 = old leaky filter (the forming
+    bar with its FINAL values); crude = the 2026-10-27 rule; a list such as "MN,W1" = fix only those (diagnosis)."""
+    flag = os.getenv("HTF_NO_LOOKAHEAD", "1").strip().upper()
+    if flag in ("", "0", "FALSE", "NO", "OFF"):
+        return None
+    if flag == "CRUDE":
+        return "crude"
+    if flag in ("1", "TRUE", "YES", "ON") or tf in {x.strip() for x in flag.split(",")}:
+        return "exact"
+    return None
+
 
 @dataclass
 class TickData:
@@ -249,6 +280,11 @@ class CSVMT5Simulator:
             self._sl_slippage_pips = None
         self._gap_fills = _os.getenv("GAP_FILLS", "1").strip().lower() \
             not in ("0", "false", "no", "off")
+        # BROKER_STRICT=1: close the three places where this fake broker was kinder than MT5
+        # (audit_referee_tests.py broker): a pending order on the wrong side of the market is rejected
+        # (MT5 retcode 10015); the bar that fills an order is also checked for its stop; buy entries and
+        # the SL/TP of sells trigger on the ASK (bid + spread). Off by default until the audit switches over.
+        self._strict = _os.getenv("BROKER_STRICT", "0").strip().lower() in ("1", "true", "yes", "on")
 
         self.connected = False
         
@@ -809,6 +845,7 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
+        df = self._completed_only(df, symbol, tf, end_ts)
         
         if df.empty:
             return None
@@ -848,12 +885,22 @@ class CSVMT5Simulator:
         
         # Filter to BEFORE end_time (no look-ahead!)
         df = df[df['time'] < end_ts]
+        df = self._completed_only(df, symbol, tf, end_ts)
         
         if df.empty:
             return None
         
         return df.tail(count).copy()
     
+    def _completed_only(self, df, symbol, tf, end_ts):
+        """Keep only the candles MT5 would already have closed at end_ts (see _lookahead_mode)."""
+        mode = _lookahead_mode(tf)
+        if mode is None or df.empty or tf == "M15" or tf not in _TF_DURATION:
+            return df
+        if mode == "crude":
+            return _drop_forming_bar(df, tf, end_ts)
+        return filter_completed(self, df, symbol, tf, end_ts)
+
     def _load_data(self, symbol: str, timeframe: str) -> Optional[pd.DataFrame]:
         """Load data from CSV file."""
         # Check cache
@@ -1222,6 +1269,13 @@ class CSVMT5Simulator:
         
         type_map = {"buy_limit": 2, "sell_limit": 3, "buy_stop": 4, "sell_stop": 5}
         order_type_int = type_map.get(order_type, 2)
+        if self._strict:
+            tick = self.get_tick(symbol)
+            if tick is not None:
+                wrong = ((order_type_int == 2 and price >= tick.ask) or (order_type_int == 4 and price <= tick.ask) or
+                         (order_type_int == 3 and price <= tick.bid) or (order_type_int == 5 and price >= tick.bid))
+                if wrong:
+                    return TradeResult(success=False, error="Invalid price (10015): pending order on the wrong side of the market")
         
         ticket = self._next_ticket
         self._next_ticket += 1
@@ -1341,6 +1395,10 @@ class CSVMT5Simulator:
             base = max(pos.sl, op) if self._gap_fills else pos.sl
             return base + slip
 
+    def _spread_price(self, symbol):
+        spec = _get_spec(symbol)
+        return self.spread_pips * spec.get('pip_size', 0.0001)
+
     def check_pending_order_fills(self) -> List[int]:
         """Check if any pending orders should fill on current M15 bar."""
         filled_tickets = []
@@ -1351,18 +1409,19 @@ class CSVMT5Simulator:
                 continue
             
             high, low = bar['high'], bar['low']
+            sp = self._spread_price(order.symbol) if self._strict else 0.0
             
             filled = False
             fill_price = order.price
             
-            if order.type == 2:  # buy_limit
-                if low <= order.price:
+            if order.type == 2:  # buy_limit (fills on the ask)
+                if low + sp <= order.price:
                     filled = True
             elif order.type == 3:  # sell_limit
                 if high >= order.price:
                     filled = True
-            elif order.type == 4:  # buy_stop
-                if high >= order.price:
+            elif order.type == 4:  # buy_stop (fills on the ask)
+                if high + sp >= order.price:
                     filled = True
             elif order.type == 5:  # sell_stop
                 if low <= order.price:
@@ -1389,6 +1448,11 @@ class CSVMT5Simulator:
                 self._positions[ticket] = pos
                 del self._pending_orders[ticket]
                 filled_tickets.append(ticket)
+                if self._strict and pos.sl > 0 and ((pos_type == 0 and low <= pos.sl) or
+                                                    (pos_type == 1 and high + sp >= pos.sl)):
+                    # the bar that filled the order also went through its stop: the order of the two inside
+                    # the bar is unknown, so take the stop (the safe side)
+                    self.close_position(ticket, close_price=self._exit_sl_price(pos, bar))
         
         return filled_tickets
     
@@ -1410,12 +1474,13 @@ class CSVMT5Simulator:
                 # TP hit (price rises to TP)
                 elif pos.tp > 0 and high >= pos.tp:
                     hits.append({'ticket': ticket, 'type': 'tp', 'price': pos.tp})
-            else:  # Sell position
+            else:  # Sell position (closes on the ask)
+                sp = self._spread_price(pos.symbol) if self._strict else 0.0
                 # SL hit (price rises to SL) — #3/#4 gap-through + slippage on exit
-                if pos.sl > 0 and high >= pos.sl:
+                if pos.sl > 0 and high + sp >= pos.sl:
                     hits.append({'ticket': ticket, 'type': 'sl', 'price': self._exit_sl_price(pos, bar)})
                 # TP hit (price drops to TP)
-                elif pos.tp > 0 and low <= pos.tp:
+                elif pos.tp > 0 and low + sp <= pos.tp:
                     hits.append({'ticket': ticket, 'type': 'tp', 'price': pos.tp})
         
         return hits

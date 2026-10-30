@@ -1,0 +1,32 @@
+[
+ [
+  "PASS",
+  "buy limit waits, then fills at its price",
+  ""
+ ],
+ [
+  "PASS",
+  "buy stop gapped through fills at the open",
+  "fill 1.103"
+ ],
+ [
+  "PASS",
+  "SL and TP in one bar -> SL",
+  ""
+ ],
+ [
+  "KNOWN",
+  "fill bar that also crosses the SL stops the trade in that bar",
+  "the stop is only checked from the next bar on; real price may have hit the SL after the fill"
+ ],
+ [
+  "KNOWN",
+  "buy limit above the market is rejected",
+  "accepted and filled at 1.1050 on the next bar (the live client never sends this: it picks LIMIT/STOP from the tick)"
+ ],
+ [
+  "KNOWN",
+  "sell TP needs the ask to reach it",
+  "TP taken when the bid low touches it: optimistic by one spread on sell TPs and sell stops"
+ ]
+]

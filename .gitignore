@@ -265,3 +265,20 @@ backtest/output/doe/full_2step_eval.json
 backtest/output/doe/wall5/*_run.log
 backtest/output/doe/wall5/margin_trades/
 challenge_steps.json
+
+# live replay logs are large; keep trades/summary only
+backtest/output/replay/**/replay.log
+backtest/output/replay/**/scan_errors.log
+
+# job logs
+backtest/output/jobs/*.log
+backtest/output/jobs/*.done
+
+# Audit: unpacked old versions and their runs (docs/AUDIT_PLAN.md)
+backtest/output/audit/*/code/
+backtest/output/audit/*/runs/
+
+# Video storyboards (screenshots can be large / copyrighted): keep local
+research/videos/
+research/strategy/out/
+research/rnd/out/
