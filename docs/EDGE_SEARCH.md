@@ -89,3 +89,27 @@ dalen.
 
 **Gerapporteerd, niet beslissend:** DEW long/short, Primary Wave, Two-Week Rule, UK100 (2015-25), goud. Een geslaagde
 regel gaat naar een eigen vastlegging: de 5ers-challenge op het echte 15-minutenpad (`research/rnd/prop_m15.py`).
+
+### Uitkomst V1: verworpen
+`python research/edge/vv_timing.py`. Gemiddelde van SPX500 en NAS100, na kosten, zonder swaps:
+
+| | 2005-14 | 2015-20 | 2021-25 |
+|---|---|---|---|
+| Kopen en houden | +7,8%/j, Sharpe 0,47, maxDD -55% | +15,3%/j, Sharpe 0,82, maxDD -31% | +14,6%/j, Sharpe 0,79, maxDD -30% |
+| **DEW long-only** | +3,9%/j, Sharpe 0,39, maxDD -31% | +9,5%/j, Sharpe 0,79, maxDD -23% | +3,7%/j, Sharpe 0,35, maxDD -29% |
+| DEW long/short | -2,8%/j, Sharpe -0,05 | +1,9%/j, Sharpe 0,20 | -8,0%/j, Sharpe -0,37 |
+| Primary Wave long-only | -4,7%/j, Sharpe -0,34 | +3,0%/j, Sharpe 0,32 | +3,3%/j, Sharpe 0,33 |
+| Two-Week Rule long-only | +0,6%/j, Sharpe 0,11 | +1,4%/j, Sharpe 0,18 | +7,4%/j, Sharpe 0,64 |
+
+- De DEW verkleint de drawdown in elke periode, maar levert per eenheid risico **minder** op dan kopen en houden
+  (Sharpe 0,39 / 0,79 / 0,35 tegenover 0,47 / 0,82 / 0,79). De lat vroeg beide; dat is dus niet gehaald.
+- Een kleinere drawdown krijg je goedkoper door gewoon kleiner in te zetten. Kopen en houden op halve grootte heeft
+  ongeveer dezelfde maxDD als de DEW (-15 tot -28%), met een hogere Sharpe.
+- Short gaan op Down-signalen verliest bij alle drie de systemen; de Primary Wave long/short tot -18%/j.
+- UK100 en goud: hetzelfde beeld (de DEW is lager dan kopen en houden, behalve de drawdown).
+- Sluit aan bij de onafhankelijke reviews: er is geen controleerbaar bewijs dat de VectorVest-timing kopen en houden
+  verslaat.
+
+**Stand.** Ook de VectorVest-timing (DEW, Primary Wave, Two-Week Rule) geeft op de indices geen voorsprong boven
+kopen en houden. Kopen en houden van indices en goud blijft het enige positieve; de schaal (volatiliteit) is de
+knop voor de drawdown, niet de timing. Open: de swaps in de prop-simulatie.
