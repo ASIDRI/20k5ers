@@ -112,7 +112,9 @@ def run(sym, start, end):
                 T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
             levs = [p for p, _ in lv.at(pd.Timestamp(t[i]).tz_localize("UTC"))]
             lo_, hi_ = sorted([b1, price])
-            return dict(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
+            ts = pd.Timestamp(t[i]).tz_localize("UTC")
+            return dict(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs),
+                        m_ma=lv.trend(ts, "MN") * dirn)  # monthly close vs its 10-month mean, in the trade direction
 
         if res == "verlopen" and f + 1 >= len(d) and f + 1 < deadline:
             # the data ended while the setup was still waiting for its rejection candle: live

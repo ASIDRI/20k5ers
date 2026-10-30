@@ -813,3 +813,18 @@ wisselend (-11R tot +23R). Challenge (+8% dan +5%, -10% statisch; dagverlies nie
 2006-2024: 1% risico: 38% geslaagd, 47% breach, mediaan 617 dagen tot geslaagd; 1,5%: 28% / 68%, 314 dagen;
 2%: 27% / 73%, 247 dagen. Volledig op -0,2 bij 1,5%: 23% / 72%. Slaagkans lager dan de breach-kans bij elk risico:
 niet geschikt om challenges mee te kopen.
+
+## Met de trend mee: welke maand/week-definitie? (`t20_trend.py`, beschrijvend - trades al bekend)
+
+Test 20-trades (grote dagpoten, 34 instrumenten), beheer van de trader, één positie per richting, per periode:
+- geen trendfilter: +0,02 / -0,00 / +0,11R
+- weekstructuur (HH/HL): +0,03 / -0,01 / +0,20R
+- maandstructuur (HH/HL): +0,02 / -0,03 / +0,21R
+- **maandslot boven/onder het 10-maands gemiddelde: +0,04 / +0,05 / +0,10R** (1.093 trades; het meest stabiel)
+- **weekstructuur + maandgemiddelde: +0,05 / +0,04 / +0,14R**
+- week + maand gemiddelde eens: +0,05 / -0,05 / +0,31R (weinig trades)
+- **tegen de maandtrend: -0,12 / -0,13 / +0,12R**
+Conclusie: de maandtrend (eenvoudig: slot boven/onder het 10-maands gemiddelde) is het nuttigste "met de trend mee";
+tegen de maandtrend handelen kost geld. De voorsprong blijft klein (+0,05R, t ±1,2).
+Vooruit-meting (vastgelegd 2026-10-30): de scanner toont nu ook `maandtrend` (mee/tegen); naast de regel van test 20
+wordt "regel + maandtrend mee" apart bijgehouden en op dezelfde manier beoordeeld (na 50 afgesloten trades).
