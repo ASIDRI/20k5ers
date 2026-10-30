@@ -201,3 +201,23 @@ van R per trade, met minstens 100 trades.
   test 33, met dezelfde parameters (eigen vastlegging).
 - Gerapporteerd: het resultaat op 2005-2014 zelf (dat is per constructie te mooi) en een N1-achtige referentie (markt
   op het slot, stop 0,1 ATR, doel = mediaan rr1).
+
+### Uitkomst test N3: verworpen (alle vier de cellen)
+Run: `python research/neely/n3_optuna.py --trials 300` (17 seconden; beste parameters in `research/neely/out/n3_best.json`).
+
+| Cel | Beste op 2005-14 | 2005-14 (gezien) | 2015-20 | 2021-25 | t buiten |
+|---|---|---|---|---|---|
+| A dag | s 1,45, e 0,54, k 3,3, H 76 | +0,04R | -0,05R | -0,31R | -2,0 |
+| B dag | s 1,49, e 0,27, k 4,6, be 1,15, H 95 | +0,04R | -0,04R | -0,14R | -2,6 |
+| A week | s 0,43, e 0,09, k 2,3, H 119 | +0,25R | -0,05R | +0,06R | 0,0 |
+| B week | s 1,33, e 0,21, k 2,3, H 119 | +0,26R (t 3,6) | -0,12R | +0,25R | 0,7 |
+
+- Optuna vond telkens hetzelfde soort oplossing: een stop ver voorbij het ongeldigheidspunt (tot 1,5 ATR), een doel
+  van 2-5R en een instap via een terugval. Dat is het omgekeerde van N1 (vaak klein winnen). Het slaagpercentage zakt
+  daarbij naar 12-40%.
+- In 2005-2014 ziet dat er goed uit (B week t 3,6), maar in de periodes die Optuna niet zag, valt het terug naar rond
+  nul of negatief. Dat is het patroon van overfitting: wat Optuna vond, was ruis in 2005-2014.
+- De N1-achtige referentie verliest in alle periodes, met slaagpercentages van 56-68%.
+- Les: de richtingstreffer van 55-63% hangt aan een doel dicht bij de instap. Zodra het doel verder ligt, is er geen
+  voorsprong meer. De telling voorspelt een kleine terugbeweging, geen beweging waaraan iets te verdienen is na
+  stop en kosten.
