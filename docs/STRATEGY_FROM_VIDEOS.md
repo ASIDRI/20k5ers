@@ -1543,3 +1543,13 @@ Beslissend `R_m`: 1587 trades (76 per jaar, 1,5 per week), +0,07 / -0,04 / -0,03
 maandniveau geeft op zich geen voorsprong. De test 53-regel met de nieuwe zone (basis óf fib) en de nieuwe blokkade:
 +0,11 / -0,08 / -0,03R - slechter dan test 53 (alleen fib 0,618-0,796): instappen op 0,5 in een S/R-zone kost meer
 dan het oplevert.
+
+## Test 55 (vooraf vastgelegd): VectorVest "confirmed call" als trendpoort
+De trader: "kijken naar een confirmed call up or down van VectorVest. Dus de prijs is 2 opeenvolgende 5 dagen
+gestegen." VectorVest publiceert de formule niet; volgens AAII (VectorVest RealTime) volgt de bevestigde trend uit twee
+opeenvolgende week-over-week stijgingen/dalingen van de VectorVest Composite, bevestigd door de buy/sell-ratio (BSR).
+Hier per instrument op dagslotkoersen: `vv_call` +1 als slot > slot 5 dagen eerder > slot 10 dagen eerder, -1
+gespiegeld, anders blijft de vorige call. (De BSR / een nieuwsscore is apart; zie hieronder.)
+**Test 55**: de dagsetups van test 53 met de call i.p.v. de week-trigger. **Beslissend: `((ms_trend == 1) | (mt_done
+== -1)) & vv_call == 1 & ~m_block`, `R_m`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0,
+PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: test 53 + call, call alleen, test 53 met call tegen.

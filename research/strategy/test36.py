@@ -362,6 +362,11 @@ def run(sym, tf, start, end):
     ms = monthly_setup_trend(sym)  # test 50
     wt = weekly_trigger(sym)  # test 51
     mr = monthly_setup_trend(sym, with_reached=True)  # test 53
+    # test 55, VectorVest "confirmed call": up after two consecutive week-over-week (5 trading days) rises of the close,
+    # down after two consecutive falls; it holds until the opposite call (per daily candle, known at its close)
+    vv = np.zeros(len(c), int)
+    for i in range(10, len(c)):
+        vv[i] = 1 if c[i] > c[i - 5] > c[i - 10] else (-1 if c[i] < c[i - 5] < c[i - 10] else vv[i - 1])
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -510,7 +515,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)

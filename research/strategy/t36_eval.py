@@ -14,7 +14,11 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 54: (setting of na maanddoel of gebroken maandniveau) + week-trigger/flip, niet geblokkeerd": "((((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1) | m_flip) & ~m_block2",
+RULES = {"test 55: maandtrend/na maanddoel + VectorVest confirmed call, geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & vv_call == 1 & ~m_block",
+         "test 53 + confirmed call (week-trigger én call)": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_call == 1 & ~m_block",
+         "alleen confirmed call, geen maand-S/R in de weg": "vv_call == 1 & ~m_block",
+         "test 53 maar call tegen": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_call == -1 & ~m_block",
+"test 54: (setting of na maanddoel of gebroken maandniveau) + week-trigger/flip, niet geblokkeerd": "((((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1) | m_flip) & ~m_block2",
          "alleen de maandniveau-flips": "m_flip & ~(((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1) & ~m_block2",
          "test 53-regel met nieuwe zone en blokkade": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block2",
 "test 53: setting + na het maanddoel tegengesteld (week-trigger), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
