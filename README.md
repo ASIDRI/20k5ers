@@ -8,6 +8,8 @@ Nu: een nieuwe strategie op basis van de Market Matrix-video's, getest in een ge
 
 | Wat | Waar |
 |---|---|
+| Systeem VX: VectorVest vertaald naar forex, metalen, olie | `docs/SYSTEM_VX.md`, `research/vx/vx.py` |
+| Zoektocht naar een edge met een reden (turn-of-month, VectorVest-timing) | `docs/EDGE_SEARCH.md`, `research/edge/` |
 | Regels uit de video's, tests 1-3 | `docs/STRATEGY_FROM_VIDEOS.md`, `research/strategy/` |
 | R&D-programma (fases, register, resultaten) | `docs/RND_PLAN.md`, `docs/RND_RESULTS.md`, `research/rnd/` |
 | S/R-niveaus (maand/week, wick-tikken, point in time) | `research/strategy/sr_levels.py` |

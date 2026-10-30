@@ -49,8 +49,12 @@ def read_subs(path):
 
 def transcribe(video, model):
     from faster_whisper import WhisperModel
+    import numpy as np
     wm = WhisperModel(model, device="cpu", compute_type="int8")
-    segs, info = wm.transcribe(str(video), vad_filter=True, word_timestamps=True)
+    # decode with ffmpeg (16 kHz mono float), independent of the PyAV version faster-whisper would use
+    raw = subprocess.run([ffmpeg(), "-hide_banner", "-loglevel", "error", "-i", str(video), "-ac", "1", "-ar", "16000",
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    segs, info = wm.transcribe(np.frombuffer(raw, np.float32), vad_filter=True, word_timestamps=True)
     segs = list(segs)
     words = [(w.start, w.end, w.word.strip()) for s in segs for w in (s.words or [])]
     return [(s.start, s.end, s.text.strip()) for s in segs], words, info.language
