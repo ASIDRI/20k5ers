@@ -876,3 +876,12 @@ EURUSD/NZDCAD/GBPNZD samen ±+14R over 2023-2026 (veel -1R, enkele grote winnaar
 (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: met de context van
 test 20 (regel, maandtrend), beheer, en per kenmerk van de bevestiging (sweep, diepte L*, tijd tot bevestiging) -
 ontdekking op 2005-2014, controle op 2015-2025.
+
+### Uitkomst test 24: verworpen (beslissende regel), ontdekking van de bevestiging
+Alle bevestigde setups, `R_t020`: 2005-14 -0,03R (809) / 2015-20 -0,15R (374) / 2021-25 +0,08R (294), t -0,7;
+mediane RR 4,5, winnend ±19%. Met regel (week + S/R): -0,00 / -0,25 / +0,35R; met maandtrend: -0,12 / -0,12 / +0,10R.
+Ontdekking op 2005-2014 (809 trades) per kenmerk van de bevestiging: snelle bevestiging (<= 15 4u-candles na de
+aanraking) +0,19R tegen trage (> 47) -0,22R; sweep van een eerdere low onder 1 en dan bevestiging +0,40R (40 trades);
+diepte L*, instapdiepte en RR zonder duidelijke lijn.
+**Vastgelegd voor controle op 2015-2025:** (a) `conf_bars <= 15`, (b) `swept`. Geslaagd als gemiddeld > 0 met
+PF >= 1,05 en t >= 2,0 op 2015-2025.
