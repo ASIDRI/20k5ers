@@ -92,7 +92,7 @@ if __name__ == "__main__":
         except Exception:  # noqa - a column this run does not have
             continue
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
-        for col in [c for c in ("R_m2", "R_m3", "R_m", "R_t020") if c in o]:
+        for col in [c for c in ("R_lad", "R_m2", "R_m", "R_t020") if c in o]:
             out, pool = [], []
             for p, s, e in P:
                 x = o[(o.date >= s) & (o.date < e)][col].dropna()

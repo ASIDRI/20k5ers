@@ -1628,3 +1628,6 @@ Gerapporteerd: dag- vs 4u-trigger, + SMT.
 Aanpassing vóór het draaien van test 60 (de trader: "als TP1 gehaald is, stoploss in profit. Neem ook 50% winst op
 TP1 dus -0.2 fib"): beheer `R_m2` = half op -0,2, stop naar de oude top (fib 0, in winst), rest op -0,65; ook `R_m3`
 (rest op -1). **Beslissende kolom test 60: `R_m2`.**
+Tweede aanpassing vóór het draaien (de trader: "Zelfs 1.618 als doel kan. Telkens stoploss verhogen naar -0.25, dan
+-0.618, dan -0.798 als laatste"): `R_lad` = half op -0,2 en stop naar fib 0; bij -0,618 stop naar -0,25, bij -0,796
+naar -0,618, bij -1 naar -0,796 (laatste); rest op -1,618. **Beslissende kolom test 60: `R_lad`** (R_m2 gerapporteerd).
