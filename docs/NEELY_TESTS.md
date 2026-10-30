@@ -221,3 +221,33 @@ Run: `python research/neely/n3_optuna.py --trials 300` (17 seconden; beste param
 - Les: de richtingstreffer van 55-63% hangt aan een doel dicht bij de instap. Zodra het doel verder ligt, is er geen
   voorsprong meer. De telling voorspelt een kleine terugbeweging, geen beweging waaraan iets te verdienen is na
   stop en kosten.
+
+## Test N4 (vooraf vastgelegd, 2026-10-30): Optuna op de signalen én de trade, alleen op 2005-2014
+
+Vraag van de trader: Optuna ook laten kiezen welke signalen en setups er gehandeld worden. Code:
+`research/neely/n4_optuna.py`.
+
+**Signalen.** Eén ruime run van N1 (`neely_bt.py --loose --sim-min 0.2 --prefix n4_<tf>_`), met daarin elk bevestigd
+patroon met zijn kenmerken. Dat omvat ook expanding triangles, patronen die DETOUR een impuls noemt, en setups zonder
+ruimte tot T1. Optuna (TPE, seed 0, 500 trials per tijdframe, dag en week apart) kiest:
+- Welke setups: A, B of beide; triangles alleen contracting of alle; zigzag, flat of beide; DETOUR-patronen wel/niet.
+- Drempels:
+  - Similarity 0,2-0,6 (boek: 1/3);
+  - hoger tijdframe: mee / niet tegen / maakt niet uit;
+  - startlijsten wel/niet;
+  - grootte van het patroon >= 0-5 ATR;
+  - bevestiging hooguit 0-20 candles na het eind;
+  - slot minstens 0-1 ATR voorbij de lijn;
+  - instap hooguit 0,5-6 ATR van het ongeldigheidspunt.
+- Trade: stop, limietinstap, doel in R, stop naar instap en tijdstop, zoals in N3. Dezelfde vul- en uitstapregels.
+- Doel: de t-waarde van R per trade op signalen vóór 2015, met minstens 150 trades.
+
+**Beslissend, per tijdframe (2 cellen), twee stappen. Beide moeten slagen.**
+1. Buiten de steekproef: met de beste parameters van 2005-2014 zitten 2015-2020 en 2021-2025 elk gemiddeld boven 0
+   met PF >= 1,05, en de twee samen halen t >= 2,0. Kanttekening: deze jaren zijn in N1-N3 al gemeten, al heeft
+   Optuna ze niet gezien.
+2. Alleen als stap 1 slaagt: de **31 holdout-instrumenten van test 33**, die nooit in een Neely-test zaten, met
+   dezelfde parameters. Elke periode (2005-14, 2015-20, 2021-25) moet gemiddeld boven 0 zitten met PF >= 1,05, en de
+   drie samen moeten t >= 2,0 halen.
+
+Een cel die beide haalt, is een kandidaat voor papertrading. Het is nog geen bewezen edge.
