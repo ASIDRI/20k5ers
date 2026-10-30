@@ -137,3 +137,34 @@ cellen (dagteller en weekteller). Een cel slaagt als elke periode (2005-14, 2015
 PF >= 1,05, en de drie samen t >= 2,0 halen. Omdat dit één instrument is, is een geslaagde cel alleen een kandidaat.
 Hij moet dan eerst op de andere 33 instrumenten getest worden (eigen vastlegging). Gerapporteerd: per Complexity, per
 patroon, met en zonder `op_tijd`.
+
+### Uitkomst test N2 (EURUSD): verworpen (beide cellen)
+Run: `python research/neely/neely_count.py --tf D1` en `--tf W1`, daarna `python research/neely/n2_eval.py`.
+
+| Teller | Trades | 2005-14 | 2015-20 | 2021-25 | t |
+|---|---|---|---|---|---|
+| dag, `cx >= 2 & op_tijd` | 647 | -0,09R (PF 0,87) | -0,31R (PF 0,58) | -0,37R (PF 0,47) | -3,3 |
+| week, `cx >= 2 & op_tijd` | 122 | -0,28R (PF 0,60) | -0,29R (PF 0,54) | +0,17R (PF 1,33) | -1,5 |
+
+- Hoger in de telling (Complexity >= 3) is niet beter: op de dag +0,04 / -0,43 / -0,36R.
+- Per patroon (dag, beslissend): driedubbel -0,46R (194), triangle -0,27R (134), flat -0,17R (148), zigzag 0,00R (78),
+  terminal **+0,65R (44)**. Op de week ook terminal +0,29R (8). Dit zijn kleine aantallen en het is één van ±20
+  gerapporteerde cijfers; zie dit hooguit als idee voor een vooraf vast te leggen test op de andere 33 instrumenten.
+  Het is geen resultaat.
+- Lookahead-test: de teller is op 2013 en 2022 (dag) en 2017 (week) afgeknipt. Alles ervóór blijft gelijk.
+
+**Huidige telling EURUSD** (data tot 14-12-2025; grafieken `docs/neely_eurusd_D1.png`, `docs/neely_eurusd_W1.png`):
+- **Week:** na de bodem van februari 2025 (1,0360) volgt een reeks :3's omhoog. Eerst een dubbele, dan een zigzag
+  en een driedubbele tot 1,1830 (juni). Daarna een triangle (Complexity 2) tot 1,1590 en drie zijwaartse flats tussen
+  1,149 en 1,173. Laatste afgeronde golf: een zigzag omhoog van 1,1491 naar 1,1682 (november). Er wacht geen patroon
+  op bevestiging.
+- **Dag:** een driedubbele omhoog (Complexity 3) van 1,1491 (20-11) naar 1,1763 (10-12), daarna een flat omlaag naar
+  1,1727. Er wacht geen patroon op bevestiging.
+- Volgens deze telling is alles sinds februari 2025 opgebouwd uit correctieve stukken (:3), zonder één impuls. In
+  Neely's taal is dat een complexe correctie, geen nieuwe trend. Gezien de uitkomst hierboven is dat geen
+  handelsadvies.
+
+**Conclusie N2.** De reconstructie telt EURUSD wel over meerdere graden, zonder toekomst te zien, maar de bevestigde
+patronen voorspellen de volgende beweging niet: de trades verliezen op dag en week. Twee grenzen blijven:
+- De telling komt niet verder dan weken (dag) of maanden (week). De grote meerjarige graad bouwt deze teller niet op.
+- De regels uit hoofdstuk 6-12 zijn gereconstrueerd, niet gelezen. Een echte toets van Neely vraagt die hoofdstukken.
