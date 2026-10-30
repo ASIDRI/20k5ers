@@ -272,3 +272,22 @@ Run: `python research/neely/n4_optuna.py --trials 500` (35 seconden; parameters 
 (N3) en geoptimaliseerde signalen en setups (N4): geen enkele versie houdt stand buiten de data waarop ze gekozen is.
 De Neely-patronen (hoofdstuk 2-5, plus deze reconstructie van 6-12) voorspellen op deze data geen beweging waaraan na
 kosten iets te verdienen is.
+
+## Controle (beschrijvend, 2026-10-30): is de trefkans van Neely beter dan toeval?
+
+In N3 is de trefkans van 55-63% in N1 gelezen als richtingsvoorsprong. **Dat was onjuist.** Bij een doel op ±0,5R en
+een stop op 1R raakt ook een munt het doel in ±67% van de gevallen (zonder drift: kans = stop / (stop + doel)). De
+eerlijke vergelijking is daarom: dezelfde trades, met dezelfde stop- en doelafstand en dezelfde motor, maar in de
+omgekeerde richting. Zo zijn de geometrie, de candle-regels en de periode gelijk, en verschilt alleen de richting.
+Bruto, zonder kosten:
+
+| Setup | Trades | Neely-richting | Omgekeerd | Verschil (95%) |
+|---|---|---|---|---|
+| A triangle, dag | 6.828 | 59,9% / -0,088R | 64,0% / -0,018R | -0,069R (±0,036) |
+| B zigzag/flat, dag | 31.422 | 53,6% / -0,028R | 53,8% / -0,033R | +0,005R (±0,022) |
+| A triangle, week | 1.405 | 65,0% / -0,038R | 64,3% / -0,035R | -0,003R (±0,077) |
+| B zigzag/flat, week | 6.404 | 57,0% / -0,020R | 56,1% / -0,024R | +0,005R (±0,045) |
+
+De richting die Neely aanwijst, is niet beter dan de omgekeerde richting. Bij de triangle-thrust op de dag is ze zelfs
+slechter. De hoge trefkans kwam alleen uit de plaats van het doel. Er is dus geen voorsprong die met stops, doelen,
+positiegrootte of kansberekening in winst om te zetten is.
