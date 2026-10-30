@@ -1396,3 +1396,11 @@ support-afwijzing (low tot 0,1 maand-ATR erboven of erdoor, body erboven) + resi
 tussen de instap en het doel (-0,2) -> geen trade in die richting. **Beslissend: `hi_bias == 1 & ~m_block`, `R_t020`,
 één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode
 > 0). Gerapporteerd: met maandniveau achter de instap (`m_sup`), zonder weekbias, en de trades mét een niveau in de weg.
+
+### Uitkomst test 47: verworpen (2015-20 negatief), maar maand-S/R als blokkade is echt
+`hi_bias == 1 & ~m_block`, `R_t020`: 974 trades (46 per jaar, 0,9 per week), +0,18 / -0,04 / +0,01R (PF 1,40 / 0,93 /
+1,01, t 2,35), winnend 49-56%; holdout -0,04 / +0,07 / -0,04R. Met maandniveau achter de instap: 389 trades,
++0,15 / +0,08 / +0,06R (PF 1,33 / 1,16 / 1,14, t 1,94) - alle periodes positief, maar holdout -0,07 / -0,01 / -0,12R.
+Wel duidelijk: trades **mét een maandniveau tussen instap en doel** zijn op de holdout sterk negatief (-0,30 / -0,18 /
+-0,33R, t -3,4) en op de 37 in 2021-25 -0,14R -> de maand-S/R van de trader als "niet ertegenin handelen" klopt; het
+maakt de rest alleen nog niet stabiel positief.
