@@ -1018,3 +1018,10 @@ De trader: "We zijn in de goede richting. Nu meer continuation trades." Test 30b
 (`cont`). Beslissend: `cont & wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting, 34 instrumenten.
 Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: zonder S/R-eis, en
 continuation binnen de grote poten (3 / 6).
+
+### Uitkomst test 31: beslissende regel niet geslaagd
+Kleinere poten (2 / 4), continuation + regel, `R_m_top_1`: 682 trades (1,0 per paar per jaar): +0,13 / -0,07 / +0,09R
+(t 1,2) -> 2015-20 negatief. Zonder continuation-eis (alleen regel): 734 trades, +0,17 / -0,00 / +0,01R (t 1,7).
+Grote poten (3 / 6), continuation + regel: 417 trades (0,6 per paar per jaar), +0,16 / +0,03 / +0,14R (PF 1,26 /
+1,04 / 1,23, t 1,6) - de beste per trade, maar minder trades. Meer poten (kleiner) geeft ±1,7x zoveel trades, maar de
+periode 2015-2020 wordt dan ±0 of negatief.
