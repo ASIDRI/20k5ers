@@ -27,3 +27,18 @@ zonder reden; daar verwachten we niets), en het aandeel van het totale rendement
 
 **Bij slagen** volgt een eigen vastlegging: de 5ers-challenge met blootstelling alleen op TOM-dagen tegenover kopen en
 houden bij dezelfde volatiliteit, op het echte 15-minutenpad (`research/rnd/prop_m15.py`).
+
+### Uitkomst X1: verworpen
+`python research/edge/tom.py`. SPX500 + NAS100, netto per trade (4 dagen):
+- per periode: +0,01% (2005-14), +0,19% (2015-20), -0,01% (2021-25);
+- het dagrendement op TOM-dagen tegenover de andere dagen: +0,059 vs +0,034% (t 0,6), +0,064 vs +0,065% (t 0,0),
+  +0,004 vs +0,074% (t -1,1).
+
+Het effect is weg. In 2005-14 viel nog 29% van het rendement op de 19% TOM-dagen; in 2015-20 19%, en in 2021-25 1%.
+Dat past bij de literatuur, die zegt dat bekende kalendereffecten na publicatie verzwakken. UK100 laat ook niets zien.
+
+Controles:
+- **Goud:** de 4-daagse trade is positief (+0,28%, t 2,0), maar het dagrendement op TOM-dagen verschilt niet
+  significant van de rest (t 1,0). Het grootste deel is de stijging van goud zelf. Er is ook geen reden voor het
+  effect, en het is één van de ±20 gerapporteerde cijfers. Daarom telt dit niet als vondst.
+- **EURUSD:** niets (2005-25 t -0,2).
