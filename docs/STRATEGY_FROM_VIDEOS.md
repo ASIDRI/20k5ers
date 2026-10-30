@@ -1419,3 +1419,11 @@ boven de laatste bevestigde maand-swinghigh, tot een slot onder de laatste swing
 ~m_block` (met de maandtrend, geen maand-S/R tussen instap en doel), `R_t020`, één positie per richting, 37
 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: + week-
 BoS, + dag-BoS, tegen de maandtrend.
+
+### Uitkomst test 48: verworpen
+`mn_bias == 1 & ~m_block`, `R_t020`: 807 trades (38 per jaar), +0,16 / -0,14 / -0,00R (t 1,0); holdout -0,03 / +0,15 /
+-0,10R. Maand + week + dag-BoS mee: 556 trades (26 per jaar), +0,25 / -0,08 / +0,04R (PF 1,59 / 0,86 / 1,09, t 2,5),
+winnend 45-58%; holdout -0,04 / -0,02 / -0,14R. Tegen de maandtrend: +0,02 / -0,00 / -0,20R. Telkens hetzelfde
+beeld: 2005-14 duidelijk positief, 2015-20 negatief, 2021-25 rond nul, holdout rond nul of negatief.
+Opmerking: onze maand-BoS (wick van de maand-swinghigh, zigzag) kantelt GBPJPY pas in de lente van 2021; de trader
+gebruikt de body (144,116) en ziet de breuk in februari 2021.
