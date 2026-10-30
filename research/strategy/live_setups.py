@@ -71,7 +71,28 @@ def extend(sym, out):
     mold = m.assign(time=m.time.dt.strftime("%Y-%m-%d"))[["time", "open", "high", "low", "close"]]
     mold["volume"] = 0
     pd.concat([mold, pd.DataFrame(rows)], ignore_index=True).to_csv(out / f"{sym}_MN_live.csv", index=False)
+    extend_h4(sym, out)
     return str(new.time.iloc[0])[:10], str(new.time.iloc[-1])[:10], len(new)
+
+
+def extend_h4(sym, out):
+    """4-hour candles from Yahoo 1-hour candles, in the stored 4-hour blocks (22, 2, 6, 10, 14, 18 UTC)."""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}=X?range=730d&interval=60m"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    r = json.load(urllib.request.urlopen(req, timeout=30))["chart"]["result"][0]
+    q = r["indicators"]["quote"][0]
+    y = pd.DataFrame({"t": pd.to_datetime(r["timestamp"], unit="s", utc=True), "open": q["open"], "high": q["high"],
+                      "low": q["low"], "close": q["close"]}).dropna()
+    y = y[y.t < pd.Timestamp.now(tz="UTC").floor("h") - pd.Timedelta(hours=1)]
+    y["blk"] = (y.t - pd.Timedelta(hours=2)).dt.floor("4h") + pd.Timedelta(hours=2)
+    g = y.groupby("blk").agg(open=("open", "first"), high=("high", "max"), low=("low", "min"), close=("close", "last"))
+    h4 = setup_study.load(sym, "H4")
+    g = g[g.index > h4.time.iloc[-1]]
+    new = pd.DataFrame({"time": g.index.strftime("%Y-%m-%d %H:%M:%S"), "open": g.open, "high": g.high, "low": g.low,
+                        "close": g.close, "volume": 0})
+    old = h4.assign(time=h4.time.dt.strftime("%Y-%m-%d %H:%M:%S"))[["time", "open", "high", "low", "close"]]
+    old["volume"] = 0
+    pd.concat([old, new], ignore_index=True).to_csv(out / f"{sym}_H4_live.csv", index=False)
 
 
 if __name__ == "__main__":

@@ -860,3 +860,19 @@ bijschalen (nee), TP -0,27 + BE (ja).
 Video 9: week 4 fases (test 12), trendwissel pas na de tweede lower low (nee), fib wick -> body (ja, test 11),
 zone 0,618 tot eerste structuur of 1 (test 8), TP -0,27 anders -0,68 (ja), 4u: vertraging (test 8), 4u bullish N (nee),
 4u inverse H&S (test 14), BE (ja), correctie = veel tijd weinig prijs (tijdverhouding: geen verschil, zie hierboven).
+
+## Test 24 (vooraf vastgelegd, 2026-10-30): alleen instappen na bevestiging in de golden pocket / 0,786
+
+De trader: "Alleen een positie openen nadat er reactie is in goldenpocket of 0-786 die wijst op een bounce en
+continuation. Soms valt de prijs ook onder de 1/1, dan is het belangrijk dat het daar liquiditeit heeft genomen van
+een eerdere low. En dan opnieuw kijken op de 4u chart naar confirmation dat het toch nog een bullish N wordt."
+`research/strategy/test24.py`: grote dagpoten (test 20); op 4u: aanraking 0,618; bevestiging = na de laagste 4u-low
+sinds de aanraking (L*) een 4u-slot boven de laatste bevestigde 4u-swingtop van vóór L* (structuurbreuk = begin van
+het tweede been van de N); instap op dat slot, alleen bij RR >= 1,5 tot -0,2. Onder fib 1 alleen geldig als de prijs
+de liquiditeit van een eerdere dag-low heeft genomen (sweep), ongeldig > 1 ATR eronder. SL 0,1 ATR onder L*.
+Controle (Yahoo-data tot nu): GBPNZD aug-26 bevestigd 4 aug (+6,5R op -0,2), NZDCAD jun-24 bevestigd 30 juli (+9,2R),
+EURUSD/NZDCAD/GBPNZD samen ±+14R over 2023-2026 (veel -1R, enkele grote winnaars; RR 2-9).
+**Beslissend: `R_t020`, één positie per richting, 34 instrumenten (4u-data), 2005-2025.** Geslaagd als elke periode
+(2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: met de context van
+test 20 (regel, maandtrend), beheer, en per kenmerk van de bevestiging (sweep, diepte L*, tijd tot bevestiging) -
+ontdekking op 2005-2014, controle op 2015-2025.
