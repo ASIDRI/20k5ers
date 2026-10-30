@@ -291,3 +291,13 @@ Bruto, zonder kosten:
 De richting die Neely aanwijst, is niet beter dan de omgekeerde richting. Bij de triangle-thrust op de dag is ze zelfs
 slechter. De hoge trefkans kwam alleen uit de plaats van het doel. Er is dus geen voorsprong die met stops, doelen,
 positiegrootte of kansberekening in winst om te zetten is.
+
+**Stop en doel in dezelfde dagcandle (2026-10-30).** De motor (`test18.follow`) kent na de instap alleen dagcandles.
+Raakt één dag zowel de stop als het doel, dan is uit die candle niet af te lezen wat eerst kwam. De motor neemt dan
+de stop (voorzichtig). Dit gaat over de **uitvoering** van een open trade, niet over het signaal: het signaal
+gebruikt alleen gesloten candles. Opgelost met de 4u-candles van die dag, in tijdsvolgorde:
+- Het gebeurt bij 5,9% (triangle) en 2,3% (zigzag/flat) van de trades. 4u beslist in 85-91% van die gevallen.
+- Triangle, dag: Neely -0,029R tegen omgekeerd +0,030R.
+- Zigzag/flat, dag: Neely -0,007R tegen omgekeerd -0,015R.
+- De trefkansen komen dan uit op die van toeval (64,3% tegen ±66%; 55,1% tegen ±55,6%).
+Beide richtingen gaan iets omhoog; het verschil tussen Neely en omgekeerd verandert niet.
