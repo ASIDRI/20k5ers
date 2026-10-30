@@ -134,7 +134,7 @@ def run(sym, start, end):
             # the data ended while the setup was still waiting for its rejection candle: live
             res = "actief"
             row.update(zone_0618=top - dirn * 0.618 * rng, zone_0786=top - dirn * 0.786 * rng,
-                       sl=b1 - dirn * SL_BUF[0] * atr[f], tp_020=top + dirn * 0.2 * rng, touch_n=touch_n,
+                       sl=(w1 if FIB == "bodywick" else b1) - dirn * SL_BUF[0] * atr[f], tp_020=top + dirn * 0.2 * rng, touch_n=touch_n,
                        nog_candles=deadline - f - 1, **context(f, top - dirn * 0.618 * rng))
         if res != "gevuld":
             rows.append(dict(row, result=res))
