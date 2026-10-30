@@ -1249,3 +1249,13 @@ test 32). Uit: half -0,25, stop naar de oude top, rest -0,65.
 **Beslissend: `htf_sup & hi_struct == 1 & bos & has_ob` (alles in confluentie), `R_m`, één positie per richting, 37
 instrumenten.** Geslaagd als elke periode > 0 met PF >= 1,05 en t >= 2,0, én op de 29 holdout-exoten elke periode > 0.
 Gerapporteerd: zonder maandstructuur, zonder OB, test 37 met bevestiging i.p.v. limiet.
+
+### Uitkomst test 40: piramide verworpen; test 37 + dagbevestiging is de beste kandidaat
+Volledige piramide (S/R + maand- én weekstructuur + fib + OB + bevestiging): 73 trades (3 per jaar), +0,50 / -0,15 /
+-0,34R (t 0,85) -> verworpen; de eis "maandstructuur mee" maakt het slechter (zelfde les als test 39: een weekbreuk
+tegen een nog niet gedraaide maand is juist de vroege omkeer). Zonder maandstructuur: +0,13 / +0,19 / +0,17R (t 1,5).
+**Test 37-regel (weekpoot + breuk + OB) met instap op de dagbevestiging i.p.v. de limiet** (gerapporteerde variant):
+37 instrumenten 264 trades (13 per jaar), +0,27 / +0,20 / +0,15R (PF 1,44 / 1,35 / 1,27, t 2,28); holdout 194 trades,
++0,31 / +0,06 / +0,08R (PF 1,53 / 1,09 / 1,13, t 1,83). Dit is de eerste versie die op de 37 de lat haalt én op de
+holdout in elke periode positief is - maar het is een variant, niet de vooraf beslissende regel van test 40, dus eerst
+vooruit volgen (scanner) vóór geld.
