@@ -1103,3 +1103,12 @@ fib 1, beheer) met kleinere dagpoten: zigzag-keerpunt na 1,5 dag-ATR, poot >= 3 
 **Beslissend: 1,5 / 3, `cont & wk_struct == 1` (continuation met de weekstructuur, zonder S/R-eis om het aantal te
 houden), `R_m_top_1`, één positie per richting.** Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen
 t >= 2,0. Gerapporteerd: trades per jaar en de andere regels.
+
+### Uitkomst test 35: verworpen - kleinere poten geven het gewenste aantal, maar geen voorsprong
+1,5 / 3, continuation + weekstructuur (beslissend): 1679 trades (±80 per jaar), +0,03 / -0,07 / +0,04R (t 0,2).
+Alle setups 1,5 / 3: 4106 trades = ±196 per jaar (±3,8 per week, het aantal van de trader), -0,00 / -0,05 / -0,03R.
+1 / 2 alle: ±310 per jaar, -0,04 / -0,04 / -0,03R (t -2,1). 2 / 4 met de 37: regel +0,17 / -0,02 / -0,03R.
+Lijn over alle tests: hoe kleiner de poot, hoe meer trades en hoe kleiner de voorsprong; alleen de grote poten
+(3 / 6) + continuation + regel zijn in elke periode positief (±21 per jaar). Het verschil tussen de ±4 setups per week
+van de trader en het mechanische resultaat zit dan in een keuze die niet in de regels staat - alleen te vinden met
+de volledige tradegeschiedenis (ook verliezers en overgeslagen setups).
