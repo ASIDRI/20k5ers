@@ -1290,3 +1290,10 @@ toont (nov-23 short, dec-23 long, apr-24 short: alle -1R).
 limiet opnieuw op 0,66 van de nieuwe poot (OB vervalt), verlooptijd opnieuw. Verder test 41.
 **Beslissend: `bos & wk_sr`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF
 >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: alle setups, met weekbias, `R_m`.
+
+### Uitkomst test 42: verworpen
+`bos & wk_sr`, `R_t020`: 1636 trades (78 per jaar, 1,5 per week), +0,06 / -0,01 / -0,07R (t 0,4); holdout +0,01 /
+-0,03 / +0,06R. Fib 0 verleggen vangt nu de NZDCAD jun-24 trade van de trader (+2,1R), maar in NZDCAD sep-23 t/m
+sep-24 vuurt dezelfde regel 7 keer: de trader toont 3 winnaars (okt-23, feb-24, jun-24), de engine heeft daarnaast
+5 verliezers (nov-23 short, dec-23 long, apr-24 short, aug-24 short x2, okt-24 long). Het verschil tussen de trader en
+de regels zit in welke setups hij **niet** neemt - dat staat nergens in de video's of screenshots.
