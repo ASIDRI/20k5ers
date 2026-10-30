@@ -35,6 +35,7 @@ import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
+SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
 HIGHER = {"D1": "W1", "W1": "MN"}
 DAYS = {"D1": 1, "W1": 5}  # daily candles per --tf candle (for the expiry)
 
@@ -118,7 +119,8 @@ def run(sym, tf, start, end):
         last = min(f + EXPIRY * DAYS[tf], len(d))
         res = "verlopen"
         while f < last:
-            if ((h[f] if dirn == 1 else l[f]) - top) * dirn > 0 and ((l[f] if dirn == 1 else h[f]) - entry) * dirn > 0:
+            beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
+            if beyond and ((l[f] if dirn == 1 else h[f]) - entry) * dirn > 0:
                 res = "weggelopen"
                 break
             if ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0:
@@ -158,7 +160,9 @@ if __name__ == "__main__":
     ap.add_argument("--start", default="2005-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default="t36_")
+    ap.add_argument("--sweep", action="store_true")
     a = ap.parse_args()
+    SWEEP = a.sweep
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)

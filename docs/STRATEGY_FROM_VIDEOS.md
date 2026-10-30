@@ -1180,3 +1180,21 @@ een daaltrend = inverse H&S), anders voortzetting.
 **Beslissend: weekpoten, `has_ob & bos`, `R_m`, één positie per richting.** Geslaagd als op de 37 instrumenten van de
 trader elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0, én op de 29 holdout-exoten elke periode > 0.
 Gerapporteerd: omkeer vs voortzetting, met S/R, dagpoten, en de voorbeeldtrades van de trader.
+
+### Uitkomst test 37: op de 37 instrumenten geslaagd, holdout net niet (laatste periode)
+Weekpoten, OB in de golden pocket + structuurbreuk, `R_m`: 287 trades (14 per jaar), +0,24 / +0,18 / +0,16R (PF
+1,39 / 1,29 / 1,26, t 2,15) -> de lat op de 37 instrumenten van de trader is gehaald (eerste keer). Holdout (29
+exoten): +0,33 / +0,14 / -0,02R (PF 1,57 / 1,22 / 0,97; 2021-25 maar 22 trades), t 2,12 -> voorwaarde "elke periode
+> 0" op de holdout mist in 2021-25 -> formeel niet geslaagd, wel de beste en meest consistente uitkomst tot nu toe.
+Omkeer (inverse H&S, eerste N na de breuk): +0,48 / +0,20 / +0,11R (t 2,37); voortzetting: +0,07 / -0,04 / +0,26R.
+OB zonder breuk: -0,22 / +0,40 / +0,35R. Dagpoten met breuk: +0,02 / +0,08 / -0,08R -> op de dag werkt het niet.
+**Voorbeeldtrades van de trader** (`trader_trades.py`) naast de engine: GBPAUD nov-25 = exact dezelfde dagpoot en
+instap (2,04388), maar de engine schrapt hem: op 12 nov prikt een wick 29 pips onder fib 0 (1,99878 -> 1,99588)
+vóór de instap; de trader houdt de fib (sweep van de low = liquiditeit) en wordt op 24 nov gevuld. NZDCAD jun-24 =
+dezelfde weekpoot met OB + breuk + omkeer, maar de OB-instap (0,822) ligt hoger dan die van de trader (0,814, fib
+±0,88) -> -1R in de engine. EURUSD jun-25 (D1) is een kleinere poot dan 2 / 4 ATR. EURAUD dec-25: data eindigt.
+
+## Test 38 (vooraf vastgelegd): een wick voorbij fib 0 is een sweep, geen annulering
+Uit de GBPAUD-trade van de trader. `test36.py --sweep`: vóór de instap vervalt de setup pas bij een **slot** voorbij
+fib 0; een wick erdoor laat de fib staan. Verder exact test 37. Beslissend: weekpoten, `has_ob & bos`, `R_m`; zelfde
+lat (37 instrumenten: elke periode > 0, PF >= 1,05, t >= 2,0; holdout: elke periode > 0). Ook dagpoten gerapporteerd.
