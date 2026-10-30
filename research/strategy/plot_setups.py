@@ -54,7 +54,7 @@ def main(prefix, sym, a, b, out):
                    (d.time <= pd.Timestamp(exit_t, tz="UTC") + pd.Timedelta(days=35))].reset_index(drop=True)
             ww = w[(w.time >= ts - pd.Timedelta(days=730)) & (w.time <= pd.Timestamp(exit_t, tz="UTC") + pd.Timedelta(days=60))].reset_index(drop=True)
             # the key level the leg broke: the previous same-side daily turn before the leg's start
-            k = next((i for i, (ci, ti, p, kk) in enumerate(turns) if str(d.time[ti])[:10] == r.start_t), None)
+            k = next((i for i, (ci, ti, p, kk) in enumerate(turns) if str(d.time[ti])[:10] == r.start_t and abs(p - r.w1) < 1e-9), None)
             key = turns[k - 1][2] if k is not None and k >= 1 else None
             levels = [p for p in clus(ts) if abs(p - entry) < 3 * rng]
             fig, (ax, ax2) = plt.subplots(1, 2, figsize=(17, 6.5), gridspec_kw={"width_ratios": [2.2, 1]})
