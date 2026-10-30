@@ -15,6 +15,9 @@
 Context: hi_struct (zigzag 2 / 4 of the next higher timeframe: W1 for D1 legs, MN for W1 legs, HH+HL = +1 in the trade
 direction), htf_sup (a monthly/weekly S/R level between fib 1 and the entry), m_ma (monthly close vs its 10-month
 mean, in the trade direction).
+Structural framework (video 4, test 37): bos = a --tf close during the leg beyond the previous same-side turn (the key
+level: the last high for a long), i.e. the leg broke structure; shift = that previous turn was itself lower than the one
+before (the leg turned a downtrend: inverse H&S), else continuation (N).
 """
 import argparse
 import sys
@@ -83,6 +86,9 @@ def run(sym, tf, start, end):
         rng = (top - b1) * dirn
         if rng < LEG * A:
             continue
+        key = turns[k - 2][2] if k >= 2 else None  # previous same-side turn: the key level
+        bos = key is not None and bool(((gc[si:ti + 1] - key) * dirn > 0).any())
+        shift = bos and k >= 4 and (key - turns[k - 4][2]) * dirn < 0
         gp_hi, gp_lo = top - dirn * 0.618 * rng, top - dirn * 0.786 * rng  # near / far edge of the golden pocket
         # daily candles of the leg: from the start candle to the end of the extreme candle
         a = int(np.searchsorted(dt, g.time.values[si]))
@@ -106,7 +112,7 @@ def run(sym, tf, start, end):
             entry, ob_t = gp_hi, None
         sl = w1 - dirn * SL_BUF * A
         row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(g.time.values[si])[:10],
-                   top_t=str(g.time.values[ti])[:10], b1=b1, w1=w1, top=top, rng=rng, has_ob=bool(obs), ob_t=ob_t,
+                   top_t=str(g.time.values[ti])[:10], b1=b1, w1=w1, top=top, rng=rng, has_ob=bool(obs), ob_t=ob_t, bos=bos, shift=shift,
                    n_ob=len(obs), entry=entry, sl=sl, entry_fib=(top - entry) * dirn / rng)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))

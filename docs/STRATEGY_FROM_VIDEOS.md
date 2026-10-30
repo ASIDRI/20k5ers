@@ -1168,3 +1168,15 @@ t >= 2,0 op de 31; daarnaast gerapporteerd: OB + S/R.
 +0,26R (t 1,3). Zoals bij test 33: de voorsprong houdt stand buiten de markten waarop hij gekozen is, maar is klein.
 Aantal op de 37 instrumenten van de trader: ±18 per jaar (weekpoten) - de video werkt van week naar dag, en levert
 dus weinig setups.
+
+## Test 37 (vooraf vastgelegd, 2026-10-30): + structural frameworks (video 4)
+Video 4 ("Lesson 4 structural frameworks"): handel pas na een verschuiving van de marktstructuur - de prijs kan niet
+verder dalen, breekt het key level (de laatste lower high) met breakaway-candles = inverse H&S; daarna fib body ->
+wick op die impuls, instap in de golden pocket (rechterschouder), SL onder het hoofd, doelen -0,25 / -0,65 / -1, stop
+in winst na het eerste doel. Daarna N-patronen (voortzetting) tot 5 golven, "we stay bullish until we have a break of
+our key high or key level". Gecodeerd in `test36.py`: `bos` = tijdens de poot een slot (zelfde tijdsframe) voorbij het
+vorige keerpunt aan dezelfde kant (het key level); `shift` = dat keerpunt lag zelf lager dan het vorige (de poot draait
+een daaltrend = inverse H&S), anders voortzetting.
+**Beslissend: weekpoten, `has_ob & bos`, `R_m`, één positie per richting.** Geslaagd als op de 37 instrumenten van de
+trader elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0, én op de 29 holdout-exoten elke periode > 0.
+Gerapporteerd: omkeer vs voortzetting, met S/R, dagpoten, en de voorbeeldtrades van de trader.

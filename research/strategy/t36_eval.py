@@ -14,7 +14,10 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"regel: OB in golden pocket + hogere structuur + S/R": "has_ob & hi_struct == 1 & htf_sup",
+RULES = {"test 37: OB + structuurbreuk (video 4)": "has_ob & bos", "OB + breuk, omkeer (inv. H&S)": "has_ob & shift",
+         "OB + breuk, voortzetting (N)": "has_ob & bos & ~shift", "OB + breuk + S/R": "has_ob & bos & htf_sup",
+         "structuurbreuk zonder OB-eis": "bos", "OB zonder breuk": "has_ob & ~bos",
+"regel: OB in golden pocket + hogere structuur + S/R": "has_ob & hi_struct == 1 & htf_sup",
          "OB + hogere structuur": "has_ob & hi_struct == 1", "OB + S/R": "has_ob & htf_sup",
          "OB + hogere structuur + maandtrend": "has_ob & hi_struct == 1 & m_ma == 1",
          "alleen OB": "has_ob", "zonder OB (limiet 0,618) + structuur + S/R": "~has_ob & hi_struct == 1 & htf_sup",
@@ -26,7 +29,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
-    for k in ("htf_sup", "has_ob"):
+    for k in ("htf_sup", "has_ob", "bos", "shift"):
         f[k] = f[k].astype(str).str.lower().eq("true")
     for lab, rule in RULES.items():
         o = one_per_dir(f.query(rule), "t065")
