@@ -910,3 +910,12 @@ Regel video 11, `R_t020`: 2005-14 -0,05R (437) / 2015-20 -0,19R (202) / 2021-25 
 Delen: breakaway + reactie binnen 1: -0,08 / -0,18 / +0,42R; geen breakaway + fib 1 genomen: +0,45 / +0,09 / +0,03R
 (maar 43 trades); geen breakaway + binnen 1 (volgens de video vermijden): -0,01 / -0,05 / -0,37R.
 In 2021-2025 maakt breakaway een groot verschil (+0,42 tegen -0,37R), daarvoor niet.
+
+## Test 26 (vooraf vastgelegd, 2026-10-30): video 10 "Liquidity Pockets" intraday
+
+`research/strategy/test26.py`, SPX500 (15 min, 2015-2026) en NAS100 (15 min tot 2022). Per dag: high/low van de
+vorige New York-middagsessie (13:30-16:00 NY) = liquiditeit. Neemt de prijs de high en sluit een 15-min-candle terug
+onder de high (geen breakaway) -> short, SL boven de sweep-high (+ 0,1 x de sessierange), doel de low; omgekeerd long.
+Eerste trigger van de dag, vóór 15:00, RR >= 1, uit op doel/SL/16:00. Kosten per symbool. Beslissend: alle trades.
+Geslaagd als elke periode (2015-18, 2019-22, 2023-26) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+Gerapporteerd: met/tegen de dag-bias (slot vorige dag boven/onder 20-daags gemiddelde).
