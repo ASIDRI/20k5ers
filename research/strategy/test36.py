@@ -41,6 +41,7 @@ CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a
 # above the previous high, still at or below fib 0.382) instead of the limit
 CONFL = False  # --confl (test 44): limit at the BoS (key) level or a weekly S/R cluster inside fib 0.618-0.796 (the
 # first one price reaches); no such level -> no trade
+BASEFIRST = False  # --basefirst (test 54 only): with --fibzone, the base / S/R zone first if there is one
 FIBZONE = False  # --fibzone (test 52): the zone is fib 0.618-0.796 itself (continuations: "no trade if it didn't
 # touch our fib levels"); a cheat-sheet pattern touching it confirms
 BASE = False  # --base (test 45): the base / S/R zone formed before the BoS (>= 2 daily swing points within 0.5 ATR);
@@ -442,8 +443,8 @@ def run(sym, tf, start, end):
             if FIBZONE:
                 # test 54: the base / S/R zone if there is one (EURNZD Dec 2017: short at fib 0.5 in the S/R zone), else
                 # fib 0.618-0.796 itself
-                zone = (base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None) or \
-                    ((top - dirn * 0.618 * rng, top - dirn * 0.796 * rng) if bos else None)
+                zone = (base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if (tf == "D1" and BASEFIRST) else None) \
+                    or ((top - dirn * 0.618 * rng, top - dirn * 0.796 * rng) if bos else None)
             else:
                 zone = base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None
             if zone is None:
@@ -555,8 +556,9 @@ if __name__ == "__main__":
     ap.add_argument("--base", action="store_true")
     ap.add_argument("--patterns", action="store_true")
     ap.add_argument("--fibzone", action="store_true")
+    ap.add_argument("--basefirst", action="store_true")
     a = ap.parse_args()
-    PATTERNS, FIBZONE = a.patterns, a.fibzone
+    PATTERNS, FIBZONE, BASEFIRST = a.patterns, a.fibzone, a.basefirst
     SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL, BASE = a.sweep, a.entry, a.confirm, a.reanchor, a.confl, a.base
     for s in a.symbols:
         try:

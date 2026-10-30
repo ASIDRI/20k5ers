@@ -1553,3 +1553,16 @@ gespiegeld, anders blijft de vorige call. (De BSR / een nieuwsscore is apart; zi
 **Test 55**: de dagsetups van test 53 met de call i.p.v. de week-trigger. **Beslissend: `((ms_trend == 1) | (mt_done
 == -1)) & vv_call == 1 & ~m_block`, `R_m`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0,
 PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: test 53 + call, call alleen, test 53 met call tegen.
+Correctie: de eerste run van test 55 gebruikte per vergissing de zone van test 54 (basis eerst); die wijziging staat
+nu achter `--basefirst` (alleen test 54) en test 55 is opnieuw gedraaid met de zone van test 53.
+
+### Uitkomst test 55: verworpen - maar de call TEGEN de trade is opvallend sterk (ontdekking, niet vooraf)
+Beslissend (call mee i.p.v. week-trigger), `R_m`: 437 trades (21 per jaar), +0,06 / -0,06 / -0,14R (t -0,3); holdout
++0,12 / -0,07 / +0,02R. Test 53 + call mee: +0,10 / -0,11 / -0,09R. Call alleen: +0,08 / -0,07 / -0,21R.
+**Ontdekking**: test 53 maar met de call **tegen** de trade (in een bullish setting een long nadat de prijs twee weken
+na elkaar daalde = de terugval naar de fib): 547 trades (26 per jaar, 0,5 per week), `R_m` +0,17 / +0,14 / +0,10R
+(PF 1,30 / 1,23 / 1,18, t 2,4), `R_t020` +0,15 / +0,07 / +0,11R (t 2,1); holdout 452 trades, `R_m` +0,08 / +0,46 /
++0,12R (PF 1,13 / 2,06 / 1,22, t 2,9). Op beide sets in elke periode positief met t > 2 - maar gevonden ná het zien van
+de resultaten, en beide sets zijn nu gebruikt -> alleen vooruit (live) te bevestigen. Logica: de confirmed call in de
+trendrichting komt laat (achterna lopen); een call tegen de trend binnen de setting markeert juist de terugval waarop
+de trader instapt.
