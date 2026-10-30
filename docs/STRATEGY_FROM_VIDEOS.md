@@ -1297,3 +1297,22 @@ limiet opnieuw op 0,66 van de nieuwe poot (OB vervalt), verlooptijd opnieuw. Ver
 sep-24 vuurt dezelfde regel 7 keer: de trader toont 3 winnaars (okt-23, feb-24, jun-24), de engine heeft daarnaast
 5 verliezers (nov-23 short, dec-23 long, apr-24 short, aug-24 short x2, okt-24 long). Het verschil tussen de trader en
 de regels zit in welke setups hij **niet** neemt - dat staat nergens in de video's of screenshots.
+
+## Grafieken van de NZDCAD-setups (`plot_setups.py`, `docs/setups_nzdcad/`) en test 43 (vooraf vastgelegd)
+Waarom verloren de engine-setups in NZDCAD sep-23 t/m dec-24 (dag + week naast elkaar bekeken)?
+- nov-23 short, jan-24 long, aug-24 short (2x): **tegen de weekbias** en/of zonder weekly S/R in de zone - ze vallen
+  al weg met de regel bias + S/R.
+- apr-24 short (bias mee, S/R ja): de poot eindigt op 0,8067 = **precies op de week-support van de range-bodem**
+  (0,807, sinds 2023 meermaals gehouden): de weekcandle prikt er net door en sluit erboven -> einde van de beweging,
+  doel -0,2 (0,8014) ligt onder die support.
+- okt-24 long (bias mee, S/R ja): de poot eindigt met een spike naar 0,8614 **boven de grote weekweerstand 0,853**
+  (toppen 2022-23); de weekcandle sluit er weer onder (lange bovenwick) = liquiditeitsgrijp aan HTF-weerstand ->
+  omkeer; doel 0,867 ligt boven die weerstand.
+- jul-24 long (winnaar, ook de trade van de trader): top 0,8519 net ónder 0,853, geen sweep -> doorgezet tot -0,2.
+Hypothese: een poot waarvan de **weekcandle van de extreme een weekly S/R-niveau doorprikt en terug sluit** (sweep
+van HTF-liquiditeit) is het einde van de beweging, geen voortzetting (video 12: "previous week high taken ... you
+need to be careful"; video 4: "unable to expand").
+**Test 43**: test 42 + `w_rej` (die weekcandle: extreme voorbij een weekly S/R-cluster, slot terug erachter).
+**Beslissend: `bos & wk_sr & hi_bias == 1 & ~w_rej`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat
+(elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Afgeleid uit 3 trades van één paar -> de
+holdout is hier extra belangrijk.

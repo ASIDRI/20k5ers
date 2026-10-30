@@ -106,7 +106,9 @@ def run(sym, tf, start, end):
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
     lv = Levels(sym)
-    clus = sr_methods(sym)[0]["cluster"]  # weekly S/R: >= 2 weekly swing points within 0.25 weekly ATR (test 41)
+    clus = sr_methods(sym)[0]["cluster"]
+    wk = load(sym, "W1")
+    wkt, wkh, wkl, wkc = wk.time.values, wk.high.values, wk.low.values, wk.close.values  # weekly S/R: >= 2 weekly swing points within 0.25 weekly ATR (test 41)
     test5.REV = REV
     turns, atr = test5.legs(g)
     t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
@@ -155,6 +157,7 @@ def run(sym, tf, start, end):
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
         res, touched = "verlopen", False
+        top_day = g.time.values[ti] if tf == "D1" else None  # the daily candle of the leg's extreme
         while f < last:
             beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
             if beyond and ((l[f] if dirn == 1 else h[f]) - entry) * dirn > 0:
@@ -164,6 +167,7 @@ def run(sym, tf, start, end):
                     entry = top - dirn * ENTRY * rng
                     last = min(f + 1 + EXPIRY * DAYS[tf], len(d))
                     row.update(top=top, rng=rng, entry=entry, has_ob=False, reanchored=True)
+                    top_day = dt[f]
                     f += 1
                     continue
                 res = "weggelopen"
@@ -195,6 +199,10 @@ def run(sym, tf, start, end):
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
                    m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
+        if top_day is not None:  # test 43: the week of the leg's extreme swept a weekly S/R level and closed back
+            wi = int(np.searchsorted(wkt, top_day, side="right")) - 1
+            ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
+            row["w_rej"] = any((ext - p) * dirn > 0 and (cl - p) * dirn < 0 for p in clus(ts))
         hit_sl = not CONFIRM and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
         for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
