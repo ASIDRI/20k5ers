@@ -34,8 +34,16 @@ STRUCT_TF, ENTRY_TF = "D1", "H4"  # test 4: W1 / D1 (--struct-tf, --entry-tf)
 COST = json.loads((HERE.parent / "costs.json").read_text())  # adverse pips per symbol (spread + slippage)
 
 
-def cost_price(sym):
+# exotics, crypto (test 33): adverse cost per side in basis points of the price (spread + slippage, retail/prop)
+REL_BPS = {"TRY": 10, "THB": 10, "ZAR": 4, "MXN": 4, "BTC": 5, "ETH": 6,
+           "SGD": 3, "NOK": 3, "SEK": 3, "PLN": 3, "CZK": 3, "HUF": 3}
+
+
+def cost_price(sym, price=None):
     u = sym.replace("_", "").upper()
+    rel = next((v for k, v in REL_BPS.items() if k in u), None)
+    if rel is not None and price is not None:
+        return 2 * rel * 1e-4 * price  # entry and exit
     pips = next((v for k, v in sorted(COST.items(), key=lambda kv: -len(kv[0])) if k in u), 1.5)
     pip = (0.01 if ("JPY" in u or u.startswith(("XTI", "XAG"))) else 0.1 if u.startswith("XAU")
            else 1.0 if u.startswith(("UK100", "NAS100", "SPX500", "US500")) else 0.0001)

@@ -140,6 +140,7 @@ def run(sym, start, end):
             rows.append(dict(row, result=res))
             continue
         row.update(**context(f, entry))
+        cost = cost_price(sym, entry)  # exotics / crypto: relative to the price at entry
         row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, touch_n=touch_n)
         for pre, buf in zip(("R_", "R_w_"), SL_BUF):
             sl = (w1 if FIB == "bodywick" else b1) - dirn * buf * atr[f]

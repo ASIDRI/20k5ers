@@ -1047,3 +1047,15 @@ Winnend slechts 11-22%: de krappe stop onder de 4u-reactie-low (L*) wordt te vaa
 dezelfde poten is de dag-afwijzingscandle met de stop voorbij de wick van fib 1 (30b / 31: +0,16 / +0,03 / +0,14R)
 duidelijk beter. Conclusie: de 4u-bevestiging als instap met een krappe stop kost meer dan ze oplevert; de 4u-grafiek
 blijft nuttig voor timing, maar de stop hoort voorbij de structuur (de wick van fib 1), niet onder de 4u-reactie.
+
+## Test 33 (vooraf vastgelegd, 2026-10-30): de beste dagversie op nieuwe instrumenten (holdout)
+
+Meer trades via meer markten, niet via lossere regels. Test 31 grote poten (fib body -> wick, 3 / 6, dag-
+afwijzingscandle, SL voorbij de wick van fib 1), regel `cont & wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie
+per richting, op instrumenten die nooit in een test of optimalisatie zaten: AUDSGD CADSGD CHFZAR EURCZK EURHUF EURNOK
+EURPLN EURSEK EURSGD EURTRY EURZAR GBPPLN GBPSGD GBPZAR NZDSGD SGDCHF SGDJPY TRYJPY USDCZK USDHUF USDMXN USDNOK USDPLN
+USDSEK USDSGD USDTHB USDTRY USDZAR ZARJPY BTC_USD ETH_USD (31). Weggelaten: gekoppelde munten (HKD, DKK, CNH) en
+dubbele reeksen (olie, SPX500_USD). Kosten per kant in basispunten van de prijs bij instap: TRY/THB 10, ZAR/MXN 4,
+BTC 5, ETH 6, SGD/NOK/SEK/PLN/CZK/HUF 3 (±3-10x de majors).
+Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0 op deze 31;
+daarnaast samen met de 34 van test 31 (65 instrumenten).
