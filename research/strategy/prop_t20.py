@@ -21,8 +21,8 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir  # noqa: E402
 
 
-def trades(col):
-    fs = [pd.read_csv(p) for p in glob.glob(str(HERE / "out" / "t20_*.csv")) + glob.glob(str(HERE / "out" / "t20x_*.csv"))
+def trades(col, prefixes=("t20_", "t20x_")):
+    fs = [pd.read_csv(p) for pre in prefixes for p in glob.glob(str(HERE / "out" / f"{pre}*.csv"))
           if Path(p).stat().st_size > 1]
     f = pd.concat(fs)
     f = f[f.result == "gevuld"].reset_index(drop=True)
@@ -51,8 +51,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--col", default="R_m_top_1")
     ap.add_argument("--risks", default="0.01,0.015,0.02")
+    ap.add_argument("--prefixes", default="t20_,t20x_")
     a = ap.parse_args()
-    t = trades(a.col)
+    t = trades(a.col, a.prefixes.split(","))
     per_year = t.groupby(t.exit.str[:4]).R.agg(["size", "sum"])
     print(f"{len(t)} trades ({a.col}), gemiddeld {t.R.mean():+.3f}R; per jaar:\n{per_year.round(1).T.to_string()}")
     starts = pd.date_range("2006-01-01", "2024-12-01", freq="MS").strftime("%Y-%m-%d")

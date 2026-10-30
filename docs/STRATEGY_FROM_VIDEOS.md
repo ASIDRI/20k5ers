@@ -999,3 +999,13 @@ Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapp
 ook niet de juiste manier: "body to wick, altijd".
 **Test 30b (vooraf vastgelegd):** fib 1 = body van de start-candle, 0 = wick van het uiterste; SL voorbij de wick van
 de start (0,1 ATR); verder exact test 20. Zelfde regel, beheer en lat.
+
+### Uitkomst test 30b (fib body -> wick): beste en stabielste versie tot nu toe, lat net niet gehaald
+Regel (week + S/R), beheer (`R_m_top_1`): 2005-14 +0,12R (PF 1,20, 231 trades) / 2015-20 +0,07R (PF 1,10, 129) /
+2021-25 +0,09R (PF 1,14, 82); t 1,41. Elke periode positief met PF >= 1,05; alleen t >= 2,0 niet gehaald.
+Volledig op -0,2: +0,09 / +0,05 / +0,09R (t 1,1). Ook alle grote poten zonder filter nu positief in elke periode
+(+0,05 / +0,04 / +0,01R). Ter vergelijking wick -> wick (test 20): +0,05 / +0,05 / +0,22R; body -> body: +0,13 /
++0,09 / -0,05R. Body -> wick geeft de gelijkmatigste uitkomst over de drie periodes.
+5ers (test 30b, regel + beheer, 442 trades, ±21 per jaar, +0,10R gemiddeld; jaarsommen -14R tot +22R): 1% risico
+26% geslaagd / 58% breach (mediaan 530 dagen); 1,5% 27% / 64%; 0,75% 19% / 59%. Stabieler per trade, maar te weinig
+rendement per jaar (±+2R) voor +8% binnen redelijke tijd.
