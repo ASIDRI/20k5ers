@@ -1316,3 +1316,9 @@ need to be careful"; video 4: "unable to expand").
 **Beslissend: `bos & wk_sr & hi_bias == 1 & ~w_rej`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat
 (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Afgeleid uit 3 trades van één paar -> de
 holdout is hier extra belangrijk.
+
+### Uitkomst test 43: verworpen - de reden uit NZDCAD geldt niet in het algemeen
+`bos & wk_sr & hi_bias == 1 & ~w_rej`, `R_t020`: 717 trades (34 per jaar), +0,17 / -0,19 / +0,13R (t 1,0); holdout
+-0,07 / +0,04 / +0,10R. Poten mét een week-sweep op de top zijn over alle markten niet slechter (+0,01 / +0,20 /
+-0,01R). Wat de NZDCAD-verliezers verklaart (top in HTF-weerstand, bodem op range-support) is achteraf duidelijk, maar
+als mechanische regel over 37 markten en 20 jaar geeft het geen voorsprong.
