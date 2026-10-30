@@ -1616,3 +1616,12 @@ smt`, `R_m`, één positie per richting, alleen instrumenten met een partner (26
 > 0, PF >= 1,05, t >= 2,0; geen holdout: de exoten hebben geen partner in de lijst). Ook gerapporteerd met de setups
 van test 53 (fib 0,618-0,796).
 (De pdf "ICT Weekly Profiles" - op welke dag de low/high van de week valt - is genoteerd voor later.)
+
+## Test 60 (vooraf vastgelegd): swing-setup met zone 0,5-0,796 en 4u-candlepatronen
+De trader: "Gebruik 0.5 - 0.796 en anders ook 4 hour candle pattern." Test 58 met `--zone 0.5,0.796 --h4pat`: de zone
+loopt van fib 0,5 tot 0,796 (slot boven 0,796 vereist); instap op een cheat-sheet-patroon op de dag, of eerder op een
+cheat-sheet-patroon (of de 3-candle-vertraging) op de 4 uur waarvan de extreme de zone raakt en dat boven 0,796 sluit
+(instap op dat 4u-slot; raakt de dagcandle daarna nog de SL: -1R). SL 0,1 ATR onder de wick van fib 1, dagswings
+(zigzag 1 / 2 ATR). **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_m`, één positie
+per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
+Gerapporteerd: dag- vs 4u-trigger, + SMT.
