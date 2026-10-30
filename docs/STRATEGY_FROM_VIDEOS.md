@@ -1500,3 +1500,14 @@ Gerapporteerde variant **+ geen maand-S/R tussen instap en doel**: 786 trades (3
 +0,15 / +0,03 / +0,04R (PF 1,27 / 1,05 / 1,06, t 1,9), beheer `R_m` +0,18 / +0,07 / +0,05R (PF 1,33 / 1,12 / 1,10,
 t 2,4) - alle periodes positief; holdout `R_t020` -0,02 / +0,06 / +0,08R (`R_m` -0,02 / +0,08 / +0,12R) - één
 periode net negatief. Kandidaat om vooruit te volgen (scanner), nog niet om mee te handelen.
+
+## Test 53 (vooraf vastgelegd): ook tegengesteld na het maanddoel (week-BoS)
+De trader: "Hoeveel trades heb je nu? Omgekeerd short kan ook he. Maar dan eerder op de wekelijkse grafiek kijken
+voor bos enzo maar dan moet de maandelijkse target wel behaald zijn." (Test 52 bevatte al shorts in een bearish
+setting, gespiegeld; 786 trades = ±0,7 per week.) Aanpassingen in `monthly_setup_trend`: een trend die met een
+maand-BoS start, loopt tot het volgende maand-S/R-niveau >= 1 maand-ATR verder (GBPJPY: bullish feb 2021 - dec 2022,
+"towards the monthly s/r higher"); na een maand-setup blijft het doel -0,25. Is het doel behaald, dan is de setting
+voorbij en mag de tegengestelde richting zodra de week-trigger (engulfing + week-BoS) die kant op wijst (`mt_done`).
+**Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_t020`, één positie per richting,
+37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd:
+alleen de tegengestelde trades, longs / shorts apart.

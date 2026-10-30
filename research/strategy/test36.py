@@ -104,7 +104,7 @@ def monthly_levels(sym, n=4):
     return at
 
 
-def monthly_setup_trend(sym, rev=2.0, leg=3.0):
+def monthly_setup_trend(sym, rev=2.0, leg=3.0, with_reached=False):
     """The trend from a setup on the monthly chart (the trader, gold 2016-2017: "hier begint de uptrend"). Monthly
     zigzag legs (turn after `rev` monthly ATR, leg >= `leg` ATR), fib body -> wick; the leg must close beyond the most
     recent monthly swing point on its side (2 months each side, a BoS). Once the leg is confirmed, the first month that
@@ -149,6 +149,15 @@ def monthly_setup_trend(sym, rev=2.0, leg=3.0):
     # zigzag turn on the other side starts the trend; the latest event (BoS or setup) wins
     bh, bl = np.maximum(o, c), np.minimum(o, c)
     state, inval, out, sh, sl_ = 0, None, [], None, None
+    mlev = monthly_levels(sym)
+
+    def bos_target(i, d):
+        """A trend started by a monthly BoS runs to the next monthly S/R level at least 1 monthly ATR beyond the close
+        (GBPJPY 2021: "trade all setups towards the monthly s/r higher")."""
+        ahead = [p for p in mlev(m["done"][i]) if (p - c[i]) * d >= atr[i]]
+        return min(ahead, key=lambda p: abs(p - c[i])) if ahead else None
+
+    reached = []
     tgt, done_dir = None, 0  # test 52: the monthly target -0.25 of the setup; once reached the setting ends
     known = {}
     for ci, ti, _, kind in turns:  # the larger monthly swings: zigzag turns, known from their confirming candle
@@ -164,13 +173,16 @@ def monthly_setup_trend(sym, rev=2.0, leg=3.0):
         if state and tgt is not None and ((h[i] if state == 1 else l[i]) - tgt) * state >= 0:
             state, inval, tgt, done_dir = 0, None, None, state
         if sh is not None and c[i] > sh and state != 1 and done_dir != 1:
-            state, inval, tgt, done_dir = 1, None, None, 0
+            state, inval, tgt, done_dir = 1, None, bos_target(i, 1), 0
         elif sl_ is not None and c[i] < sl_ and state != -1 and done_dir != -1:
-            state, inval, tgt, done_dir = -1, None, None, 0
+            state, inval, tgt, done_dir = -1, None, bos_target(i, -1), 0
         if i in setups:
             state, inval, tgt = setups[i]
             done_dir = 0
         out.append(state)
+        reached.append(done_dir)
+    if with_reached:  # test 53: the direction whose monthly target -0.25 was reached (setting ended), per month
+        return np.array([x.value for x in m["done"]]), np.array(reached)
     return np.array([x.value for x in m["done"]]), np.array(out)
 
 
@@ -349,6 +361,7 @@ def run(sym, tf, start, end):
     mb = bos_bias(sym, "MN")  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
     ms = monthly_setup_trend(sym)  # test 50
     wt = weekly_trigger(sym)  # test 51
+    mr = monthly_setup_trend(sym, with_reached=True)  # test 53
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -494,7 +507,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)

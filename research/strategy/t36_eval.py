@@ -14,7 +14,11 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 52: bullish setting (maand + week) - alle continuations": "ms_trend == 1 & wk_trig == 1",
+RULES = {"test 53: setting + na het maanddoel tegengesteld (week-trigger), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
+         "alleen na het maanddoel tegengesteld": "mt_done == -1 & wk_trig == 1 & ~m_block",
+         "setting, alleen longs": "ms_trend == 1 & wk_trig == 1 & ~m_block & dir == 1",
+         "setting, alleen shorts": "ms_trend == 1 & wk_trig == 1 & ~m_block & dir == -1",
+"test 52: bullish setting (maand + week) - alle continuations": "ms_trend == 1 & wk_trig == 1",
          "test 52 + geen maand-S/R in de weg": "ms_trend == 1 & wk_trig == 1 & ~m_block",
 "test 51: maandtrend + week-engulfing/BoS": "ms_trend == 1 & wk_trig == 1",
 "test 51: maandtrend + week-engulfing/BoS + geen maand-S/R in de weg": "ms_trend == 1 & wk_trig == 1 & ~m_block",
