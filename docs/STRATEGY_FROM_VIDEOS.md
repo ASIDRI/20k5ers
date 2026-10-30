@@ -966,3 +966,8 @@ meer dan ±2 procentpunt boven een willekeurige lijn. Niveaus met meerdere react
 de vulling) tussen fib 1 en de instap. Regel `wk_struct == 1 & htf_sup_c`, één positie per richting:
 (a) test 20 met `R_m_top_1`; (b) test 24 met `R_t020`. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en
 samen t >= 2,0.
+
+### Uitkomst test 28: verworpen
+(a) test 20, cluster-S/R + week: +0,08 / -0,07 / +0,19R (t 0,9) - niet beter dan met de oude S/R (+0,05 / +0,05 /
++0,22R). (b) test 24: -0,07 / -0,32 / +0,46R (t -0,2). Een betere S/R-definitie verandert de uitkomst niet: het
+S/R-filter voegt in beide gevallen weinig of niets toe (cluster in de poot of niet: geen vast verschil).
