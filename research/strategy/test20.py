@@ -22,6 +22,7 @@
    beyond the body fib 1 by 0.1 ATR.
    --fib bodywick (test 30b, the trader: "body to wick, always"): fib 1 = body of the leg-start candle, 0 = wick of
    the leg end; the stop stays beyond the WICK of the leg start by 0.1 ATR.
+   cont (test 31): the leg ends beyond the previous turn on the same side (higher high / lower low) = continuation.
 5. A setup still waiting when the data ends is "actief" (with its zone, stop, -0.2 and the context now): for the
    scanner (scan.py).
 """
@@ -85,7 +86,9 @@ def run(sym, start, end):
         if rng < LEG * atr[ci]:
             continue
         ext, opp = (h, l) if dirn == 1 else (l, h)
-        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(t[si])[:10], top_t=str(t[ti])[:10],
+        # continuation (test 31): the leg's end beyond the previous turn on the same side (higher high for a long)
+        cont = k >= 2 and (p_end - turns[k - 2][2]) * (1 if kind == "H" else -1) > 0
+        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(t[si])[:10], top_t=str(t[ti])[:10], cont=cont,
                    b1=b1, top=top, rng=rng, rng_atr=rng / atr[ci])
         res, f, deadline, touched, touch_n = "verlopen", ci, ci + 1 + EXPIRY, False, 0
         entry = None

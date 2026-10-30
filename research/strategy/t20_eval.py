@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"regel (weekstructuur mee + boven/onder week/maand-S/R)": "wk_struct == 1 & htf_sup",
+RULES = {"continuation + regel": "cont & wk_struct == 1 & htf_sup",
+         "continuation, geen S/R-eis": "cont & wk_struct == 1",
+         "regel (weekstructuur mee + boven/onder week/maand-S/R)": "wk_struct == 1 & htf_sup",
          "alleen weekstructuur mee": "wk_struct == 1", "alleen S/R": "htf_sup", "alle grote poten": "index == index"}
 
 if __name__ == "__main__":
@@ -24,6 +26,7 @@ if __name__ == "__main__":
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
     f["htf_sup"] = f.htf_sup.astype(str).str.lower().eq("true")
+    f["cont"] = f.cont.astype(str).str.lower().eq("true") if "cont" in f else False
     for lab, rule in RULES.items():
         o = one_per_dir(f.query(rule), "t020")
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21 / f.sym.nunique():.1f} per paar per jaar)")

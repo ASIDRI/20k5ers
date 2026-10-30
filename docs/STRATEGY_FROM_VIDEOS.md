@@ -1009,3 +1009,12 @@ Volledig op -0,2: +0,09 / +0,05 / +0,09R (t 1,1). Ook alle grote poten zonder fi
 5ers (test 30b, regel + beheer, 442 trades, ±21 per jaar, +0,10R gemiddeld; jaarsommen -14R tot +22R): 1% risico
 26% geslaagd / 58% breach (mediaan 530 dagen); 1,5% 27% / 64%; 0,75% 19% / 59%. Stabieler per trade, maar te weinig
 rendement per jaar (±+2R) voor +8% binnen redelijke tijd.
+
+## Test 31 (vooraf vastgelegd, 2026-10-30): meer continuation-trades
+
+De trader: "We zijn in de goede richting. Nu meer continuation trades." Test 30b (fib body -> wick, regel, beheer) met
+(1) kleinere poten: zigzag-keerpunt na 2 dag-ATR, poot >= 4 ATR (in plaats van 3 / 6) - meer N's binnen een trend;
+(2) alleen continuation: de poot eindigt voorbij het vorige keerpunt aan dezelfde kant (HH bij long, LL bij short)
+(`cont`). Beslissend: `cont & wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting, 34 instrumenten.
+Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: zonder S/R-eis, en
+continuation binnen de grote poten (3 / 6).
