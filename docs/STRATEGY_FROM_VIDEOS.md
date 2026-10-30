@@ -1491,3 +1491,12 @@ een tegengestelde breuk (zoals in test 51). Controle: EURNZD mrt 2017 - feb 2018
 +1,1 / +1,3 / -1,0R; GBPJPY 2021: +0,4 / +2,1 / -1,0 / -1,0R.
 **Beslissend: `ms_trend == 1 & wk_trig == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat
 (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
+
+### Uitkomst test 52: beslissende regel net niet; met maand-S/R-blokkade de beste kandidaat
+`ms_trend == 1 & wk_trig == 1`, `R_t020`: 950 trades (45 per jaar, 0,9 per week), +0,12 / -0,01 / -0,01R (t 1,25) ->
+niet geslaagd; holdout +0,00 / -0,01 / +0,05R. Alle dagsetups zonder setting: +0,00 / -0,01 / -0,09R -> de setting
+(maand + week) doet nu wél duidelijk iets.
+Gerapporteerde variant **+ geen maand-S/R tussen instap en doel**: 786 trades (37 per jaar, 0,7 per week), `R_t020`
++0,15 / +0,03 / +0,04R (PF 1,27 / 1,05 / 1,06, t 1,9), beheer `R_m` +0,18 / +0,07 / +0,05R (PF 1,33 / 1,12 / 1,10,
+t 2,4) - alle periodes positief; holdout `R_t020` -0,02 / +0,06 / +0,08R (`R_m` -0,02 / +0,08 / +0,12R) - één
+periode net negatief. Kandidaat om vooruit te volgen (scanner), nog niet om mee te handelen.
