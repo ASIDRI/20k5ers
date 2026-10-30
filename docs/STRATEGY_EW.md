@@ -106,3 +106,63 @@ Open vragen die de strategievideo moet beantwoorden:
 - Op welk tijdframe handelt hij?
 - Hoe beheert hij een trade: winst nemen, stop verplaatsen?
 EOF
+
+---
+
+## Video 2: "How I made 5X in 3 Days Trading On Binance (Small Account Challenge)"
+
+61 minuten, live opgenomen van 22 tot 24 januari 2022. Transcript: `docs/ew/v1_transcript.txt`. Hij scalpt
+crypto-futures op Binance (DYDX, GALA, FTM, CRV) op de **1-minuutgrafiek** (soms 3 of 5 minuten), met **20x hefboom**
+en een account van 100 USDT (100 -> 523 USDT). Zijn scherm toont steeds hetzelfde: de golftelling,
+fib-retracements/extensies, de **RSI** (paneel 1), de **MACD** met histogram (paneel 2) en twee EMA's, en vaak de
+BTC-grafiek ernaast [04:30, `docs/ew/v1_04m30_dydx_1m_count_fibs_rsi_macd.jpg`].
+
+### De twee setups die hij steeds handelt
+1. **Het eind van een correctie kopen** (de meeste trades): A-B-C of W-X-Y naar beneden, ingekocht op een fib-niveau.
+   - Bij een golf 2 / B-golf: 0,382 [02:37-03:19], 0,5 [04:12, 05:37, 13:18], golden pocket 0,618-0,66 [17:14, 23:21]
+     of 0,786 [23:21, 41:29, 58:08]. "In highly leveraged markets the 0.382 can also be a second-wave correction"
+     [03:02-03:19].
+   - Bij C of Y: C = A (1:1-extensie) [18:14] of 0,618 x A [21:03-21:40, "truncated C"].
+   - Bij een irregular flat: 1,236 / 1,382 [28:34, 41:29, 54:09, 55:37].
+   - Samenvallende niveaus versterken elkaar, bijvoorbeeld 0,786 op de ene grafiek met 1,618 op de andere [42:41-43:10].
+2. **Het eind van een vijfgolvenbeweging tegen in handelen** (short na 5 golven omhoog, of long na 5 omlaag): op 0,786
+   [01:15-01:23, 31:32-31:54], als een trendlijn op 3 minuten breekt [09:37-10:02], of bij 5 golven met MACD-divergentie
+   [12:10-12:33].
+
+### Bevestiging (naast de telling en het fib-niveau)
+- **MACD-divergentie:** de prijs maakt een lagere low, de MACD een hogere [10:54, 12:27-12:33, 28:34-28:54]. Voor een
+  short: een hogere high met een lagere high op de MACD [54:20].
+- **MACD-histogram:** "the histogram always shows the A or the W as the lowest", met daarna hogere lows op het
+  histogram [34:26-34:49, `docs/ew/v1_34m41_gala_wxy_histogram.jpg`].
+- **RSI verborgen bullish divergentie:** een hogere low in de prijs, een lagere low op de RSI [04:27-04:42].
+- Steun van de **55-EMA** [04:42].
+- Wachten tot de prijs **de trendlijn breekt** met een MACD-kruising [11:10-11:31, 24:15]. Ook steun van het
+  **volumeprofiel** (point of control) [06:02-06:17, 17:45], een order block [04:12] en een eerdere weerstand of steun.
+- Fib's op de log- én niet-loggrafiek, en op meerdere grafieken van dezelfde munt [31:38-32:21, 42:41-43:03, 48:37].
+
+### Instap, stop en beheer
+- **Instap:** op het fib-niveau, met **bijkopen** op de volgende niveaus (0,5 -> golden pocket -> 0,786) [05:37-05:45,
+  17:22-17:55, 41:29-42:08, 58:17-58:31].
+- **Stop:** krap, net voorbij het punt waar de telling niet meer klopt ("that is my invalidation") [19:03-19:35]: onder
+  het fib-niveau [21:40-21:54], boven de laatste top bij een short [31:54-32:02], of onder het begin van golf 1.
+  "Sometimes a little bit too tight" [22:37]. Hij verliest daardoor geregeld, met kleine verliezen [11:51, 12:33,
+  19:48, 23:05, 52:29, 54:01].
+- **Winst nemen in stukken:** telkens **50%** (of 25%) op het volgende fib-niveau. Dat zijn 0,236 / 0,382 / 0,5 /
+  golden pocket van de vorige beweging en de 1:1-extensie [03:24-03:38, 06:26-07:17, 13:39-15:15, 24:15-26:11,
+  59:18-60:58].
+- Na de eerste winstname: **stop naar instap** ("so that I cannot have a loss") [32:40-34:00, 44:12-44:20, 49:54-50:06].
+- Geen posities 's nachts [26:11-26:27].
+
+### Wat dit betekent voor de 5ers-bot
+- Dit is **discretionair scalpen op crypto, op 1 minuut, met 20x hefboom**. Elke trade hangt af van een telling die hij
+  ter plekke maakt, met een tweede telling als alternatief. Drie dagen live is geen bewijs van een edge: de titel
+  ("5X") kiest de goede periode uit, en hij verloor ook trades.
+- De vaste kern is wél te coderen: (1) een swing (golf 1 / A / W) afgerond, (2) een terugval naar 0,382-0,786 (of de
+  1:1-extensie bij C/Y, of 1,236-1,382 bij een irregular flat), (3) een bevestiging (MACD-divergentie of een
+  RSI-divergentie, een trendlijnbreuk), (4) een stop net voorbij de ongeldigheid, (5) de helft eraf op het volgende
+  fib-niveau en de stop naar instap.
+- **Kosten zijn het grote probleem op 1 minuut.** In de eerdere R&D kostten de spread en slippage op 4u al 10% van een
+  ATR per trade (`docs/RND_RESULTS.md`, fase 2). Op 1 minuut is dat veel meer. De repo heeft geen 1-minuutdata; wel 15
+  minuten (2015-2025) voor 28 forexparen, goud, zilver, indices, olie, BTC en ETH.
+- In de theorievideo verwijst hij naar een aparte "strategy video" met zijn instappen [52:25, 77:46]. Dat lijkt deze
+  video niet te zijn. Als die bestaat, is dat de belangrijkste bron.
