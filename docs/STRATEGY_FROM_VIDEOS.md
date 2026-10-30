@@ -1631,3 +1631,6 @@ TP1 dus -0.2 fib"): beheer `R_m2` = half op -0,2, stop naar de oude top (fib 0, 
 Tweede aanpassing vóór het draaien (de trader: "Zelfs 1.618 als doel kan. Telkens stoploss verhogen naar -0.25, dan
 -0.618, dan -0.798 als laatste"): `R_lad` = half op -0,2 en stop naar fib 0; bij -0,618 stop naar -0,25, bij -0,796
 naar -0,618, bij -1 naar -0,796 (laatste); rest op -1,618. **Beslissende kolom test 60: `R_lad`** (R_m2 gerapporteerd).
+Derde aanpassing vóór het draaien ("Ook een deeltje sluiten op -0.618, op 1 en op 1.618"): `R_lad` sluit 50% op -0,2,
+20% op -0,618, 15% op -1 en de laatste 15% op -1,618 (verdeling door ons gekozen); stop na -0,2 naar fib 0, dan de
+ladder (-0,618 -> -0,25, -0,796 -> -0,618, -1 -> -0,796). Beslissend blijft `R_lad`.
