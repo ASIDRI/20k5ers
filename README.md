@@ -8,7 +8,6 @@ Nu: een nieuwe strategie op basis van de Market Matrix-video's, getest in een ge
 
 | Wat | Waar |
 |---|---|
-| Elliott Wave op de manier van de trader (video's, regels) | `docs/STRATEGY_EW.md`, `docs/ew/` |
 | Regels uit de video's, tests 1-3 | `docs/STRATEGY_FROM_VIDEOS.md`, `research/strategy/` |
 | R&D-programma (fases, register, resultaten) | `docs/RND_PLAN.md`, `docs/RND_RESULTS.md`, `research/rnd/` |
 | S/R-niveaus (maand/week, wick-tikken, point in time) | `research/strategy/sr_levels.py` |

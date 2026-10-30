@@ -148,3 +148,13 @@ positie per richting). De code staat in de git-geschiedenis (`research/neely/`, 
 - **Controle:** dezelfde trades in de omgekeerde richting (zelfde stop, doel en motor) doen het even goed of beter.
   De hoge trefkans (55-63%) kwam alleen uit de plaats van het doel.
 - Stop en doel in dezelfde dagcandle: 2-6% van de trades. Opgelost met 4u verandert de conclusie niet.
+
+## Elliott Wave op de manier van de trader (E1, 2026-10-30): geschrapt
+
+Regels uit twee video's van de trader ("Elliott Wave Theory", en live scalpen op Binance), met de telling op week en
+dag en de trades op 4u. Code en document staan in de git-geschiedenis (`research/ew/`, `docs/STRATEGY_EW.md`,
+`docs/ew/`, commit `fcfc46a`).
+- **Setup 1**, de correctie kopen met de dagtelling mee: 858 trades, -0,01 / -0,06 / -0,12R (t -2,2), ook bruto
+  negatief. Hij wint 3 op 4 trades, maar de winst per trade is te klein (±0,25R).
+- **Setup 2**, vijf golven tegen in: -0,02 / -0,28 / -0,21R.
+- De telling op dag en week voegde niets toe.

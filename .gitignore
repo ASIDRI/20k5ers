@@ -283,6 +283,3 @@ research/videos/
 research/strategy/out/
 research/rnd/out/
 
-# video digests: screenshots stay local (key frames are copied to docs/ew/)
-research/videos/*/frames/
-research/ew/out/
