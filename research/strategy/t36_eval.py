@@ -14,7 +14,11 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 37: OB + structuurbreuk (video 4)": "has_ob & bos", "OB + breuk, omkeer (inv. H&S)": "has_ob & shift",
+RULES = {"test 39: weekbias + structuurbreuk (dag)": "hi_bias == 1 & bos",
+         "weekbias + breuk + OB": "hi_bias == 1 & bos & has_ob", "weekbias + breuk + S/R": "hi_bias == 1 & bos & htf_sup",
+         "weekbias + breuk, omkeer": "hi_bias == 1 & shift", "weekbias + breuk, voortzetting": "hi_bias == 1 & bos & ~shift",
+         "weekbias, alle poten": "hi_bias == 1", "tegen de weekbias, breuk": "hi_bias == -1 & bos",
+"test 37: OB + structuurbreuk (video 4)": "has_ob & bos", "OB + breuk, omkeer (inv. H&S)": "has_ob & shift",
          "OB + breuk, voortzetting (N)": "has_ob & bos & ~shift", "OB + breuk + S/R": "has_ob & bos & htf_sup",
          "structuurbreuk zonder OB-eis": "bos", "OB zonder breuk": "has_ob & ~bos",
 "regel: OB in golden pocket + hogere structuur + S/R": "has_ob & hi_struct == 1 & htf_sup",

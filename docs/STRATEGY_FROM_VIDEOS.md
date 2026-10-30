@@ -1202,3 +1202,18 @@ lat (37 instrumenten: elke periode > 0, PF >= 1,05, t >= 2,0; holdout: elke peri
 ### Uitkomst test 38: verworpen (niet beter dan 37)
 Weekpoten, sweep toegestaan: +0,23 / +0,10 / +0,13R (t 1,88); holdout +0,31 / +0,09 / -0,07R. Een wick voorbij fib 0
 laten staan voegt 14 trades toe maar verlaagt het gemiddelde; test 37 (schrappen bij een nieuwe extreme) blijft.
+
+## Test 39 (vooraf vastgelegd, 2026-10-30): bias van de week, setups op de dag (video 12 + 4 + 3)
+De trader: "De eerste video (12) was om trend te vinden, niet echt setups; die vind je in structural frameworks en
+fibonacci." Video 3 (fibonacci): fib body -> wick op de impuls die het key level brak; instap rond 0,66 (golden zone
+0,618-0,786, bijleggen bij 0,786); SL onder de laatste low ("it cannot go lower than your last low"); half op -0,25,
+stop in winst, dan -0,65 / -1. "Each month you can trade with the mindset we are bullish until we hit a key level";
+"start on the highest time frame, trade towards the day".
+- **Bias (video 12 / 4)**: op weekcandles +1 na een weekslot boven de laatste bevestigde week-swinghigh (zigzag 2 / 4),
+  -1 na een weekslot onder de laatste week-swinglow; blijft tot het tegengestelde key level breekt (`hi_bias`).
+- **Setup (video 4 / 3)**: dagpoot (2 / 4 ATR) met structuurbreuk (`bos`, test 37) in de richting van de weekbias;
+  fib body -> wick; limiet op 0,66 (of de OB-bovenkant als die er is, niet voorbij 0,66); SL 0,1 ATR onder de wick van
+  fib 1; half -0,25, stop naar de oude top, rest -0,65 (`R_m`); vervalt bij een nieuwe extreme vóór de instap.
+**Beslissend: dagpoten, `hi_bias == 1 & bos`, `R_m`, één positie per richting, 37 instrumenten.** Geslaagd als elke
+periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0, én op de 29 holdout-exoten elke periode > 0. Gerapporteerd:
+trades per week, met OB / S/R, omkeer vs voortzetting, tegen de bias, weekpoten met maandbias.

@@ -12,7 +12,7 @@
    beyond fib 1, or after 40 --tf candles.
 4. Stop: 0.1 ATR (--tf) beyond the wick of fib 1. If the fill candle also reaches the stop: -1R.
 5. Exits: half at -0.25, stop to the old top, rest at -0.65 (R_m); full at -0.25 (R_t025) or -0.65 (R_t065).
-Context: hi_struct (zigzag 2 / 4 of the next higher timeframe: W1 for D1 legs, MN for W1 legs, HH+HL = +1 in the trade
+Context: hi_bias (bos_bias of the next higher timeframe, in the trade direction), hi_struct (zigzag 2 / 4 of the next higher timeframe: W1 for D1 legs, MN for W1 legs, HH+HL = +1 in the trade
 direction), htf_sup (a monthly/weekly S/R level between fib 1 and the entry), m_ma (monthly close vs its 10-month
 mean, in the trade direction).
 Structural framework (video 4, test 37): bos = a --tf close during the leg beyond the previous same-side turn (the key
@@ -35,6 +35,7 @@ import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
+ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
 HIGHER = {"D1": "W1", "W1": "MN"}
 DAYS = {"D1": 1, "W1": 5}  # daily candles per --tf candle (for the expiry)
@@ -48,6 +49,35 @@ def structure(sym, tf):
     wt, _ = test5.legs(w)
     return (np.array([w["done"][ci].value for ci, *_ in wt]), np.array([k for *_, k in wt]),
             np.array([p for _, _, p, _ in wt]))
+
+
+def bos_bias(sym, tf):
+    """Video 4 / 12: on tf, +1 after a close above the last confirmed swing high (zigzag 2 / 4), -1 after a close below
+    the last confirmed swing low; it holds until the opposite key level breaks. (done times, state) per candle."""
+    w = load(sym, tf)
+    w["done"] = complete_times(w["time"], tf, load(sym, "D1")["time"] if tf == "MN" else None)
+    test5.REV = 2.0
+    wt, _ = test5.legs(w)
+    c = w.close.values
+    known = {}
+    for ci, _, p, kk in wt:
+        known.setdefault(ci, []).append((kk, p))
+    hi = lo = None
+    state, out = 0, []
+    for i in range(len(w)):
+        if hi is not None and c[i] > hi:
+            state = 1
+        elif lo is not None and c[i] < lo:
+            state = -1
+        out.append(state)
+        for kk, p in known.get(i, []):  # turns confirmed by this candle are known from its close on
+            hi, lo = (p, lo) if kk == "H" else (hi, p)
+    return np.array([x.value for x in w["done"]]), np.array(out)
+
+
+def bias_at(bb, ts):
+    k = int(np.searchsorted(bb[0], ts.value, side="right")) - 1
+    return int(bb[1][k]) if k >= 0 else 0
 
 
 def trend_at(st, ts):
@@ -69,6 +99,7 @@ def run(sym, tf, start, end):
         g["done"] = complete_times(g["time"], tf)
     go, gc = g.open.values, g.close.values
     st = structure(sym, HIGHER[tf])
+    bb = bos_bias(sym, HIGHER[tf])
     lv = Levels(sym)
     test5.REV = REV
     turns, atr = test5.legs(g)
@@ -90,7 +121,7 @@ def run(sym, tf, start, end):
         key = turns[k - 2][2] if k >= 2 else None  # previous same-side turn: the key level
         bos = key is not None and bool(((gc[si:ti + 1] - key) * dirn > 0).any())
         shift = bos and k >= 4 and (key - turns[k - 4][2]) * dirn < 0
-        gp_hi, gp_lo = top - dirn * 0.618 * rng, top - dirn * 0.786 * rng  # near / far edge of the golden pocket
+        gp_hi, gp_lo = top - dirn * ENTRY * rng, top - dirn * 0.786 * rng  # near / far edge of the golden pocket
         # daily candles of the leg: from the start candle to the end of the extreme candle
         a = int(np.searchsorted(dt, g.time.values[si]))
         b = int(np.searchsorted(dt, g["done"][ti].tz_convert(None).to_datetime64())) if tf != "D1" else ti + 1
@@ -142,7 +173,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn)
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn)
         hit_sl = ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0
         for name, x in (("t025", 0.25), ("t065", 0.65)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
@@ -161,8 +192,9 @@ if __name__ == "__main__":
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default="t36_")
     ap.add_argument("--sweep", action="store_true")
+    ap.add_argument("--entry", type=float, default=0.618)
     a = ap.parse_args()
-    SWEEP = a.sweep
+    SWEEP, ENTRY = a.sweep, a.entry
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)
