@@ -43,6 +43,7 @@ CONFL = False  # --confl (test 44): limit at the BoS (key) level or a weekly S/R
 # first one price reaches); no such level -> no trade
 BASE = False  # --base (test 45): the base / S/R zone formed before the BoS (>= 2 daily swing points within 0.5 ATR);
 # on the return into it a daily rejection candle (hammer / pin bar or engulfing) confirms, entry at its close
+PATTERNS = False  # --patterns (test 46): every bullish / bearish pattern of the trader's cheat sheet confirms
 REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
 # of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
@@ -109,6 +110,48 @@ def rejection(o, h, l, c, f, dirn):
     po, pc = (o[f - 1], c[f - 1]) if dirn == 1 else (-o[f - 1], -c[f - 1])
     engulf = C > O and pc < po and C > po and O <= pc
     return pin or engulf
+
+
+def pattern(o, h, l, c, f, dirn):
+    """Cheat-sheet patterns (the trader, 2026-10-30) ending at candle f, in the trade direction (mirrored for shorts):
+    hammer, inverted hammer, dragonfly doji, spinning top, engulfing, harami, tweezers, morning star, three white
+    soldiers, three inside up, three outside up. Returns the name or None."""
+    if f < 3:
+        return None
+    m = (lambda a: a) if dirn == 1 else (lambda a: -a)
+    O = [m(o[f - k]) for k in (2, 1, 0)]
+    C = [m(c[f - k]) for k in (2, 1, 0)]
+    H = [m(h[f - k]) if dirn == 1 else m(l[f - k]) for k in (2, 1, 0)]
+    L = [m(l[f - k]) if dirn == 1 else m(h[f - k]) for k in (2, 1, 0)]
+    span = [H[i] - L[i] for i in range(3)]
+    body = [abs(C[i] - O[i]) for i in range(3)]
+    up = [C[i] > O[i] for i in range(3)]
+    if span[2] <= 0:
+        return None
+    lw, uw = min(O[2], C[2]) - L[2], H[2] - max(O[2], C[2])
+    if lw >= 2 * body[2] and uw <= max(body[2], 0.15 * span[2]):
+        return "hammer"
+    if uw >= 2 * body[2] and lw <= max(body[2], 0.15 * span[2]) and C[1] < O[1]:
+        return "inverted hammer"
+    if body[2] <= 0.1 * span[2] and uw <= 0.1 * span[2]:
+        return "dragonfly doji"
+    if up[2] and body[2] <= 0.3 * span[2] and lw >= 0.25 * span[2] and uw >= 0.25 * span[2] and C[1] < O[1]:
+        return "spinning top"
+    if up[2] and not up[1] and C[2] > O[1] and O[2] <= C[1]:
+        return "engulfing"
+    if up[2] and not up[1] and body[1] > 0 and C[2] < O[1] and O[2] > C[1]:
+        return "harami"
+    if up[2] and not up[1] and abs(L[2] - L[1]) <= 0.05 * max(span[1], span[2]):
+        return "tweezers"
+    if not up[0] and body[0] >= 0.5 * span[0] and body[1] <= 0.3 * body[0] and up[2] and C[2] > (O[0] + C[0]) / 2:
+        return "morning star"
+    if all(up) and C[0] < C[1] < C[2]:
+        return "three white soldiers"
+    if not up[0] and up[1] and C[1] < O[0] and O[1] > C[0] and C[2] > O[0]:
+        return "three inside up"
+    if not up[0] and up[1] and C[1] > O[0] and O[1] <= C[0] and C[2] > C[1]:
+        return "three outside up"
+    return None
 
 
 def base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng):
@@ -262,9 +305,12 @@ def run(sym, tf, start, end):
                 if (c[f] - zone[1]) * dirn < -0.5 * A:  # closed clearly through the zone: it did not hold
                     res = "ongeldig"
                     break
-                if rejection(o, h, l, c, f, dirn) and ((l[f] if dirn == 1 else h[f]) - zone[0]) * dirn <= 0.1 * A \
+                pat = pattern(o, h, l, c, f, dirn) if PATTERNS else ("pin/engulf" if rejection(o, h, l, c, f, dirn) else None)
+                ext3 = l[f - 2:f + 1].min() if dirn == 1 else h[f - 2:f + 1].max()  # the pattern's extreme
+                if pat and ((ext3 if PATTERNS else (l[f] if dirn == 1 else h[f])) - zone[0]) * dirn <= 0.1 * A \
                         and (c[f] - zone[1]) * dirn > 0 and (top - c[f]) * dirn >= 0.2 * rng:
                     res = "gevuld"
+                    row["pattern"] = pat
                     break
                 f += 1
                 continue
@@ -322,7 +368,9 @@ if __name__ == "__main__":
     ap.add_argument("--reanchor", action="store_true")
     ap.add_argument("--confl", action="store_true")
     ap.add_argument("--base", action="store_true")
+    ap.add_argument("--patterns", action="store_true")
     a = ap.parse_args()
+    PATTERNS = a.patterns
     SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL, BASE = a.sweep, a.entry, a.confirm, a.reanchor, a.confl, a.base
     for s in a.symbols:
         try:

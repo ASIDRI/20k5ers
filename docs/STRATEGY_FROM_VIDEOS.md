@@ -1362,3 +1362,15 @@ ATR voorbij de wick van fib 1, TP -0,2. Afgestemd op 3 voorbeelden (EURAUD jun-2
 1,7464-1,7474, hammer 9 juni, instap 1,7518), dus de holdout telt mee.
 **Beslissend: `hi_bias == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0,
 PF >= 1,05, t >= 2,0; holdout elke periode > 0).
+
+### Uitkomst test 45: verworpen
+`hi_bias == 1`, `R_t020`: 946 trades (45 per jaar, 0,9 per week), +0,06 / -0,00 / +0,04R (PF 1,12 / 0,99 / 1,07,
+t 1,0), winnend ±50%; holdout -0,11 / -0,05 / -0,01R. Alle setups: +0,03 / +0,02 / -0,07R.
+
+## Test 46 (vooraf vastgelegd): alle candlestickpatronen van de cheat sheet als bevestiging
+De trader: "dag-hammer of pin bar - dit mogen ook andere candle stick patterns zijn" (EarnForex cheat sheet). Test 45
+met als bevestiging elk patroon in de handelsrichting dat eindigt op de dagcandle (gespiegeld voor shorts): hammer,
+inverted hammer, dragonfly doji, spinning top, engulfing, harami, tweezers, morning star, three white soldiers, three
+inside up, three outside up (definities in `test36.pattern`); de extreme van het patroon (laatste 3 candles) raakt de
+zone. Instap op het slot. Verder exact test 45. **Beslissend: `hi_bias == 1`, `R_t020`**; zelfde lat. Gerapporteerd:
+per patroon.
