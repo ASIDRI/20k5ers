@@ -1597,3 +1597,22 @@ dagpatroon in de zone. SL 0,1 ATR onder de wick van fib 1. Controle: EURNZD ±29
 **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_m`, één positie per richting, 37
 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: 4u-
 vertraging vs dagpatroon, zonder setting.
+
+### Uitkomst test 58: verworpen - veel trades, licht negatief
+Beslissend `R_m`: 3002 trades (143 per jaar, 2,7 per week op 37 instrumenten), -0,03 / -0,02 / -0,04R (PF 0,96 /
+0,97 / 0,94, t -1,0); holdout -0,06 / +0,03 / -0,08R. Alleen 4u-vertraging (2289): -0,04 / -0,03 / -0,11R; alleen
+dagpatroon (1471): +0,01 / -0,03 / +0,10R. Zonder setting (9745 = 8,9 per week): -0,05 / -0,04 / -0,03R. De
+frequentie van de trader (om de paar dagen per ticker) wordt gehaald, maar elke kleine swing in de trend nemen kost
+na kosten licht geld; de 4u-vertraging is de zwakste trigger.
+
+## SMT (pdf "Mastering SMT", ICTSILVEREDGE) en test 59 (vooraf vastgelegd)
+SMT = twee gecorreleerde paren lopen uit de pas: het ene maakt een lagere low, het andere een hogere low ->
+liquiditeit gepakt, bevestiging voor de bounce. Paren uit de pdf (`test36.SMT_PAIRS`: EURUSD-GBPUSD, EURAUD-GBPAUD,
+goud-zilver, EURNZD-GBPNZD, EURCHF-GBPCHF, AUDUSD-NZDUSD, AUDCHF-NZDCHF, AUDJPY-NZDJPY, AUDCAD-NZDCAD, EURCAD-GBPCAD,
+EURJPY-GBPJPY, BTC-ETH, NAS100-SPX500). `smt` = tijdens de terugval (na de extreme tot de instap) neemt het
+partnerpaar zijn eigen low rond de start van de poot (high bij short) terwijl dit paar standhoudt.
+**Test 59**: test 58 + `smt == True`. **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block &
+smt`, `R_m`, één positie per richting, alleen instrumenten met een partner (26 van de 37)**; zelfde lat (elke periode
+> 0, PF >= 1,05, t >= 2,0; geen holdout: de exoten hebben geen partner in de lijst). Ook gerapporteerd met de setups
+van test 53 (fib 0,618-0,796).
+(De pdf "ICT Weekly Profiles" - op welke dag de low/high van de week valt - is genoteerd voor later.)

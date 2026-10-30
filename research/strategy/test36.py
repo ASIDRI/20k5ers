@@ -280,6 +280,40 @@ def rejection(o, h, l, c, f, dirn):
     return pin or engulf
 
 
+# test 59: correlated pairs from the trader's SMT notes (ICTSILVEREDGE "Mastering SMT"), both directions
+SMT_PAIRS = [("EURUSD", "GBPUSD"), ("EURAUD", "GBPAUD"), ("XAUUSD", "XAGUSD"), ("EURNZD", "GBPNZD"), ("EURCHF", "GBPCHF"),
+             ("AUDUSD", "NZDUSD"), ("AUDCHF", "NZDCHF"), ("AUDJPY", "NZDJPY"), ("AUDCAD", "NZDCAD"), ("EURCAD", "GBPCAD"),
+             ("EURJPY", "GBPJPY"), ("BTC_USD", "ETH_USD"), ("NAS100USD", "SPX500USD")]
+SMT_PARTNER = {**{a: b for a, b in SMT_PAIRS}, **{b: a for a, b in SMT_PAIRS}}
+
+
+def smt_flag(sym, dirn, t_start, t_top, t_fill):
+    """SMT (smart money technique): during the pullback (after the leg's extreme, up to the fill) the correlated pair
+    takes out its own low around the leg's start (high for a short) while this pair holds -> True; partner holds too ->
+    False; no partner / data -> None."""
+    other = SMT_PARTNER.get(sym)
+    if other is None:
+        return None
+    try:
+        y = _partner_cache.get(other)
+        if y is None:
+            y = _partner_cache[other] = load(other, "D1")
+    except Exception:  # noqa
+        return None
+    t = y.time.values
+    a = np.searchsorted(t, t_start) - 2
+    b = np.searchsorted(t, t_top)
+    e = np.searchsorted(t, t_fill, side="right")
+    if a < 0 or e <= b + 1:
+        return None
+    if dirn == 1:
+        return bool(y.low.values[b + 1:e].min() < y.low.values[a:a + 5].min())
+    return bool(y.high.values[b + 1:e].max() > y.high.values[a:a + 5].max())
+
+
+_partner_cache = {}
+
+
 def pattern(o, h, l, c, f, dirn):
     """Cheat-sheet patterns (the trader, 2026-10-30) ending at candle f, in the trade direction (mirrored for shorts):
     hammer, inverted hammer, dragonfly doji, spinning top, engulfing, harami, tweezers, morning star, three white
@@ -552,7 +586,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn, vv_fast=int(vvf[f]) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn, smt=smt_flag(sym, dirn, g.time.values[si], top_day if top_day is not None else g.time.values[ti], dt[f]), vv_fast=int(vvf[f]) * dirn,
                    news=(NEWS.pair(sym, ts) if dirn == 1 else 2 - NEWS.pair(sym, ts)) if NEWS is not None else np.nan,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng

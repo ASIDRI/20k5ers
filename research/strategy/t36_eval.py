@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 58: swing-setup in de setting (maand + week), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
+RULES = {"test 59: test 58 + SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == True",
+         "test 58 met partner maar zonder SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == False",
+"test 58: swing-setup in de setting (maand + week), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
          "test 58, alleen 4u-vertraging": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & pattern == '4u-vertraging'",
          "test 58, alleen dagpatroon": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & pattern != '4u-vertraging'",
          "swing-setup zonder setting": "~m_block",
@@ -85,7 +87,10 @@ if __name__ == "__main__":
             f[k] = False
         f[k] = f[k].astype(str).str.lower().eq("true")
     for lab, rule in RULES.items():
-        o = one_per_dir(f.query(rule), "t065")
+        try:
+            o = one_per_dir(f.query(rule), "t065")
+        except Exception:  # noqa - a column this run does not have
+            continue
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
         for col in ("R_m", "R_t020", "R_t025"):
             out, pool = [], []
