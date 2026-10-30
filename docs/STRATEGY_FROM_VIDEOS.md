@@ -1625,3 +1625,6 @@ cheat-sheet-patroon (of de 3-candle-vertraging) op de 4 uur waarvan de extreme d
 (zigzag 1 / 2 ATR). **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_m`, één positie
 per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
 Gerapporteerd: dag- vs 4u-trigger, + SMT.
+Aanpassing vóór het draaien van test 60 (de trader: "als TP1 gehaald is, stoploss in profit. Neem ook 50% winst op
+TP1 dus -0.2 fib"): beheer `R_m2` = half op -0,2, stop naar de oude top (fib 0, in winst), rest op -0,65; ook `R_m3`
+(rest op -1). **Beslissende kolom test 60: `R_m2`.**
