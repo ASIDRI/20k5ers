@@ -1339,3 +1339,9 @@ vóór de instap fib 0 verleggen en opnieuw zoeken. SL 0,1 ATR voorbij de wick v
 binnen 0,5 ATR van een weekly cluster of maand/week-niveau (gerapporteerd).
 **Beslissend: `bos & hi_bias == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode
 > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
+
+### Uitkomst test 44: verworpen
+`bos & hi_bias == 1` met confluentie-instap, `R_t020`: 1164 trades (55 per jaar, 1,1 per week), +0,10 / -0,02 / +0,03R
+(t 1,1); holdout +0,05 / -0,01 / -0,09R. Met fib 1 op HTF-S/R erbij (de jun-24-trade): 823 trades, +0,20 / -0,00 /
++0,07R (t 2,0), holdout +0,02 / -0,01 / +0,02R -> ook niet. De instap op het samenvallende niveau i.p.v. 0,66 verandert
+het totaal nauwelijks (alle setups +0,01 / +0,01 / -0,02R).
