@@ -1198,3 +1198,7 @@ dezelfde weekpoot met OB + breuk + omkeer, maar de OB-instap (0,822) ligt hoger 
 Uit de GBPAUD-trade van de trader. `test36.py --sweep`: vóór de instap vervalt de setup pas bij een **slot** voorbij
 fib 0; een wick erdoor laat de fib staan. Verder exact test 37. Beslissend: weekpoten, `has_ob & bos`, `R_m`; zelfde
 lat (37 instrumenten: elke periode > 0, PF >= 1,05, t >= 2,0; holdout: elke periode > 0). Ook dagpoten gerapporteerd.
+
+### Uitkomst test 38: verworpen (niet beter dan 37)
+Weekpoten, sweep toegestaan: +0,23 / +0,10 / +0,13R (t 1,88); holdout +0,31 / +0,09 / -0,07R. Een wick voorbij fib 0
+laten staan voegt 14 trades toe maar verlaagt het gemiddelde; test 37 (schrappen bij een nieuwe extreme) blijft.
