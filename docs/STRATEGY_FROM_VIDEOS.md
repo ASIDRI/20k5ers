@@ -828,3 +828,10 @@ Conclusie: de maandtrend (eenvoudig: slot boven/onder het 10-maands gemiddelde) 
 tegen de maandtrend handelen kost geld. De voorsprong blijft klein (+0,05R, t ±1,2).
 Vooruit-meting (vastgelegd 2026-10-30): de scanner toont nu ook `maandtrend` (mee/tegen); naast de regel van test 20
 wordt "regel + maandtrend mee" apart bijgehouden en op dezelfde manier beoordeeld (na 50 afgesloten trades).
+
+### Regel + maandtrend (beschrijvend, 34 instrumenten, beheer van de trader)
+regel (week + S/R): +0,05 / +0,05 / +0,22R, samen +0,08R PF 1,13 t 1,25 (526 trades)
+regel + maandtrend mee: +0,07 / +0,09 / +0,15R, samen +0,09R PF 1,14 t 1,28 (483 trades) - iets stabieler
++ max. één positie per munt: +0,02 / +0,23 / -0,33R (166 trades) - slechter, niet gebruiken
+5ers (start elke maand 2006-2024) met regel + maandtrend: 1% risico 40% geslaagd / 50% breach; 0,75%: 30% / 55%;
+1,5%: 32% / 65%; 2%: 26% / 69%. Jaarsommen -13R tot +24R. Nog altijd meer breach dan geslaagd.
