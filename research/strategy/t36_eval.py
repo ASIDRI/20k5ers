@@ -14,7 +14,12 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 50: maand-setup-trend + geen maand-S/R in de weg": "ms_trend == 1 & ~m_block",
+RULES = {"test 51: maandtrend + week-engulfing/BoS": "ms_trend == 1 & wk_trig == 1",
+"test 51: maandtrend + week-engulfing/BoS + geen maand-S/R in de weg": "ms_trend == 1 & wk_trig == 1 & ~m_block",
+         "week-engulfing/BoS + geen maand-S/R in de weg": "wk_trig == 1 & ~m_block",
+         "maandtrend + week-engulfing/BoS + dag-BoS, geen maand-S/R": "ms_trend == 1 & wk_trig == 1 & bos & ~m_block",
+         "maandtrend, géén week-trigger": "ms_trend == 1 & wk_trig != 1 & ~m_block",
+"test 50: maand-setup-trend + geen maand-S/R in de weg": "ms_trend == 1 & ~m_block",
          "maand-setup-trend + week-BoS + dag-BoS, geen maand-S/R in de weg": "ms_trend == 1 & hi_bias == 1 & bos & ~m_block",
          "maand-setup-trend": "ms_trend == 1", "geen maand-setup actief": "ms_trend == 0", "tegen de maand-setup": "ms_trend == -1",
 "test 48: maand-BoS-trend + geen maand-S/R in de weg": "mn_bias == 1 & ~m_block",

@@ -1455,3 +1455,19 @@ Gerapporteerd: + week- en dag-BoS, geen trend, tegen de trend.
 -0,05 / -0,13R. Tegen de maandtrend: -0,01 / -0,04 / -0,13R (37) maar +0,04 / -0,00 / +0,03R (holdout). De
 maandtrend herkent nu de voorbeelden van de trader (GBPJPY feb 2021, goud eind 2016), maar maakt de dagsetups niet
 stabiel winstgevend: zelfde beeld als test 47-48.
+
+## EURNZD 2015-2017 van de trader en test 51 (vooraf vastgelegd): de week-poort
+De trader (EURNZD 1M / 1W / 1D, na elkaar): maand bullish (BoS 1,7087, prijs kaatst op fib 1 -> "we already know
+our target = -0,25, so we can trade longs on the daily"); maar drie daglongs eind 2016 - begin 2017 neemt hij niet:
+"So how we know which long to take and make sure we don't take all those losses: we look at the weekly chart. I want
+to see a weekly bullish engulfing candle above the wick of previous week. Only then we start trading, we don't try to
+guess bottoms before the weekly shows us." Daarna een week-BoS (1,5198) -> "now zoom in to the daily": dagpoot met
+de top "real time", terug naar de S/R-zone / 0,796, "really nice daily candle", long op de close (+2,5R).
+`test36.weekly_trigger`: +1 na een weekslot boven de body van de laatste week-swinghigh (2 weken elke kant) als in de
+laatste 8 weken (die week inbegrepen) een bullish engulfing-week zat (bullish, slot boven de high van de vorige week);
+-1 gespiegeld; terug naar 0 bij een breuk aan de andere kant zonder zo'n week. Controle EURNZD: +1 vanaf 3 maart 2017
+(engulfing-week 24 feb, BoS 1,5187); de daglong van januari 2017 (-1R) valt weg, de long van juni 2017 (+2,6R) blijft.
+**Test 51**: dagsetups van test 50 met `wk_trig`. **Beslissend: `ms_trend == 1 & wk_trig == 1` (maandtrend + week-
+poort), `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0;
+holdout elke periode > 0). Gerapporteerd: met maand-S/R-blokkade (onze maandlijnen wijken af van die van de trader:
+in dit voorbeeld blokkeert ze de juni-long ten onrechte), + dag-BoS, maandtrend zonder week-poort.

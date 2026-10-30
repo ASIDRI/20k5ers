@@ -168,6 +168,38 @@ def monthly_setup_trend(sym, rev=2.0, leg=3.0):
     return np.array([x.value for x in m["done"]]), np.array(out)
 
 
+def weekly_trigger(sym, within=8):
+    """The trader's weekly gate (EURNZD 2017): "I want to see a weekly bullish engulfing candle above the wick of previous
+    week. Only then we start trading, we don't try to guess bottoms", followed by a weekly BoS. +1 after a weekly close
+    above the body of the last weekly swing high (2 weeks each side) when a bullish engulfing week (bullish, close above the previous week's
+    high) occurred in the last `within` weeks (that week included); -1 mirrored; back to 0
+    at a weekly close beyond the last swing on the other side without such a trigger. (done times, state) per week."""
+    w = load(sym, "W1")
+    w["done"] = complete_times(w["time"], "W1")
+    o, h, l, c = (w[k].values for k in ("open", "high", "low", "close"))
+    sh = slo = None
+    last_up = last_dn = -999
+    state, out = 0, []
+    for i in range(len(w)):
+        if i >= 1:
+            if c[i] > o[i] and c[i] > h[i - 1]:
+                last_up = i
+            if c[i] < o[i] and c[i] < l[i - 1]:
+                last_dn = i
+        if sh is not None and c[i] > sh:
+            state = 1 if i - last_up < within else (0 if state == -1 else state)
+        elif slo is not None and c[i] < slo:
+            state = -1 if i - last_dn < within else (0 if state == 1 else state)
+        out.append(state)
+        j = i - 2  # weekly swing points (2 weeks each side), on the body (the trader's 1.5198 on EURNZD), known now
+        if j >= 2:
+            if h[j] == h[j - 2:j + 3].max():
+                sh = max(o[j], c[j])
+            if l[j] == l[j - 2:j + 3].min():
+                slo = min(o[j], c[j])
+    return np.array([x.value for x in w["done"]]), np.array(out)
+
+
 def bos_bias(sym, tf):
     """Video 4 / 12: on tf, +1 after a close above the last confirmed swing high (zigzag 2 / 4), -1 after a close below
     the last confirmed swing low; it holds until the opposite key level breaks. (done times, state) per candle."""
@@ -308,8 +340,9 @@ def run(sym, tf, start, end):
     go, gc = g.open.values, g.close.values
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
-    mb = bos_bias(sym, "MN")
-    ms = monthly_setup_trend(sym)  # test 50  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
+    mb = bos_bias(sym, "MN")  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
+    ms = monthly_setup_trend(sym)  # test 50
+    wt = weekly_trigger(sym)  # test 51
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -449,7 +482,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)
