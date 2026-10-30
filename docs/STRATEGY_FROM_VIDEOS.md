@@ -771,3 +771,11 @@ trades in het venster) kiezen op de jaren ervóór, en dan dat jaar handelen. Vi
 jaar of alle eerdere jaren; beste combinatie of top 5 samen. Geslaagd als een variant over 2010-2025 gemiddeld > 0
 met PF >= 1,05, in >= 10 van de 16 jaren positief, en t (op de jaarsommen) >= 2,0. Bij vier varianten is één
 toevallige treffer mogelijk: een geslaagde variant moet ook in de andere drie in dezelfde richting wijzen.
+
+### Uitkomst test 22: niet geslaagd
+Alle vier varianten licht positief, geen haalt de lat (2010-2025, uit de steekproef):
+venster 5 jaar top 1: +0,03R/trade, PF 1,04, 9/16 jaren positief, t 0,27; top 5: +0,04R, PF 1,05, 9/16, t 0,40;
+alle eerdere jaren top 1: +0,09R, PF 1,12, 7/16, t 1,23 (koos meestal de grootste poten of week+S/R met beheer);
+top 5: +0,05R, PF 1,07, 9/16, t 0,70. Rond 25 trades per jaar over 34 instrumenten -> ±+1 tot +2R per jaar,
+dus ±1-2% per jaar bij 1% risico. Optimaliseren levert uit de steekproef een kleine, onzekere plus op; geen
+bruikbare voorsprong voor een prop-challenge.
