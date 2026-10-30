@@ -21,13 +21,14 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir  # noqa: E402
 
 
-def trades(col, prefixes=("t20_", "t20x_")):
+def trades(col, prefixes=("t20_", "t20x_"), rule="wk_struct == 1 & htf_sup"):
     fs = [pd.read_csv(p) for pre in prefixes for p in glob.glob(str(HERE / "out" / f"{pre}*.csv"))
           if Path(p).stat().st_size > 1]
     f = pd.concat(fs)
     f = f[f.result == "gevuld"].reset_index(drop=True)
     f["htf_sup"] = f.htf_sup.astype(str).str.lower().eq("true")
-    o = one_per_dir(f.query("wk_struct == 1 & htf_sup"), "t020")
+    f["cont"] = f.cont.astype(str).str.lower().eq("true") if "cont" in f else False
+    o = one_per_dir(f.query(rule), "t020")
     xcol = "x_t020"
     o = o[o[col].notna() & o[xcol].notna()]
     return o[["sym", "fill", xcol, col]].rename(columns={xcol: "exit", col: "R"}).sort_values("exit")
@@ -52,8 +53,9 @@ if __name__ == "__main__":
     ap.add_argument("--col", default="R_m_top_1")
     ap.add_argument("--risks", default="0.01,0.015,0.02")
     ap.add_argument("--prefixes", default="t20_,t20x_")
+    ap.add_argument("--rule", default="wk_struct == 1 & htf_sup")
     a = ap.parse_args()
-    t = trades(a.col, a.prefixes.split(","))
+    t = trades(a.col, a.prefixes.split(","), a.rule)
     per_year = t.groupby(t.exit.str[:4]).R.agg(["size", "sum"])
     print(f"{len(t)} trades ({a.col}), gemiddeld {t.R.mean():+.3f}R; per jaar:\n{per_year.round(1).T.to_string()}")
     starts = pd.date_range("2006-01-01", "2024-12-01", freq="MS").strftime("%Y-%m-%d")

@@ -1068,3 +1068,13 @@ zijn (ook na 3-10x hogere kosten) - geen teken van overfitting.
 Samen 65 instrumenten, continuation + regel: 724 trades (0,5 per paar per jaar), +0,10 / +0,09 / +0,11R (PF 1,16 /
 1,15 / 1,19, t 1,85) - de stabielste uitkomst tot nu toe. Continuation zonder S/R-eis: 1072 trades, +0,07 / +0,14 /
 +0,10R (t 2,05, beschrijvend, niet vooraf als beslissend vastgelegd).
+
+## Handelsuniversum van de trader (2026-10-30): geen exoten
+De trader: geen exoten; wel forex (majors + crosses), goud, zilver, olie, indices, BTC, ETH. Universum = de 34 van
+test 31 + BTC_USD, ETH_USD, XBR_USD (Brent, vanaf 2015) = 37 (`t37_` = koppelingen naar t31g_ / t33_). Pipwaarde XBR
+gecorrigeerd (0,01). Continuation + regel, `R_m_top_1`: 439 trades, +0,16 / +0,02 / +0,11R (PF 1,26 / 1,03 / 1,18,
+t 1,47) - gelijk aan test 31; zonder exoten valt de extra stabiliteit van test 33 weg (de exoten droegen vooral
+2015-20).
+5ers (`prop_t20.py --prefixes t37_ --rule "cont & wk_struct == 1 & htf_sup"`): ±21 trades per jaar, +0,10R gemiddeld
+(±+2R per jaar). Geslaagd 28% / breach 56% bij 1% risico (mediaan 526 dagen tot geslaagd); 1,5%: 26% / 65%; 2%:
+21% / 77%. De voorsprong per trade is echt maar te klein en te traag voor +8% en +5% vóór -10%.
