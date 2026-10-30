@@ -948,3 +948,14 @@ per richting. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t 
 ### Uitkomst test 27: verworpen
 (a) test 20 regel: zonder filter +0,05 / +0,05 / +0,22R; met filter -0,05 / +0,03 / +0,10R (t 0,0).
 (b) test 24 + regel: zonder -0,00 / -0,25 / +0,35R; met +0,11 / -0,84 / +0,16R (t 0,1).
+
+## Terug naar de basis: werken de S/R-niveaus wel? (`sr_quality.py`, 2026-10-30)
+
+Elke maandeinde 2005-2025, 30 instrumenten: niveaus (punt in de tijd) binnen 3 week-ATR van de prijs; eerste
+aanraking op de dag binnen 63 dagen; "houdt" = 1 dag-ATR terug weg voor een slot 0,5 ATR erdoor (binnen 20 dagen).
+Vergeleken met dezelfde niveaus 1,5 week-ATR verschoven (nep-niveaus). Aandeel dat houdt, echt vs verschoven:
+huidig (wick-tikken, onze methode) 71,0% vs 70,9% (+0,1 pp) - niet beter dan een willekeurige lijn;
+swing (week-swings) 71,5 vs 70,6; cluster (>= 2 week-swings samen) 71,8 vs 70,0 (+1,8 pp, beste);
+rolwissel (gebroken swing, "Breaker/KEY") 71,5 vs 70,7; body (opens/sloten) 71,4 vs 70,3; maand-swings 71,1 vs 70,0.
+Per periode cluster +2,9 / +1,0 / +1,2 pp. Conclusie: onze S/R-methode deed niets; geen enkele definitie geeft
+meer dan ±2 procentpunt boven een willekeurige lijn. Niveaus met meerdere reacties (cluster) zijn de beste keuze.
