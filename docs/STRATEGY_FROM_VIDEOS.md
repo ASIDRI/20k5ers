@@ -904,3 +904,9 @@ Per poot: `breakaway` = een dagcandle in de poot met body >= 1 dag-ATR die sluit
 high van de 40 dagen voor de start). Regel: (breakaway en de reactie-low blijft boven fib 1, `l_fib <= 1`) of (geen
 breakaway en de reactie-low nam fib 1, `l_fib > 1`). `R_t020`, één positie per richting, 34 instrumenten, alle drie de
 periodes (geen ontdekking). Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+
+### Uitkomst test 25: verworpen
+Regel video 11, `R_t020`: 2005-14 -0,05R (437) / 2015-20 -0,19R (202) / 2021-25 +0,40R (161), t 0,1.
+Delen: breakaway + reactie binnen 1: -0,08 / -0,18 / +0,42R; geen breakaway + fib 1 genomen: +0,45 / +0,09 / +0,03R
+(maar 43 trades); geen breakaway + binnen 1 (volgens de video vermijden): -0,01 / -0,05 / -0,37R.
+In 2021-2025 maakt breakaway een groot verschil (+0,42 tegen -0,37R), daarvoor niet.
