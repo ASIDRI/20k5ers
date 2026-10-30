@@ -65,3 +65,30 @@ beslissing bij het slot van dag t geldt van dat slot tot het volgende.
 - als vergelijking: goud kopen en houden.
 
 **Bij slagen:** een eigen vastlegging met (1) de 5ers-challenge op het 15-minutenpad en (2) swaps.
+
+### Uitkomst VX1: verworpen
+`python research/vx/vx.py` (26 s). Na kosten, zonder swaps. De volatiliteit is laag omdat de 7 plaatsen niet altijd
+gevuld zijn; vergelijk daarom de Sharpe.
+
+| | 2005-14 | 2015-20 | 2021-25 | t 2005-25 |
+|---|---|---|---|---|
+| **VX volledig** | +0,9%/j, Sharpe 0,26 | -1,5%/j, Sharpe -0,34 | -3,0%/j, Sharpe -0,71 | -0,5 |
+| alleen forex | 0,0%/j, Sharpe 0,01 | -1,1%/j, Sharpe -0,30 | -2,8%/j, Sharpe -0,90 | -1,3 |
+| alleen grondstoffen | +1,0%/j, Sharpe 0,47 | -0,5%/j, Sharpe -0,18 | -0,2%/j, Sharpe -0,05 | 0,9 |
+| zonder DEW (alleen VST) | +1,3%/j, Sharpe 0,26 | -3,9%/j, Sharpe -0,76 | -2,8%/j, Sharpe -0,52 | -0,8 |
+| alleen DEW (zonder VST) | +0,3%/j, Sharpe 0,10 | -1,2%/j, Sharpe -0,28 | -1,9%/j, Sharpe -0,47 | -0,6 |
+| goud kopen en houden (zelfde schaal) | +1,0%/j, Sharpe 0,67 | +0,9%/j, Sharpe 0,61 | +1,6%/j, Sharpe 1,09 | 3,7 |
+
+- Elk onderdeel was alleen in 2005-14 licht positief en daarna negatief: de VST-rangen (momentum + waarde +
+  veiligheid), de DEW-timing, en de grondstoffen met DEW + momentum. Dat past bij de literatuur: momentum en waarde in
+  valuta's werkten tot ±2010 en zijn sindsdien zwak. Hetzelfde zagen we in fase 2b (`docs/RND_RESULTS.md`).
+- Goud gewoon aanhouden doet het in elke periode beter dan elk timingsysteem. Het blijft de risicopremie die werkt,
+  niet de timing.
+- Niet getest: carry (renteverschil). In de literatuur is dat de sterkste valutafactor, maar er is geen rentedata in
+  de repo, en de 5ers rekent swaps.
+
+**Stand eind 2025** (`python research/vx/vx.py --now`):
+- VST: EUR 0,55, CAD 0,47, AUD, GBP, NZD rond 0; USD -0,10, CHF -0,19, JPY -0,78.
+- DEW Up: EUR, CAD, AUD, GBP, NZD. DEW Down: USD, CHF, JPY.
+- Grondstoffen: goud en zilver DEW Up met positieve RT, olie DEW Down met negatieve RT.
+- Het systeem zou dus long EUR en CAD tegen short JPY en CHF staan, long goud en zilver, en short olie.

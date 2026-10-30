@@ -96,8 +96,8 @@ def build():
     dew_m = pd.DataFrame({s: dew(px[s]) for s in COMMOD})
     vol = lr.rolling(63).std() * np.sqrt(252)
     date = px.index.tz_convert(None) if px.index.tz is not None else px.index
-    week = pd.Series(date.isocalendar().week.values * 10000 + date.isocalendar().year.values, index=px.index)
-    weekly = (week != week.shift(-1)).values  # last forex day of its week (known from the calendar)
+    week = np.asarray((date - pd.Timestamp("2000-01-03")).days // 7)  # Monday-based week number
+    weekly = np.r_[week[1:] != week[:-1], True]  # last forex day of its week (known from the calendar)
     ret = (px.shift(-1) / px - 1).fillna(0)  # from this close to the next
     cost = pd.DataFrame({s: [cost_price(s, x) / 2 / x if x == x else 0 for x in px[s].values] for s in px},
                         index=px.index)
