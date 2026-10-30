@@ -166,3 +166,63 @@ BTC-grafiek ernaast [04:30, `docs/ew/v1_04m30_dydx_1m_count_fibs_rsi_macd.jpg`].
   minuten (2015-2025) voor 28 forexparen, goud, zilver, indices, olie, BTC en ETH.
 - In de theorievideo verwijst hij naar een aparte "strategy video" met zijn instappen [52:25, 77:46]. Dat lijkt deze
   video niet te zijn. Als die bestaat, is dat de belangrijkste bron.
+
+---
+
+## Test E1 (vooraf vastgelegd, 2026-10-30): tellen op week en dag, handelen op 4 uur
+
+De trader: "probeer op 4 uur de trades te doen, maar ook op de daily en weekly chart de golven tellen". Code:
+`research/ew/ew_bt.py` (`--now` toont de huidige telling), `research/ew/ew_eval.py`.
+
+**Motor (ongewijzigd):**
+- alleen gesloten candles (`complete_times`);
+- instap op het slot van de 4u-candle die bevestigt;
+- `test18.follow` / `managed`: de stop gaat voor als stop en doel in dezelfde candle vallen;
+- kosten per symbool;
+- één positie per richting.
+
+**Instrumenten:** de 34 van tests 20-33. Goud, zilver en NAS100 gebruiken de 4u-reeks van OANDA (vanaf 2015) met de
+dag- en weekreeks onder de andere naam.
+
+**Swings:** een top (bodem) is bevestigd als de prijs K x ATR(14) terug is, en is bekend bij het slot van die candle.
+K = 2 (week), 3 (dag), 2 (4u).
+
+**Telling op week en dag** (gespiegeld voor omlaag; video "Elliott Wave Theory"):
+
+| Telling | Voorwaarden | Verwachting |
+|---|---|---|
+| in golf 3 | golf 2 = 0,382-0,786 van golf 1 (±0,03) [37:49-38:57] | omhoog |
+| in golf 5 | zoals hierboven; 3 voorbij 1 en niet korter dan 1 [34:42, 03:33]; golf 4 = 0,20-0,50 van 3 (0,236-0,382 met marge), boven de top van 1 [33:44, 42:18] | omhoog |
+| 5 golven af | "in golf 5" + een nieuwe top voorbij 3 met golf 5 >= 0,5 x golf 1 | omlaag |
+
+De telling die op de laatste swing eindigt, wint. Ze vervalt zodra het laatste slot voorbij haar ongeldigheidsniveau
+komt.
+
+**Setup 1 (beslissend): het eind van de correctie kopen, met de grotere telling mee.**
+- Een 4u-poot 0 -> 1 van minstens 4 ATR(4u), met het eind bevestigd.
+- Dan een 4u-slot waarbij:
+  - de low sinds punt 1 het 0,382-niveau heeft bereikt (zone 0,382-0,786) [38:04-39:22, video 2 02:37-05:45];
+  - de MACD(12,26,9) zijn signaallijn kruist in de handelsrichting [video 2 11:10-11:31];
+  - het slot boven het 0,786-niveau staat.
+- Dit moet binnen de duur van de poot zelf gebeuren (minimaal 6 candles) ("wave 2 is mostly shorter in time than
+  wave 1" [33:14]).
+- Ongeldig: een slot voorbij het begin van de poot. Een nieuwe top voorbij 1 vóór de instap: overslaan.
+- Stop: 0,1 ATR(4u) voorbij het begin van de poot (het begin van golf 1) [39:45-40:05].
+- **Beheer `R_m` (beslissend):** de helft op punt 1 (hertest van de top), stop naar instap, de rest op de
+  1,618-extensie (0 -> 1 -> low van de correctie) [40:13-40:50, video 2: telkens de helft, daarna de stop naar
+  instap].
+- **Beslissende regel:** `d1 == 1 & w1 >= 0`, dus de dagtelling in de handelsrichting en de weektelling er niet tegen.
+
+**Setup 2 (tweede cel): een afgeronde vijfgolvenbeweging op 4u tegen in handelen.**
+- De 4u-swings 0..5 voldoen aan "5 golven af", met MACD-divergentie (de MACD-lijn bij 5 lager dan bij 3, voor een
+  top) [video 2 12:10-12:33, 54:20].
+- Instap op het slot dat swing 5 bevestigt. Stop: 0,1 ATR voorbij 5.
+- `R_m`: de helft op het eind van golf 4, stop naar instap, de rest op 0,618 van de hele beweging 0 -> 5.
+
+**Lat (per cel):**
+- Elke periode (2005-14, 2015-20, 2021-25) zit gemiddeld boven 0 met PF >= 1,05, en de drie samen halen t >= 2,0.
+- Een geslaagde cel moet daarna slagen op de 31 holdout-instrumenten van test 33 (eigen vastlegging).
+- Gerapporteerd: zonder dag/week-filter, met alleen dag of alleen week, `R_t1` (alles op punt 1), `R_t2` (alles op
+  1,618) en `R_tight_m` (stop onder de low van de correctie, zoals in zijn live trades).
+
+Vóór deze vastlegging is de code op EURUSD gedraaid om te zien dat hij werkt (aantallen, geen rendement).
