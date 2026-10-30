@@ -1161,3 +1161,10 @@ De regel "weekpoten, alleen OB" (`has_ob`, `R_m`) is gekozen na het zien van de 
 exoten van test 33 (niet om te handelen - de trader handelt geen exoten - alleen als onafhankelijke markten die nooit
 voor deze regel gebruikt zijn), kosten zoals test 33. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen
 t >= 2,0 op de 31; daarnaast gerapporteerd: OB + S/R.
+
+### Uitkomst test 36b: holdout positief in elke periode, lat net niet gehaald
+29 exoten (BTC/ETH zitten al in de 37), weekpoten, alleen OB, `R_m`: 251 trades, +0,21 / +0,03 / +0,03R (PF 1,34 /
+1,04 / 1,05, t 1,40) -> niet geslaagd (2015-20 PF 1,04, t < 2), wel nergens negatief. OB + S/R: +0,18 / +0,02 /
++0,26R (t 1,3). Zoals bij test 33: de voorsprong houdt stand buiten de markten waarop hij gekozen is, maar is klein.
+Aantal op de 37 instrumenten van de trader: ±18 per jaar (weekpoten) - de video werkt van week naar dag, en levert
+dus weinig setups.
