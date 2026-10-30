@@ -1640,3 +1640,5 @@ Swing-setup (26 instrumenten met partner), setting + SMT, `R_m`: 618 trades, +0,
 SMT (zelfde instrumenten): +0,04 / +0,06 / -0,15R. Fib-setup van test 53 + SMT: 158 trades, +0,29 / +0,02 / -0,24R;
 test 53 zonder SMT op die instrumenten: +0,15 / +0,11 / +0,08R (t 2,0). De SMT-bevestiging zoals hier gemeten (partner
 neemt zijn low tijdens de terugval, dit paar houdt) voegt geen voorsprong toe; eerder het omgekeerde.
+Test 60, extra (de trader: meerdere posities in dezelfde richting mogen): ook geëvalueerd met `t36_eval.py --stack`
+(elke setup telt, exacte dubbels één keer); de vooraf vastgelegde regel blijft één positie per richting.

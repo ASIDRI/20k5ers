@@ -79,6 +79,7 @@ RULES = {"test 59: test 58 + SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_tri
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--prefix", default="t36_")
+    ap.add_argument("--stack", action="store_true", help="every setup counts, several positions per direction allowed")
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
@@ -88,7 +89,8 @@ if __name__ == "__main__":
         f[k] = f[k].astype(str).str.lower().eq("true")
     for lab, rule in RULES.items():
         try:
-            o = one_per_dir(f.query(rule), "t065")
+            q = f.query(rule)
+            o = q.drop_duplicates(["sym", "dir", "fill", "entry"]) if a.stack else one_per_dir(q, "t065")
         except Exception:  # noqa - a column this run does not have
             continue
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
