@@ -1233,3 +1233,19 @@ Geslaagd als elke periode > 0 met PF >= 1,05 en samen t >= 2,0.
 29 exoten, weekpoten, breuk tegen de maandbias: 88 trades, +0,42 / +0,04 / +0,88R (PF 1,73 / 1,05 / 3,24, t 1,98).
 Samen met de 37: ±203 trades (±10 per jaar), alle periodes positief. Klein in aantal, maar de sterkste en meest
 consistente regel tot nu toe, samen met test 37 (weekpoot + OB + breuk).
+
+## Grok-"Blueprint tool" (gedeeld door de trader, 2026-10-30) en test 40 (vooraf vastgelegd)
+De tekst zegt zelf dat Grok de video's niet kon bekijken ("standard interpretations ... direct video content access
+yielded insufficient details"); de voorbeelden (EUR/CHF 0,9540 -> 0,9840, "YouTube link 6/7") en de "3-candle
+Bullish N" zijn verzonnen en wijken af van de video's (video 4: N = impuls, correctie naar de golden pocket, nieuwe
+poot; video 3/12: fib body -> wick, doelen -0,25 / -0,65, geen 1,272 / 1,618). Bruikbaar en toetsbaar is de
+**volgorde / piramide**: maand-S/R -> maand- en weekstructuur in dezelfde richting -> fib op de week-impuls, dagprijs in
+0,618-0,786 -> dag-framework (OB / geflipte S/R in die zone) -> bevestigingscandle op de dag in de richting van de bias
+-> instap.
+**Test 40**: weekpoten (test 37: breuk van het key level), `test36.py --tf W1 --confirm`: na de aanraking van de
+golden pocket instap op het slot van een bevestigingscandle op de dag (in de richting van de poot, slot voorbij de
+vorige high/low, nog op of onder fib 0,382). SL 0,1 ATR voorbij de wick van fib 1 (video 3, niet onder de sweep:
+test 32). Uit: half -0,25, stop naar de oude top, rest -0,65.
+**Beslissend: `htf_sup & hi_struct == 1 & bos & has_ob` (alles in confluentie), `R_m`, één positie per richting, 37
+instrumenten.** Geslaagd als elke periode > 0 met PF >= 1,05 en t >= 2,0, én op de 29 holdout-exoten elke periode > 0.
+Gerapporteerd: zonder maandstructuur, zonder OB, test 37 met bevestiging i.p.v. limiet.

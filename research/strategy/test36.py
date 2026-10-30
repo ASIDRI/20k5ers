@@ -36,6 +36,8 @@ from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
 ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
+CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a daily confirmation candle (bullish, closing
+# above the previous high, still at or below fib 0.382) instead of the limit
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
 HIGHER = {"D1": "W1", "W1": "MN"}
 DAYS = {"D1": 1, "W1": 5}  # daily candles per --tf candle (for the expiry)
@@ -148,33 +150,39 @@ def run(sym, tf, start, end):
                    n_ob=len(obs), entry=entry, sl=sl, entry_fib=(top - entry) * dirn / rng)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
-        res = "verlopen"
+        res, touched = "verlopen", False
         while f < last:
             beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
             if beyond and ((l[f] if dirn == 1 else h[f]) - entry) * dirn > 0:
                 res = "weggelopen"
                 break
-            if ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0:
+            if not CONFIRM and ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0:
                 res = "gevuld"
                 break
             if (c[f] - b1) * dirn < 0:
                 res = "ongeldig"
                 break
+            if CONFIRM:
+                if touched and (c[f] - o[f]) * dirn > 0 and (c[f] - (h[f - 1] if dirn == 1 else l[f - 1])) * dirn > 0 \
+                        and (top - c[f]) * dirn >= 0.382 * rng:
+                    res = "gevuld"
+                    break
+                touched = touched or ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0
             f += 1
         if res == "verlopen" and f >= len(d):
             res = "actief"
         if res != "gevuld":
             rows.append(dict(row, result=res))
             continue
-        fill = entry if ((o[f] - entry) * dirn >= 0) else o[f]  # a gap through the limit fills at the open
+        fill = c[f] if CONFIRM else (entry if ((o[f] - entry) * dirn >= 0) else o[f])  # a gap through the limit: the open
         risk = abs(fill - sl)
         ts = pd.Timestamp(dt[f]).tz_localize("UTC")
         lo_, hi_ = sorted([b1, fill])
         cost = cost_price(sym, fill)
-        row.update(result="gevuld", fill=str(ts.date()), entry=fill, R_cost=cost / risk,
+        row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
                    m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn)
-        hit_sl = ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0
+        hit_sl = not CONFIRM and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
         for name, x in (("t025", 0.25), ("t065", 0.65)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
             row[f"R_{name}"] = r - cost / risk
@@ -193,8 +201,9 @@ if __name__ == "__main__":
     ap.add_argument("--prefix", default="t36_")
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--entry", type=float, default=0.618)
+    ap.add_argument("--confirm", action="store_true")
     a = ap.parse_args()
-    SWEEP, ENTRY = a.sweep, a.entry
+    SWEEP, ENTRY, CONFIRM = a.sweep, a.entry, a.confirm
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)

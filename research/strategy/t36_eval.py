@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 39: weekbias + structuurbreuk (dag)": "hi_bias == 1 & bos",
+RULES = {"test 40: piramide (S/R + maand- en weekstructuur + fib + OB + dagbevestiging)": "htf_sup & hi_struct == 1 & bos & has_ob",
+         "piramide zonder maandstructuur": "htf_sup & bos & has_ob", "piramide zonder OB": "htf_sup & hi_struct == 1 & bos",
+"test 39: weekbias + structuurbreuk (dag)": "hi_bias == 1 & bos",
          "weekbias + breuk + OB": "hi_bias == 1 & bos & has_ob", "weekbias + breuk + S/R": "hi_bias == 1 & bos & htf_sup",
          "weekbias + breuk, omkeer": "hi_bias == 1 & shift", "weekbias + breuk, voortzetting": "hi_bias == 1 & bos & ~shift",
          "weekbias, alle poten": "hi_bias == 1", "tegen de weekbias, breuk": "hi_bias == -1 & bos",
