@@ -1436,3 +1436,15 @@ instrumenten, 2005-2025: 271 poten, 159 trades (±7 per jaar over alle instrumen
 (win 30%), `R_t1618` -0,56R (win 7%), beheer -0,24R. Goud: 2 trades, beide groot gewonnen (+2,1R op -0,2 / +5,4-5,5R
 op -1,618); de goud-poot van 2016 zelf is kleiner dan 4 maand-ATR en wordt niet als poot gezien. Over alle
 instrumenten geen voorsprong; te weinig trades voor de lat - niet verder als regel.
+
+## Test 50 (vooraf vastgelegd): maandtrend uit de maand-BoS (body) en de maand-setup
+De trader: "De engine moet ook gewoon zien dat die setup gevormd wordt op de maandelijkse chart, belangrijk voor de
+trend." `test36.monthly_setup_trend`: maandpoten (zigzag 2 maand-ATR, poot >= 3 ATR - zo wordt goud dec-2015 1046 ->
+jul-2016 1375 wel gezien), fib body -> wick, de poot sluit voorbij de laatste maand-swing aan zijn kant; de eerste maand
+die in fib 0,618 handelt zonder voorbij fib 1 te sluiten start de trend in die richting (geldt tot een maandslot
+voorbij fib 1). Daarnaast een maand-BoS op de body: een maandslot voorbij de body van het laatste maand-zigzagkeerpunt
+aan de andere kant (GBPJPY: bullish vanaf feb 2021, zoals de trader met 144,116). De laatste gebeurtenis bepaalt de
+trend (`ms_trend`). Controle: GBPJPY +1 vanaf 2021-02; goud +1 vanaf 2016-11.
+**Test 50**: de dagsetups van test 48 met `ms_trend`. **Beslissend: `ms_trend == 1 & ~m_block`, `R_t020`, één positie
+per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
+Gerapporteerd: + week- en dag-BoS, geen trend, tegen de trend.

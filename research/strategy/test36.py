@@ -102,6 +102,72 @@ def monthly_levels(sym, n=4):
     return at
 
 
+def monthly_setup_trend(sym, rev=2.0, leg=3.0):
+    """The trend from a setup on the monthly chart (the trader, gold 2016-2017: "hier begint de uptrend"). Monthly
+    zigzag legs (turn after `rev` monthly ATR, leg >= `leg` ATR), fib body -> wick; the leg must close beyond the most
+    recent monthly swing point on its side (2 months each side, a BoS). Once the leg is confirmed, the first month that
+    trades into fib 0.618 without closing beyond fib 1 starts the trend in the leg's direction (known at that month's
+    close); it holds until a monthly close beyond fib 1 of that leg (trend 0) or an opposite monthly setup. A monthly BoS
+    (close beyond the body of the last monthly swing point on the other side) also sets the trend.
+    Returns (done times, state) per monthly candle, for bias_at."""
+    m = load(sym, "MN")
+    m["done"] = complete_times(m["time"], "MN", load(sym, "D1")["time"])
+    o, h, l, c = (m[k].values for k in ("open", "high", "low", "close"))
+    old = test5.REV
+    test5.REV = rev
+    turns, atr = test5.legs(m)
+    test5.REV = old
+    setups = {}  # month index -> (dirn, fib 1 wick)
+    for k in range(1, len(turns)):
+        ci, ti, p_end, kind = turns[k]
+        _, si, p_start, _ = turns[k - 1]
+        dirn = 1 if kind == "H" else -1
+        b1 = min(o[si], c[si]) if dirn == 1 else max(o[si], c[si])
+        rng = (p_end - b1) * dirn
+        if rng < leg * atr[ci]:
+            continue
+        ext = h if dirn == 1 else l
+        sw, broke = None, False
+        for j in range(max(si - 24, 4), ti + 1):
+            i = j - 2
+            if ext[i] == (ext[i - 2:i + 3].max() if dirn == 1 else ext[i - 2:i + 3].min()):
+                sw = ext[i] if i < si else sw
+            if j > si and sw is not None and (c[j] - sw) * dirn > 0:
+                broke = True
+        if not broke:
+            continue
+        lvl = p_end - dirn * 0.618 * rng
+        for j in range(ci, min(ci + 36, len(m))):
+            if (c[j] - p_start) * dirn < 0 or (ext[j] - p_end) * dirn > 0:
+                break  # invalid, or the leg extended (a new leg will follow)
+            if ((l[j] if dirn == 1 else h[j]) - lvl) * dirn <= 0:
+                setups[j] = (dirn, p_start)
+                break
+    # monthly BoS on bodies (the trader's 144.116 on GBPJPY): a close beyond the body of the last confirmed monthly
+    # zigzag turn on the other side starts the trend; the latest event (BoS or setup) wins
+    bh, bl = np.maximum(o, c), np.minimum(o, c)
+    state, inval, out, sh, sl_ = 0, None, [], None, None
+    known = {}
+    for ci, ti, _, kind in turns:  # the larger monthly swings: zigzag turns, known from their confirming candle
+        known.setdefault(ci, []).append((kind, ti))
+    for i in range(len(m)):
+        for kind, ti in known.get(i - 1, []):
+            if kind == "H":
+                sh = bh[ti]
+            else:
+                sl_ = bl[ti]
+        if state and inval is not None and (c[i] - inval) * state < 0:
+            state, inval = 0, None
+        if sh is not None and c[i] > sh and state != 1:
+            state, inval = 1, None
+        elif sl_ is not None and c[i] < sl_ and state != -1:
+            state, inval = -1, None
+        if i in setups:
+            state, inval = setups[i]
+        out.append(state)
+    return np.array([x.value for x in m["done"]]), np.array(out)
+
+
 def bos_bias(sym, tf):
     """Video 4 / 12: on tf, +1 after a close above the last confirmed swing high (zigzag 2 / 4), -1 after a close below
     the last confirmed swing low; it holds until the opposite key level breaks. (done times, state) per candle."""
@@ -242,7 +308,8 @@ def run(sym, tf, start, end):
     go, gc = g.open.values, g.close.values
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
-    mb = bos_bias(sym, "MN")  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
+    mb = bos_bias(sym, "MN")
+    ms = monthly_setup_trend(sym)  # test 50  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -382,7 +449,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)
