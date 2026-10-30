@@ -1228,3 +1228,8 @@ een weekbreuk tegen een nog niet gedraaide maandstructuur = de vroege omkeer (in
 ## Test 39b (vooraf vastgelegd): weekbreuk tegen de maandbias, controle op de holdout
 `hi_bias == -1 & bos` op weekpoten (entry 0,66, `R_m`), gekozen na het zien van de 37 -> controle op de 29 exoten.
 Geslaagd als elke periode > 0 met PF >= 1,05 en samen t >= 2,0.
+
+### Uitkomst test 39b: holdout positief in elke periode, t 1,98 (lat 2,0) -> net niet
+29 exoten, weekpoten, breuk tegen de maandbias: 88 trades, +0,42 / +0,04 / +0,88R (PF 1,73 / 1,05 / 3,24, t 1,98).
+Samen met de 37: ±203 trades (±10 per jaar), alle periodes positief. Klein in aantal, maar de sterkste en meest
+consistente regel tot nu toe, samen met test 37 (weekpoot + OB + breuk).
