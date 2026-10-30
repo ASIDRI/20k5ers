@@ -1078,3 +1078,13 @@ t 1,47) - gelijk aan test 31; zonder exoten valt de extra stabiliteit van test 3
 5ers (`prop_t20.py --prefixes t37_ --rule "cont & wk_struct == 1 & htf_sup"`): ±21 trades per jaar, +0,10R gemiddeld
 (±+2R per jaar). Geslaagd 28% / breach 56% bij 1% risico (mediaan 526 dagen tot geslaagd); 1,5%: 26% / 65%; 2%:
 21% / 77%. De voorsprong per trade is echt maar te klein en te traag voor +8% en +5% vóór -10%.
+
+## Test 34 (vooraf vastgelegd, 2026-10-30): dezelfde N op de 4u-grafiek (meer trades)
+De trader: "21 trades per jaar kan niet, moet zeker 1000 zijn". Op de dagpoten is het maximum ±1,9 grote poten per
+instrument per jaar (alle setups, zonder filter): 37 x 1,9 = ±70 per jaar; meer kan alleen op een lager tijdsframe.
+`test20.py --tf H4 --fib bodywick`: zelfde regels op 4u-candles (zigzag na 3 4u-ATR, poot >= 6 4u-ATR, fib body ->
+wick, afwijzingscandle met slot 0,5-0,786, SL 0,1 ATR voorbij de wick van fib 1, verlopen na 40 candles); structuur
+`wk_struct` nu van de dagzigzag (2 / 4), S/R van week/maand, maandtrend als voorheen. 37 instrumenten van de trader.
+**Beslissend: `cont & wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting.** Geslaagd als elke periode
+(2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: aantal trades per jaar,
+kosten in R, de andere regels.

@@ -49,7 +49,7 @@ TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
 
 
 TF = "D1"  # --tf W1 (test 20w): legs on weekly candles, context from the monthly structure
-HIGHER = {"D1": "W1", "W1": "MN"}
+HIGHER = {"H4": "D1", "D1": "W1", "W1": "MN"}
 
 
 def run(sym, start, end):
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     ap.add_argument("--rev", type=float, default=REV)
     ap.add_argument("--leg", type=float, default=LEG)
     ap.add_argument("--band", default=f"{BAND[0]},{BAND[1]}")
-    ap.add_argument("--tf", default="D1", choices=["D1", "W1"])
+    ap.add_argument("--tf", default="D1", choices=["H4", "D1", "W1"])
     ap.add_argument("--fib", default="wick", choices=["wick", "body", "bodywick"])
     a = ap.parse_args()
     REV, LEG, BAND, TF, FIB = a.rev, a.leg, tuple(float(x) for x in a.band.split(",")), a.tf, a.fib
