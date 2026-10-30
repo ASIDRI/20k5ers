@@ -17,6 +17,9 @@
    for a long, below it for a short).
 6. --tf W1 (test 20w): the same on weekly candles (zigzag in weekly ATR, expiry in weeks); the structure filter then
    uses the monthly zigzag (higher highs and lows on the monthly), S/R as before.
+7. --fib body (test 30, video 12 "take the body instead of the wick"): fib 1 = the body extreme of the leg-start
+   candle, 0 = the body extreme of the leg-end candle; a new high moves 0 only when a body goes beyond it. Stop stays
+   beyond the body fib 1 by 0.1 ATR.
 5. A setup still waiting when the data ends is "actief" (with its zone, stop, -0.2 and the context now): for the
    scanner (scan.py).
 """
@@ -36,6 +39,7 @@ import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY = 3.0, 6.0, 40
+FIB = "wick"  # --fib body (test 30, video 12): fib 1 and 0 on the candle bodies instead of the wicks
 BAND = (0.5, 0.786)  # where the close of the rejection candle must sit (fib)
 SL_BUF = (0.1, 0.5)  # stop beyond fib 1 by these ATR multiples; the first is the main one (R_*), the second R_w_*
 TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
@@ -70,6 +74,9 @@ def run(sym, start, end):
             continue
         dirn = 1 if kind == "H" else -1
         top, b1 = p_end, p_start
+        if FIB == "body":
+            top = max(o[ti], c[ti]) if kind == "H" else min(o[ti], c[ti])
+            b1 = min(o[si], c[si]) if kind == "H" else max(o[si], c[si])
         rng = (top - b1) * dirn
         if rng < LEG * atr[ci]:
             continue
@@ -83,11 +90,11 @@ def run(sym, start, end):
             if (c[f] - b1) * dirn < 0:
                 res = "ongeldig"
                 break
-            if (ext[f] - top) * dirn > 0:
+            if ((ext[f] if FIB == "wick" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))) - top) * dirn > 0:
                 if touched:
                     res = "weggelopen"
                     break
-                top = ext[f]
+                top = ext[f] if FIB == "wick" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))
                 rng = (top - b1) * dirn
                 row.update(top=top, rng=rng, top_t=str(t[f])[:10], reanchored=True)
                 deadline = f + 1 + EXPIRY
@@ -152,8 +159,9 @@ if __name__ == "__main__":
     ap.add_argument("--leg", type=float, default=LEG)
     ap.add_argument("--band", default=f"{BAND[0]},{BAND[1]}")
     ap.add_argument("--tf", default="D1", choices=["D1", "W1"])
+    ap.add_argument("--fib", default="wick", choices=["wick", "body"])
     a = ap.parse_args()
-    REV, LEG, BAND, TF = a.rev, a.leg, tuple(float(x) for x in a.band.split(",")), a.tf
+    REV, LEG, BAND, TF, FIB = a.rev, a.leg, tuple(float(x) for x in a.band.split(",")), a.tf, a.fib
     for s in a.symbols:
         try:
             df = run(s, a.start, a.end)

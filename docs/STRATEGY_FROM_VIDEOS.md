@@ -983,3 +983,14 @@ weekopening (anders midden van vorige week), RR >= 1; uit bij doel, SL of einde 
 Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
 Uitkomst test 29: verworpen - 1.244 trades: -0,08R (PF 0,82) / -0,07R (PF 0,81) / +0,02R (PF 1,08), t -2,3; bruto
 (zonder kosten) -0,01R, dus geen voorsprong (kosten ±0,04R). Shorts na PWH-sweep -0,08R, longs na PWL-sweep -0,03R.
+
+## Video 12 ("Forex HTF Analysis") en test 30 (vooraf vastgelegd, 2026-10-30)
+
+`research/videos/video12`: maand eerst (trendlijnen, S/R met meerdere bounces/rejections, flips; deviaties mogen),
+week (H&S, W/M, 5 golven; fib op de laatste impuls, reactie in de golden pocket, doelen -0,25 / -0,65), dag (fair
+value gaps, order block = eerste tegengestelde candle links van de FVG; OB in de golden pocket), 4 uur (inverse H&S
+op het niveau). Nieuw en concreet: de fib vaak **van body naar body** i.p.v. wick ("if you take the fib from the low
+you never touch the golden pocket; if you take it from the body, it is clearly where we see that bounce").
+**Test 30:** precies test 20 (grote dagpoten, afwijzingscandle, SL 0,1 ATR voorbij 1, regel week + S/R, beheer), maar
+`--fib body`. Beslissend `wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting, 34 instrumenten.
+Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: alle setups en R_t020.
