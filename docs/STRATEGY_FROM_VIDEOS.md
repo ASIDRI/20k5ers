@@ -981,3 +981,5 @@ weekopening, New York-middernacht; helft dicht, SL in winst; monthly open als or
 4u-slot onder de laatste 4u-swing-low van vóór de sweep-high -> short; SL boven de sweep-high (+ 0,1 dag-ATR); doel
 weekopening (anders midden van vorige week), RR >= 1; uit bij doel, SL of einde van de week; omgekeerd voor longs.
 Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+Uitkomst test 29: verworpen - 1.244 trades: -0,08R (PF 0,82) / -0,07R (PF 0,81) / +0,02R (PF 1,08), t -2,3; bruto
+(zonder kosten) -0,01R, dus geen voorsprong (kosten ±0,04R). Shorts na PWH-sweep -0,08R, longs na PWL-sweep -0,03R.
