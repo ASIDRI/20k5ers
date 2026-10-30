@@ -1471,3 +1471,9 @@ laatste 8 weken (die week inbegrepen) een bullish engulfing-week zat (bullish, s
 poort), `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0;
 holdout elke periode > 0). Gerapporteerd: met maand-S/R-blokkade (onze maandlijnen wijken af van die van de trader:
 in dit voorbeeld blokkeert ze de juni-long ten onrechte), + dag-BoS, maandtrend zonder week-poort.
+
+### Uitkomst test 51: verworpen
+`ms_trend == 1 & wk_trig == 1`, `R_t020`: 804 trades (38 per jaar), +0,07 / -0,07 / +0,01R (t 0,4); holdout -0,09 /
+-0,01 / -0,08R. Met maand-S/R-blokkade: +0,13 / -0,11 / +0,03R; + dag-BoS: +0,15 / -0,08 / +0,05R (t 1,5); holdout
+telkens negatief. Maandtrend zónder week-poort (238 trades): +0,17 / -0,12 / -0,13R. De week-poort van de trader
+filtert in EURNZD 2017 precies de juiste trades, maar over 37 markten en 20 jaar maakt ze de dagsetups niet beter.
