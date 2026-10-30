@@ -41,6 +41,8 @@ CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a
 # above the previous high, still at or below fib 0.382) instead of the limit
 CONFL = False  # --confl (test 44): limit at the BoS (key) level or a weekly S/R cluster inside fib 0.618-0.796 (the
 # first one price reaches); no such level -> no trade
+FIBZONE = False  # --fibzone (test 52): the zone is fib 0.618-0.796 itself (continuations: "no trade if it didn't
+# touch our fib levels"); a cheat-sheet pattern touching it confirms
 BASE = False  # --base (test 45): the base / S/R zone formed before the BoS (>= 2 daily swing points within 0.5 ATR);
 # on the return into it a daily rejection candle (hammer / pin bar or engulfing) confirms, entry at its close
 PATTERNS = False  # --patterns (test 46): every bullish / bearish pattern of the trader's cheat sheet confirms
@@ -141,12 +143,13 @@ def monthly_setup_trend(sym, rev=2.0, leg=3.0):
             if (c[j] - p_start) * dirn < 0 or (ext[j] - p_end) * dirn > 0:
                 break  # invalid, or the leg extended (a new leg will follow)
             if ((l[j] if dirn == 1 else h[j]) - lvl) * dirn <= 0:
-                setups[j] = (dirn, p_start)
+                setups[j] = (dirn, p_start, p_end + dirn * 0.25 * rng)  # trend, invalidation, target -0.25
                 break
     # monthly BoS on bodies (the trader's 144.116 on GBPJPY): a close beyond the body of the last confirmed monthly
     # zigzag turn on the other side starts the trend; the latest event (BoS or setup) wins
     bh, bl = np.maximum(o, c), np.minimum(o, c)
     state, inval, out, sh, sl_ = 0, None, [], None, None
+    tgt, done_dir = None, 0  # test 52: the monthly target -0.25 of the setup; once reached the setting ends
     known = {}
     for ci, ti, _, kind in turns:  # the larger monthly swings: zigzag turns, known from their confirming candle
         known.setdefault(ci, []).append((kind, ti))
@@ -157,13 +160,16 @@ def monthly_setup_trend(sym, rev=2.0, leg=3.0):
             else:
                 sl_ = bl[ti]
         if state and inval is not None and (c[i] - inval) * state < 0:
-            state, inval = 0, None
-        if sh is not None and c[i] > sh and state != 1:
-            state, inval = 1, None
-        elif sl_ is not None and c[i] < sl_ and state != -1:
-            state, inval = -1, None
+            state, inval, tgt = 0, None, None
+        if state and tgt is not None and ((h[i] if state == 1 else l[i]) - tgt) * state >= 0:
+            state, inval, tgt, done_dir = 0, None, None, state
+        if sh is not None and c[i] > sh and state != 1 and done_dir != 1:
+            state, inval, tgt, done_dir = 1, None, None, 0
+        elif sl_ is not None and c[i] < sl_ and state != -1 and done_dir != -1:
+            state, inval, tgt, done_dir = -1, None, None, 0
         if i in setups:
-            state, inval = setups[i]
+            state, inval, tgt = setups[i]
+            done_dir = 0
         out.append(state)
     return np.array([x.value for x in m["done"]]), np.array(out)
 
@@ -415,7 +421,10 @@ def run(sym, tf, start, end):
                    n_ob=len(obs), entry=entry, sl=sl, conf=conf is not None, origin_sr=origin_sr, entry_fib=(top - entry) * dirn / rng)
         zone = None
         if BASE:
-            zone = base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None
+            if FIBZONE:
+                zone = (top - dirn * 0.618 * rng, top - dirn * 0.796 * rng) if bos else None
+            else:
+                zone = base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None
             if zone is None:
                 rows.append(dict(row, result="geen basis"))
                 continue
@@ -438,6 +447,9 @@ def run(sym, tf, start, end):
                             res = "weggelopen"
                             break
                     last = min(f + 1 + EXPIRY * DAYS[tf], len(d))
+                    if BASE and FIBZONE:
+                        zone = (top - dirn * 0.618 * rng, top - dirn * 0.796 * rng)
+                        entry = zone[0]
                     row.update(top=top, rng=rng, entry=entry, has_ob=False, reanchored=True)
                     top_day = dt[f]
                     f += 1
@@ -517,8 +529,9 @@ if __name__ == "__main__":
     ap.add_argument("--confl", action="store_true")
     ap.add_argument("--base", action="store_true")
     ap.add_argument("--patterns", action="store_true")
+    ap.add_argument("--fibzone", action="store_true")
     a = ap.parse_args()
-    PATTERNS = a.patterns
+    PATTERNS, FIBZONE = a.patterns, a.fibzone
     SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL, BASE = a.sweep, a.entry, a.confirm, a.reanchor, a.confl, a.base
     for s in a.symbols:
         try:

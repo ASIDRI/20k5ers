@@ -1477,3 +1477,17 @@ in dit voorbeeld blokkeert ze de juni-long ten onrechte), + dag-BoS, maandtrend 
 -0,01 / -0,08R. Met maand-S/R-blokkade: +0,13 / -0,11 / +0,03R; + dag-BoS: +0,15 / -0,08 / +0,05R (t 1,5); holdout
 telkens negatief. Maandtrend zónder week-poort (238 trades): +0,17 / -0,12 / -0,13R. De week-poort van de trader
 filtert in EURNZD 2017 precies de juiste trades, maar over 37 markten en 20 jaar maakt ze de dagsetups niet beter.
+
+## Test 52 (vooraf vastgelegd): in de bullish setting alle continuations op de dag (EURNZD 2017)
+De trader: "Na die bullish weekly ... moet je niet telkens wachten op die weekly candle. Want dan zijn we in een
+bullish setting, we hebben ons target op de maandelijkse -0,25. De weekly is ook mee. Daarna traden we alle bullish
+continuations op de daily chart." En: "No trade here as it didn't touch our fib levels" (aug-17: niet tot 0,618);
+"Here we can long, with those daily candle patterns at the fibs" (+2,29R).
+`test36.py --tf D1 --reanchor --base --fibzone --patterns`: dagpoten met breuk (`bos`), zone = fib 0,618-0,796 zelf;
+instap op het slot van een cheat-sheet-patroon waarvan de extreme de 0,618 raakt (tot 0,1 ATR) en dat boven 0,796
+sluit; geen aanraking = geen trade; fib 0 verleggen vóór de aanraking. De maandtrend eindigt nu ook op het maanddoel
+-0,25 van de maand-setup (opnieuw pas na een nieuwe setup of een tegengestelde BoS). De week-poort blijft staan tot
+een tegengestelde breuk (zoals in test 51). Controle: EURNZD mrt 2017 - feb 2018 in de setting: +0,9 / +0,7 / +2,6 /
++1,1 / +1,3 / -1,0R; GBPJPY 2021: +0,4 / +2,1 / -1,0 / -1,0R.
+**Beslissend: `ms_trend == 1 & wk_trig == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat
+(elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).

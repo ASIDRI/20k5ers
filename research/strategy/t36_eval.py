@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 51: maandtrend + week-engulfing/BoS": "ms_trend == 1 & wk_trig == 1",
+RULES = {"test 52: bullish setting (maand + week) - alle continuations": "ms_trend == 1 & wk_trig == 1",
+         "test 52 + geen maand-S/R in de weg": "ms_trend == 1 & wk_trig == 1 & ~m_block",
+"test 51: maandtrend + week-engulfing/BoS": "ms_trend == 1 & wk_trig == 1",
 "test 51: maandtrend + week-engulfing/BoS + geen maand-S/R in de weg": "ms_trend == 1 & wk_trig == 1 & ~m_block",
          "week-engulfing/BoS + geen maand-S/R in de weg": "wk_trig == 1 & ~m_block",
          "maandtrend + week-engulfing/BoS + dag-BoS, geen maand-S/R": "ms_trend == 1 & wk_trig == 1 & bos & ~m_block",
