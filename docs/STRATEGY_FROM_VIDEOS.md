@@ -959,3 +959,10 @@ swing (week-swings) 71,5 vs 70,6; cluster (>= 2 week-swings samen) 71,8 vs 70,0 
 rolwissel (gebroken swing, "Breaker/KEY") 71,5 vs 70,7; body (opens/sloten) 71,4 vs 70,3; maand-swings 71,1 vs 70,0.
 Per periode cluster +2,9 / +1,0 / +1,2 pp. Conclusie: onze S/R-methode deed niets; geen enkele definitie geeft
 meer dan ±2 procentpunt boven een willekeurige lijn. Niveaus met meerdere reacties (cluster) zijn de beste keuze.
+
+## Test 28 (vooraf vastgelegd): de regel van test 20/24 met cluster-S/R in plaats van de oude S/R
+
+`htf_sup_c` = een cluster-niveau (>= 2 week-swings van de laatste 2 jaar binnen 0,25 week-ATR, punt in de tijd bij
+de vulling) tussen fib 1 en de instap. Regel `wk_struct == 1 & htf_sup_c`, één positie per richting:
+(a) test 20 met `R_m_top_1`; (b) test 24 met `R_t020`. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en
+samen t >= 2,0.
