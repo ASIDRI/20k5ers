@@ -801,3 +801,15 @@ dichtstbijzijnde eerdere swingtop boven de poot die nog intact is (`R_struct`); 
 test 20. Controle: de motor vindt de GBPNZD-poot van maart 2026 niet (andere poten); test toch zoals vastgelegd.
 Regel `wk_struct == 1 & htf_sup`, `R_struct`, één positie per richting (op de eigen uitstap), 34 instrumenten,
 2005-2025. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+
+### Uitkomst test 23: verworpen
+Regel, `R_struct` (mediane RR 4,0): 2005-14 -0,03R (611 trades) / 2015-20 -0,21R (395) / 2021-25 -0,21R (274),
+t -2,0. Zonder filter ook negatief (-0,03 / -0,13 / -0,12R).
+
+## 5ers-challenge op test 20 (`research/strategy/prop_t20.py`)
+
+526 trades (regel week + S/R, beheer van de trader, 34 instrumenten), +0,08R gemiddeld, ±25 per jaar; jaarsommen
+wisselend (-11R tot +23R). Challenge (+8% dan +5%, -10% statisch; dagverlies niet gemodelleerd), start elke maand
+2006-2024: 1% risico: 38% geslaagd, 47% breach, mediaan 617 dagen tot geslaagd; 1,5%: 28% / 68%, 314 dagen;
+2%: 27% / 73%, 247 dagen. Volledig op -0,2 bij 1,5%: 23% / 72%. Slaagkans lager dan de breach-kans bij elk risico:
+niet geschikt om challenges mee te kopen.
