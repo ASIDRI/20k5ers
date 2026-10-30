@@ -20,6 +20,8 @@ En dan opnieuw kijken op de 4u chart naar confirmation dat het toch nog een bull
 5. Stop: beneath L* by 0.1 daily ATR. Exits: -0.2 (R_t020, decisive), -0.27, -0.65, and half at -0.2 with the stop to
    the old high, rest to -1 (R_m_top_1). Void after a new high once touched, or 40 trading days after the last
    re-anchor.
+A setup still waiting when the data ends is "actief" (zone, fib 1, liquidity, touched or not, and the level a 4-hour
+close must clear to confirm), for the scanner.
 Features at the entry (for "when does the confirmation work"): swept, l_fib (depth of L* in the fib), conf_bars
 (4-hour candles from the touch to the confirmation), entry_fib, rr, and the context of test 20 (wk_struct, htf_sup,
 m_ma).
@@ -135,6 +137,13 @@ def run(sym, start, end):
                 continue
             res = "gevuld"
             break
+        if res == "verlopen" and f + 1 >= len(h4) and pd.Timestamp(t4[f]).tz_localize("UTC") <= deadline:
+            res = "actief"  # the data ended while waiting: zone and stop for the scanner
+            row.update(zone_0618=(topm - 0.618 * rng) * dirn, zone_0786=(topm - 0.786 * rng) * dirn,
+                       fib1=b1, liq=liq, aangeraakt=touch is not None,
+                       laagste=(lo[low_i] * dirn) if low_i is not None else None,
+                       bevestig_boven=(hi[[x for x in swings if low_i is not None and x < low_i][-1]] * dirn)
+                       if low_i is not None and [x for x in swings if x < low_i] else None)
         if res != "gevuld":
             rows.append(dict(row, result=res))
             continue

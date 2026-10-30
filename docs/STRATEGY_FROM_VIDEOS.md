@@ -928,3 +928,12 @@ Bruto (zonder kosten) wel licht positief in 10 van 12 jaren (+0,04 tot +0,24R), 
 lat.
 Uitkomst 26b: verworpen - 251 trades: -0,04 / -0,08 / -0,09R (t -0,9). De trades met een grotere stop (vooral 2020-22)
 zijn ook bruto niet winstgevend; het bruto voordeel van de kleine trades verdwijnt in de kosten.
+
+## Scanner test 24 (`scan24.py`, 2026-10-30)
+
+Test 24 (4u-bevestiging in de golden pocket / 0,786, sweep onder 1) op de 28 forexparen met dag- en 4u-data tot nu
+(Yahoo na half december 2025). `docs/scan/scan24_<datum>.md` (wachtende setups met het 4u-niveau dat bevestigt;
+trades sinds 2026-01-01) en `docs/scan/journal24.csv`. Eerste scan, 2026: alle 45 trades (42 afgesloten) -1,5R op
+-0,2 (9 winnaars); met de regel van test 20 (week + S/R): 11 trades, +15,0R (4 winnaars). Breakaway komt in de
+Yahoo-data van 2026 bijna niet voor (1 van 45; in de backtest ±50%); dat kenmerk is in de live-scan nog niet
+betrouwbaar.
