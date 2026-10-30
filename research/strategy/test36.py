@@ -14,7 +14,7 @@
 5. Exits: half at -0.25, stop to the old top, rest at -0.65 (R_m); full at -0.25 (R_t025) or -0.65 (R_t065).
 Context: hi_bias (bos_bias of the next higher timeframe, in the trade direction), hi_struct (zigzag 2 / 4 of the next higher timeframe: W1 for D1 legs, MN for W1 legs, HH+HL = +1 in the trade
 direction), htf_sup (a monthly/weekly S/R level between fib 1 and the entry), m_ma (monthly close vs its 10-month
-mean, in the trade direction).
+mean, in the trade direction), wk_sr (test 41: a weekly S/R cluster level between the wick of fib 1 and the entry).
 Structural framework (video 4, test 37): bos = a --tf close during the leg beyond the previous same-side turn (the key
 level: the last high for a long), i.e. the leg broke structure; shift = that previous turn was itself lower than the one
 before (the leg turned a downtrend: inverse H&S), else continuation (N).
@@ -33,6 +33,7 @@ from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
 import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
+from sr_quality import methods as sr_methods  # noqa: E402
 
 REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
 ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
@@ -103,6 +104,7 @@ def run(sym, tf, start, end):
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
     lv = Levels(sym)
+    clus = sr_methods(sym)[0]["cluster"]  # weekly S/R: >= 2 weekly swing points within 0.25 weekly ATR (test 41)
     test5.REV = REV
     turns, atr = test5.legs(g)
     t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
@@ -181,9 +183,10 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn)
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn,
+                   wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         hit_sl = not CONFIRM and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
-        for name, x in (("t025", 0.25), ("t065", 0.65)):
+        for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
             row[f"R_{name}"] = r - cost / risk
             row[f"x_{name}"] = str(dt[j])[:10] if j is not None else None

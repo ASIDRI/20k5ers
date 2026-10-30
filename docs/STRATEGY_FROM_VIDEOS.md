@@ -1259,3 +1259,20 @@ tegen een nog niet gedraaide maand is juist de vroege omkeer). Zonder maandstruc
 +0,31 / +0,06 / +0,08R (PF 1,53 / 1,09 / 1,13, t 1,83). Dit is de eerste versie die op de 37 de lat haalt én op de
 holdout in elke periode positief is - maar het is een variant, niet de vooraf beslissende regel van test 40, dus eerst
 vooruit volgen (scanner) vóór geld.
+
+## Screenshots van de trader opnieuw bekeken (2026-10-30) en test 41 (vooraf vastgelegd)
+De trader: "Dit is absurd: ±13 per jaar ... Kijk terug naar al mijn setups screenshots." Alle beelden uit het gesprek
+opnieuw bekeken (TradingView, 1D): GBPNZD 2026 (2 longs: poot feb-mrt en jun-jul, +2,82R / +3,26R), NZDCAD okt-23
+long, feb-24 short, jun-24 long. Gemeenschappelijk:
+1. een **dagpoot die een BoS-lijn breekt** (de vorige swing aan dezelfde kant, door de trader als "BoS" getekend);
+2. fib body -> wick op die poot, **limiet op 0,66** (oranje lijn; NZDCAD okt-23: 0,8215 - 0,66 x 0,025 = 0,8050 =
+   instap 0,80537), SL net voorbij fib 1, **TP -0,2** (soms -0,25 / -0,65);
+3. een **weekly S/R-lijn** (horizontaal, meerdere week-reacties) tussen fib 1 en de instap (NZDCAD 0,80772 /
+   0,83221).
+Frequentie in de screenshots: ±2-3 per paar per jaar, op de **dag** (poten van 3-9 dag-ATR).
+**Test 41**: `test36.py --tf D1 --entry 0.66` (dagpoten 2 / 4, breuk `bos`, limiet 0,66 of OB, SL 0,1 ATR voorbij de
+wick van fib 1); weekly S/R = cluster van >= 2 week-swingpunten binnen 0,25 week-ATR uit de laatste 2 jaar (beste
+S/R-definitie uit `sr_quality.py`), tussen de wick van fib 1 en de instap (`wk_sr`).
+**Beslissend: `bos & wk_sr`, `R_t020` (vol op -0,2, zoals in de screenshots), één positie per richting, 37
+instrumenten.** Geslaagd als elke periode > 0 met PF >= 1,05 en t >= 2,0, én op de holdout elke periode > 0.
+Gerapporteerd: trades per week, met weekbias, beheer `R_m`, en of de 5 screenshot-trades gevonden worden.

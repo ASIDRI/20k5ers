@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 40: piramide (S/R + maand- en weekstructuur + fib + OB + dagbevestiging)": "htf_sup & hi_struct == 1 & bos & has_ob",
+RULES = {"test 41: dagpoot + BoS + weekly S/R in de zone (screenshots)": "bos & wk_sr",
+         "test 41 + weekbias": "bos & wk_sr & hi_bias == 1", "BoS zonder weekly S/R": "bos & ~wk_sr",
+"test 40: piramide (S/R + maand- en weekstructuur + fib + OB + dagbevestiging)": "htf_sup & hi_struct == 1 & bos & has_ob",
          "piramide zonder maandstructuur": "htf_sup & bos & has_ob", "piramide zonder OB": "htf_sup & hi_struct == 1 & bos",
 "test 39: weekbias + structuurbreuk (dag)": "hi_bias == 1 & bos",
          "weekbias + breuk + OB": "hi_bias == 1 & bos & has_ob", "weekbias + breuk + S/R": "hi_bias == 1 & bos & htf_sup",
@@ -35,12 +37,12 @@ if __name__ == "__main__":
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
-    for k in ("htf_sup", "has_ob", "bos", "shift"):
+    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr"):
         f[k] = f[k].astype(str).str.lower().eq("true")
     for lab, rule in RULES.items():
         o = one_per_dir(f.query(rule), "t065")
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
-        for col in ("R_m", "R_t025", "R_t065"):
+        for col in ("R_m", "R_t020", "R_t025"):
             out, pool = [], []
             for p, s, e in P:
                 x = o[(o.date >= s) & (o.date < e)][col].dropna()
