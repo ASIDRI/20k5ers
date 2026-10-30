@@ -887,3 +887,20 @@ diepte L*, instapdiepte en RR zonder duidelijke lijn.
 PF >= 1,05 en t >= 2,0 op 2015-2025.
 Controle 2015-2025: (a) snelle bevestiging -0,08R (157 trades, PF 0,91); (b) sweep -0,07R (38 trades, PF 0,91).
 Beide verworpen: de voorsprong van 2005-2014 houdt niet stand.
+
+## Video 10 ("Liquidity Pockets") en video 11 ("Liquidity Flows"), 2026-10-30
+
+`research/videos/video10`, `research/videos/video11`. Video 11: breakaway candles (sterke candles die een sleutelniveau
+doorbreken) zijn de belangrijkste candles. Breekt de markt weg van de key high, dan wordt de low eronder niet verwacht
+genomen te worden: bounce op het sleutelniveau / golden pocket zoeken. Lukt het wegbreken niet en valt de prijs terug,
+dan eerst de liquiditeit nemen van de higher low die de impuls startte (= start van de poot, fib 1); pas daarna, met
+een setup (breakaway candles / N), long; doelen -0,25 / -0,65. Video 10: intraday (15 min / 1 u), indexen - hoog en
+laag van de vorige New York-middagsessie (13:30-16:00 NY) als liquiditeit; neemt de prijs de high maar breekt hij niet
+weg, dan de low als doel (en omgekeerd).
+
+## Test 25 (vooraf vastgelegd): breakaway of niet (video 11) op de bevestigde trades van test 24
+
+Per poot: `breakaway` = een dagcandle in de poot met body >= 1 dag-ATR die sluit voorbij de vorige swingtop (hoogste
+high van de 40 dagen voor de start). Regel: (breakaway en de reactie-low blijft boven fib 1, `l_fib <= 1`) of (geen
+breakaway en de reactie-low nam fib 1, `l_fib > 1`). `R_t020`, één positie per richting, 34 instrumenten, alle drie de
+periodes (geen ontdekking). Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
