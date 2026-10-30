@@ -1634,3 +1634,9 @@ naar -0,618, bij -1 naar -0,796 (laatste); rest op -1,618. **Beslissende kolom t
 Derde aanpassing vóór het draaien ("Ook een deeltje sluiten op -0.618, op 1 en op 1.618"): `R_lad` sluit 50% op -0,2,
 20% op -0,618, 15% op -1 en de laatste 15% op -1,618 (verdeling door ons gekozen); stop na -0,2 naar fib 0, dan de
 ladder (-0,618 -> -0,25, -0,796 -> -0,618, -1 -> -0,796). Beslissend blijft `R_lad`.
+
+### Uitkomst test 59 (SMT): verworpen - SMT maakt het slechter
+Swing-setup (26 instrumenten met partner), setting + SMT, `R_m`: 618 trades, +0,06 / -0,08 / -0,02R (t 0,15); zonder
+SMT (zelfde instrumenten): +0,04 / +0,06 / -0,15R. Fib-setup van test 53 + SMT: 158 trades, +0,29 / +0,02 / -0,24R;
+test 53 zonder SMT op die instrumenten: +0,15 / +0,11 / +0,08R (t 2,0). De SMT-bevestiging zoals hier gemeten (partner
+neemt zijn low tijdens de terugval, dit paar houdt) voegt geen voorsprong toe; eerder het omgekeerde.
