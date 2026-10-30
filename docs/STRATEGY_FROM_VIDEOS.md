@@ -1217,3 +1217,14 @@ stop in winst, dan -0,65 / -1. "Each month you can trade with the mindset we are
 **Beslissend: dagpoten, `hi_bias == 1 & bos`, `R_m`, één positie per richting, 37 instrumenten.** Geslaagd als elke
 periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0, én op de 29 holdout-exoten elke periode > 0. Gerapporteerd:
 trades per week, met OB / S/R, omkeer vs voortzetting, tegen de bias, weekpoten met maandbias.
+
+### Uitkomst test 39: verworpen
+Dagpoten met weekbias + structuurbreuk, `R_m`: 1270 trades (60 per jaar, 1,2 per week), +0,22 / -0,08 / -0,05R
+(t 1,7) -> 2015-25 negatief. Holdout: +0,01 / +0,18 / +0,12R. Met OB of S/R niet beter. Tegen de weekbias: -0,13 /
++0,09 / -0,21R -> de bias helpt (mee beter dan tegen), maar de dagsetup zelf heeft na 2015 geen voorsprong.
+Opvallend (beschrijvend): weekpoten met breuk **tegen** de maandbias: 115 trades, +0,73 / +0,34 / +0,41R (t 3,2) -
+een weekbreuk tegen een nog niet gedraaide maandstructuur = de vroege omkeer (inverse H&S) van video 4.
+
+## Test 39b (vooraf vastgelegd): weekbreuk tegen de maandbias, controle op de holdout
+`hi_bias == -1 & bos` op weekpoten (entry 0,66, `R_m`), gekozen na het zien van de 37 -> controle op de 29 exoten.
+Geslaagd als elke periode > 0 met PF >= 1,05 en samen t >= 2,0.
