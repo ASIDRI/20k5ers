@@ -53,6 +53,10 @@ FIBZONE = False  # --fibzone (test 52): the zone is fib 0.618-0.796 itself (cont
 BASE = False  # --base (test 45): the base / S/R zone formed before the BoS (>= 2 daily swing points within 0.5 ATR);
 # on the return into it a daily rejection candle (hammer / pin bar or engulfing) confirms, entry at its close
 PATTERNS = False  # --patterns (test 46): every bullish / bearish pattern of the trader's cheat sheet confirms
+SWING = False  # --swing (test 58, the trader 2026-10-31): zone = fib 0.5 to fib 1 (body of the swing low), no BoS needed;
+# confirmation by a daily cheat-sheet pattern or (--h4slow) a 4-hour slowdown
+H4SLOW = False  # --h4slow: 3 consecutive 4-hour candles around the same price (closes within 0.25 daily ATR), more of
+# them in the trade direction than against, touching the zone and closing above fib 1 -> entry at the third close
 REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
 # of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
@@ -360,6 +364,14 @@ def run(sym, tf, start, end):
     o, h, l, c = (d[k].values for k in ("open", "high", "low", "close"))
     dt = d.time.values
     g = d if tf == "D1" else load(sym, tf)
+    h4o = h4h = h4l = h4c = h4day = None
+    if H4SLOW:
+        try:
+            h4 = load(sym, "H4")
+            h4o, h4h, h4l, h4c = (h4[k].values for k in ("open", "high", "low", "close"))
+            h4day = np.searchsorted(h4.time.values, dt)  # first 4-hour candle of each daily candle
+        except Exception:  # noqa - no 4-hour data: daily patterns only
+            h4o = None
     if tf != "D1":
         g["done"] = complete_times(g["time"], tf, d["time"] if tf == "MN" else None)
     go, gc = g.open.values, g.close.values
@@ -448,7 +460,9 @@ def run(sym, tf, start, end):
                    n_ob=len(obs), entry=entry, sl=sl, conf=conf is not None, origin_sr=origin_sr, entry_fib=(top - entry) * dirn / rng)
         zone = None
         if BASE:
-            if FIBZONE:
+            if SWING:
+                zone = (top - dirn * 0.5 * rng, b1)
+            elif FIBZONE:
                 # test 54: the base / S/R zone if there is one (EURNZD Dec 2017: short at fib 0.5 in the S/R zone), else
                 # fib 0.618-0.796 itself
                 zone = (base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if (tf == "D1" and BASEFIRST) else None) \
@@ -462,7 +476,7 @@ def run(sym, tf, start, end):
             row.update(zone_near=zone[0], zone_far=zone[1], entry=entry)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
-        res, touched = "verlopen", False
+        res, touched, h4fill = "verlopen", False, None
         top_day = g.time.values[ti] if tf == "D1" else None  # the daily candle of the leg's extreme
         while f < last:
             beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
@@ -490,6 +504,20 @@ def run(sym, tf, start, end):
                 if (c[f] - zone[1]) * dirn < -0.5 * A:  # closed clearly through the zone: it did not hold
                     res = "ongeldig"
                     break
+                if H4SLOW and h4o is not None:  # the 4-hour slowdown can come before the daily close
+                    a4, b4 = h4day[f], h4day[f + 1] if f + 1 < len(h4day) else len(h4c)
+                    for q in range(max(a4, 2), b4):
+                        w = slice(q - 2, q + 1)
+                        ups = int(((h4c[w] - h4o[w]) * dirn > 0).sum())
+                        ext = h4l[w].min() if dirn == 1 else h4h[w].max()
+                        if ups >= 2 and np.ptp(h4c[w]) <= 0.25 * A and (ext - zone[0]) * dirn <= 0.1 * A \
+                                and (h4c[q] - zone[1]) * dirn > 0 and (top - h4c[q]) * dirn >= 0.2 * rng:
+                            h4fill = h4c[q]
+                            break
+                    if h4fill is not None:
+                        res = "gevuld"
+                        row["pattern"] = "4u-vertraging"
+                        break
                 pat = pattern(o, h, l, c, f, dirn) if PATTERNS else ("pin/engulf" if rejection(o, h, l, c, f, dirn) else None)
                 ext3 = l[f - 2:f + 1].min() if dirn == 1 else h[f - 2:f + 1].max()  # the pattern's extreme
                 if pat and ((ext3 if PATTERNS else (l[f] if dirn == 1 else h[f])) - zone[0]) * dirn <= 0.1 * A \
@@ -517,7 +545,7 @@ def run(sym, tf, start, end):
         if res != "gevuld":
             rows.append(dict(row, result=res))
             continue
-        fill = c[f] if (CONFIRM or BASE) else (entry if ((o[f] - entry) * dirn >= 0) else o[f])  # a gap through the limit: the open
+        fill = h4fill if h4fill is not None else c[f] if (CONFIRM or BASE) else (entry if ((o[f] - entry) * dirn >= 0) else o[f])  # a gap through the limit: the open
         risk = abs(fill - sl)
         ts = pd.Timestamp(dt[f]).tz_localize("UTC")
         lo_, hi_ = sorted([b1, fill])
@@ -540,7 +568,7 @@ def run(sym, tf, start, end):
             wi = int(np.searchsorted(wkt, top_day, side="right")) - 1
             ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
             row["w_rej"] = any((ext - p) * dirn > 0 and (cl - p) * dirn < 0 for p in clus(ts))
-        hit_sl = not (CONFIRM or BASE) and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
+        hit_sl = (h4fill is not None and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0) or not (CONFIRM or BASE) and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
         for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65), ("t100", 1.0), ("t1618", 1.618)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
             row[f"R_{name}"] = r - cost / risk
@@ -566,8 +594,12 @@ if __name__ == "__main__":
     ap.add_argument("--patterns", action="store_true")
     ap.add_argument("--fibzone", action="store_true")
     ap.add_argument("--basefirst", action="store_true")
+    ap.add_argument("--swing", action="store_true")
+    ap.add_argument("--h4slow", action="store_true")
+    ap.add_argument("--rev", type=float, default=REV)
+    ap.add_argument("--leg", type=float, default=LEG)
     a = ap.parse_args()
-    PATTERNS, FIBZONE, BASEFIRST = a.patterns, a.fibzone, a.basefirst
+    PATTERNS, FIBZONE, BASEFIRST, SWING, H4SLOW, REV, LEG = a.patterns, a.fibzone, a.basefirst, a.swing, a.h4slow, a.rev, a.leg
     SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL, BASE = a.sweep, a.entry, a.confirm, a.reanchor, a.confl, a.base
     for s in a.symbols:
         try:

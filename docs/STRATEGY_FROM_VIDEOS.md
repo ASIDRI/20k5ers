@@ -1582,3 +1582,18 @@ verrassing actueel - verwachting, geschaald per indicator, teken van MT5's impac
 over 6 weken, 1 + tanh(som / 6); paar = 1 + (basis - quote) / 2). Geen AI nodig. In de engine: kolom `news` (in de
 handelsrichting) zodra `data/calendar/mt5_calendar.csv` er is. **Test 57 (vooraf vastgelegd, te draaien zodra de
 export er is)**: test 53 + `news > 1`, `R_m`, zelfde lat.
+
+## Test 58 (vooraf vastgelegd, 2026-10-31): elke dag-swing in de trend, zone 0,5-1, dagpatroon of 4u-vertraging
+De trader: "om de zoveel dagen heb je per ticker meestal een trade. Als je weer een swing low hebt, dan een swing
+high in een maandelijkse, wekelijkse uptrend dan kan je altijd van de body swing low naar wick swing high en dan heb
+je ruimte tussen 0.5 & 1 fib om een bounce te zien met een dagelijkse candle pattern en op de 4 uur chart ofwel een
+vertraging met 3 candles, 2 groene en 1 rode rond dezelfde prijs ... Maar soms heb je een snelle reactie, dan kijk je
+echt naar de dagelijkse candle pattern." En: niet het 1-week-signaal; wel DEW / Green Light (definitie volgt).
+`test36.py --tf D1 --reanchor --base --swing --h4slow --patterns --rev 1 --leg 2`: dagpoten van elke swing (zigzag 1
+ATR, poot >= 2 ATR), fib body -> wick, zone fib 0,5 tot 1, geen BoS-eis; instap op (a) een 4u-vertraging: 3
+opeenvolgende 4u-candles met slotkoersen binnen 0,25 dag-ATR, minstens 2 in de handelsrichting, raken de zone en slot
+boven fib 1 -> instap op het slot van de derde (geraakt de dagcandle daarna nog de SL: -1R); of (b) een cheat-sheet-
+dagpatroon in de zone. SL 0,1 ATR onder de wick van fib 1. Controle: EURNZD ±29 setups per jaar, GBPJPY ±33.
+**Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_m`, één positie per richting, 37
+instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: 4u-
+vertraging vs dagpatroon, zonder setting.

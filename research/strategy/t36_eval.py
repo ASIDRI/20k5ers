@@ -14,7 +14,11 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 56: test 53 + snelle call (1 week) tegen": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_fast == -1 & ~m_block",
+RULES = {"test 58: swing-setup in de setting (maand + week), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
+         "test 58, alleen 4u-vertraging": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & pattern == '4u-vertraging'",
+         "test 58, alleen dagpatroon": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & pattern != '4u-vertraging'",
+         "swing-setup zonder setting": "~m_block",
+"test 56: test 53 + snelle call (1 week) tegen": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_fast == -1 & ~m_block",
          "test 53 + snelle call mee": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_fast == 1 & ~m_block",
          "test 53 + confirmed call tegen (test 55)": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & vv_call == -1 & ~m_block",
          "test 57: test 53 + nieuwsscore > 1": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & news > 1",
