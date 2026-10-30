@@ -1112,3 +1112,37 @@ Lijn over alle tests: hoe kleiner de poot, hoe meer trades en hoe kleiner de voo
 (3 / 6) + continuation + regel zijn in elke periode positief (±21 per jaar). Het verschil tussen de ±4 setups per week
 van de trader en het mechanische resultaat zit dan in een keuze die niet in de regels staat - alleen te vinden met
 de volledige tradegeschiedenis (ook verliezers en overgeslagen setups).
+
+# Opnieuw van nul: strategie uit video 12 ("Forex HTF Analysis"), 2026-10-30
+
+De trader: "Start terug van scratch met de strategy en begin met 12 forex htf analysis." Alles hierboven blijft als
+archief; de nieuwe engine (`test36.py`) gebruikt alleen wat video 12 zegt (transcript opnieuw gelezen):
+1. **Maand**: trendlijnen en de grote S/R (meerdere bounces / rejections, flips; deviaties mogen). Richting: "we are
+   still bearish on the monthly", "we didn't breach any kind of high" -> structuur (HH/HL of LH/LL).
+2. **Week**: fib op de laatste impuls, **body -> wick**; reactie in de golden pocket (0,618-0,786); doelen **-0,25**,
+   **-0,65**, -1 (vaak op een S/R-niveau). Patronen (H&S, W/M, 5 golven) als context.
+3. **Dag**: zelfde fib; **fair value gaps**; **order block = de eerste tegengestelde candle links van de FVG (body)**.
+   "Do you notice the golden pocket at the OB? That is why it makes it interesting." -> zone = OB in de golden pocket,
+   bij voorkeur op HTF-S/R.
+4. **4u / 1u**: alleen timing ("it needs to slow down"), inverse H&S op het niveau; "you don't want to see it below
+   your support". Test 32 toonde dat een krappe 4u-stop niet werkt -> hier geen 4u-trigger, de stop achter de structuur.
+5. **Liquiditeit**: equal lows/highs, vorige dag/week/maand-high genomen = plaats waar omkeringen gebeuren (context).
+
+## Test 36 (vooraf vastgelegd): OB in de golden pocket (video 12)
+`test36.py`, 37 instrumenten van de trader (forex zonder exoten, goud, zilver, olie, indices, BTC, ETH), 2005-2025.
+- Poten: zigzag op dagcandles, keerpunt na 2 ATR, poot >= 4 ATR (beslissend); ook op weekcandles (2 / 4) gerapporteerd.
+- Fib 1 = body van de startcandle, 0 = wick van het uiterste.
+- OB: in de poot een dag-FVG in de richting van de poot (long: low[j+1] > high[j-1], candle j bullish); OB = de laatste
+  tegengestelde candle (bearish bij long) in de 5 candles vóór j; zone = de body. Alleen OB's waarvan de body de
+  golden pocket (0,618-0,786) raakt; de eerste die de prijs bereikt (hoogste bij long).
+- Instap: limiet op de bovenkant van de OB-body, maar niet hoger dan 0,618 (long; short gespiegeld), eerste aanraking
+  na de bevestiging van de poot; verlopen na 40 candles; vervalt bij een nieuwe top vóór de instap of een slot voorbij
+  fib 1.
+- SL: 0,1 ATR voorbij de wick van fib 1 (de structuur). Raakt de instapcandle ook de SL: -1R.
+- Uit: beheer van de trader = half op -0,25, stop naar de oude top (in winst), rest op -0,65 (`R_m`); ook vol op -0,25
+  (`R_t025`) en -0,65 (`R_t065`). Kosten per instrument.
+- Context: hogere structuur (week-zigzag 2 / 4 voor dagpoten, maand voor weekpoten) in de handelsrichting
+  (`hi_struct`), maand/week-S/R tussen fib 1 en de instap (`htf_sup`), maandslot vs 10-maandsgemiddelde (`m_ma`).
+**Beslissend: dagpoten, `hi_struct == 1 & htf_sup` (alle setups met een OB in de golden pocket), `R_m`, één positie per
+richting.** Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+Gerapporteerd: trades per jaar, zonder OB (limiet op 0,618), zonder context, weekpoten.
