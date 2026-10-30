@@ -168,3 +168,36 @@ Run: `python research/neely/neely_count.py --tf D1` en `--tf W1`, daarna `python
 patronen voorspellen de volgende beweging niet: de trades verliezen op dag en week. Twee grenzen blijven:
 - De telling komt niet verder dan weken (dag) of maanden (week). De grote meerjarige graad bouwt deze teller niet op.
 - De regels uit hoofdstuk 6-12 zijn gereconstrueerd, niet gelezen. Een echte toets van Neely vraagt die hoofdstukken.
+
+## Test N3 (vooraf vastgelegd, 2026-10-30): stops, doelen en instap met Optuna, alleen op 2005-2014
+
+Aanleiding: in N1 klopt de richting vaak. T1 wordt vóór de stop geraakt in 55% (A dag), 51% (B dag), 63% (A week) en
+56% (B week) van de gevallen. Maar met een doel op ±0,5R is 60-72% nodig om quitte te spelen. De vraag is of andere
+stops, doelen en instappen die voorsprong in winst omzetten. Code: `research/neely/n3_optuna.py`.
+
+**Signalen ongewijzigd:** de N1-signalen met de beslissende filter `htf == 1 & lab_ok`, 34 instrumenten, vier cellen
+(setup A/B x dag/week). Alleen de trade rond het signaal verandert:
+
+| Parameter | Betekenis | Bereik |
+|---|---|---|
+| `s` | stop `s` x ATR voorbij het ongeldigheidspunt (eind van e / c) | 0 - 1,5 |
+| `e` | 0 = markt op het slot; > 0 = limietorder `e` x (slot - stop) terug richting de stop, geldig voor de duur van het patroon | 0 - 0,6 |
+| `k` | doel in R vanaf de vulling | 0,3 - 5 |
+| `be` | stop naar instap zodra de prijs `be` x R mee is (of nooit) | 0,3 - 3 / uit |
+| `H` | tijdstop: uit op het slot `H` candles na de vulling | 2 - 120 |
+
+**Vulling en uitstap (voorzichtige kant):**
+- Een limietorder vult op zijn prijs.
+- In de vulcandle telt alleen de stop; het doel telt pas vanaf de volgende candle.
+- Vallen stop en doel in dezelfde candle, dan telt de stop eerst. Een gap voorbij de stop wordt uitgevoerd op de open.
+- Kosten per symbool. Eén positie per richting per instrument.
+
+**Optuna:** TPE, seed 0, 300 trials per cel. Optuna ziet **alleen trades met signaal vóór 2015**. Doel: de t-waarde
+van R per trade, met minstens 100 trades.
+
+**Beslissend:** per cel worden de beste parameters van 2005-2014 ongewijzigd toegepast op 2015-2020 en 2021-2025.
+- Een cel slaagt als beide periodes gemiddeld boven 0 zitten met PF >= 1,05, en de twee samen t >= 2,0 halen.
+- Bij vier cellen geldt een geslaagde cel als kandidaat. Die moet daarna slagen op de 31 holdout-instrumenten van
+  test 33, met dezelfde parameters (eigen vastlegging).
+- Gerapporteerd: het resultaat op 2005-2014 zelf (dat is per constructie te mooi) en een N1-achtige referentie (markt
+  op het slot, stop 0,1 ATR, doel = mediaan rr1).

@@ -224,7 +224,8 @@ def run(sym, tf="D1", start="2005-01-01", end="2025-12-31", cut=None):
             done_f = d["done"].values[f]
             cost = cost_price(sym, entry)
             risk = abs(entry - sl)
-            row.update(result="gevuld", fill=str(t[f])[:10], date=str(t[f])[:10], entry=entry, sl=sl, tp1=tp, tp2=tp2,
+            row.update(result="gevuld", fill=str(t[f])[:10], date=str(t[f])[:10], fi=f, atr=atr[f],
+                       entry=entry, sl=sl, tp1=tp, tp2=tp2,
                        rr1=abs(tp - entry) / risk, risk_atr=risk / atr[f], R_cost=cost / risk,
                        htf=trend(done_f) * dirn, lab_ok=lab_ok, lab_n=lab_n)
             for name, tgt in (("t1", tp), ("t2", tp2)):
