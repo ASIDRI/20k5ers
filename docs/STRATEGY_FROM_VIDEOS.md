@@ -779,3 +779,11 @@ alle eerdere jaren top 1: +0,09R, PF 1,12, 7/16, t 1,23 (koos meestal de grootst
 top 5: +0,05R, PF 1,07, 9/16, t 0,70. Rond 25 trades per jaar over 34 instrumenten -> ±+1 tot +2R per jaar,
 dus ±1-2% per jaar bij 1% risico. Optimaliseren levert uit de steekproef een kleine, onzekere plus op; geen
 bruikbare voorsprong voor een prop-challenge.
+
+## Test 20w (vooraf vastgelegd, 2026-10-30): test 20 op de weekgrafiek
+
+De trader handelt ook weekly (EURUSD W1, AUDCAD W1). `test20.py --tf W1`: precies test 20 (zigzag 3 ATR / poot 6 ATR,
+afwijzingscandle met slot 0,5-0,786, SL 0,1 ATR voorbij 1, doel -0,2 en beheer), maar op weekcandles; de
+structuurfilter gebruikt de maand-zigzag. Regel `wk_struct == 1 & htf_sup`, één positie per richting, 34
+instrumenten, 2005-2025. Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en
+samen t >= 2,0. Daarnaast: D1 + W1 samen gerapporteerd.

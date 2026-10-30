@@ -15,6 +15,8 @@
    zigzag (2 weekly ATR turns) made higher highs and higher lows (lower for a short) - last two confirmed turns of
    each kind, known at the entry; htf_sup = a monthly/weekly S/R level between fib 1 and the entry (price above it
    for a long, below it for a short).
+6. --tf W1 (test 20w): the same on weekly candles (zigzag in weekly ATR, expiry in weeks); the structure filter then
+   uses the monthly zigzag (higher highs and lows on the monthly), S/R as before.
 5. A setup still waiting when the data ends is "actief" (with its zone, stop, -0.2 and the context now): for the
    scanner (scan.py).
 """
@@ -39,12 +41,16 @@ SL_BUF = (0.1, 0.5)  # stop beyond fib 1 by these ATR multiples; the first is th
 TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
 
 
+TF = "D1"  # --tf W1 (test 20w): legs on weekly candles, context from the monthly structure
+HIGHER = {"D1": "W1", "W1": "MN"}
+
+
 def run(sym, start, end):
-    d = load(sym, "D1")
-    d["done"] = complete_times(d["time"], "D1")
+    d = load(sym, TF)
+    d["done"] = complete_times(d["time"], TF)
     o, h, l, c, t = (d[k].values for k in ("open", "high", "low", "close", "time"))
-    w = load(sym, "W1")
-    w["done"] = complete_times(w["time"], "W1")
+    w = load(sym, HIGHER[TF])
+    w["done"] = complete_times(w["time"], HIGHER[TF], load(sym, "D1")["time"] if TF == "W1" else None)
     test5.REV, test5.LEG = 2.0, 4.0
     wt, _ = test5.legs(w)
     w_done = np.array([w["done"][ci].value for ci, *_ in wt])
@@ -143,8 +149,9 @@ if __name__ == "__main__":
     ap.add_argument("--rev", type=float, default=REV)
     ap.add_argument("--leg", type=float, default=LEG)
     ap.add_argument("--band", default=f"{BAND[0]},{BAND[1]}")
+    ap.add_argument("--tf", default="D1", choices=["D1", "W1"])
     a = ap.parse_args()
-    REV, LEG, BAND = a.rev, a.leg, tuple(float(x) for x in a.band.split(","))
+    REV, LEG, BAND, TF = a.rev, a.leg, tuple(float(x) for x in a.band.split(",")), a.tf
     for s in a.symbols:
         try:
             df = run(s, a.start, a.end)
