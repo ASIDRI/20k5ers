@@ -1088,3 +1088,9 @@ wick, afwijzingscandle met slot 0,5-0,786, SL 0,1 ATR voorbij de wick van fib 1,
 **Beslissend: `cont & wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting.** Geslaagd als elke periode
 (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: aantal trades per jaar,
 kosten in R, de andere regels.
+
+### Uitkomst test 34: verworpen - op 4u is de N negatief, ook vóór kosten
+Continuation + regel, `R_m_top_1`: 1148 trades (±55 per jaar), -0,09 / -0,07 / +0,01R (t -1,5). Alle grote 4u-poten:
+7097 trades (±340 per jaar), -0,06 / -0,01 / -0,06R (t -2,9). Mediane kosten maar 0,024R; bruto gemiddeld -0,02R:
+het is niet de kost, de setup heeft op 4u geen voorsprong. Dezelfde regels op de dag: +0,16 / +0,02 / +0,11R.
+De voorsprong zit in de grote (dag-)structuur; meer trades via een lager tijdsframe vernietigt hem.
