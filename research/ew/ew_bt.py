@@ -229,11 +229,10 @@ def run(sym, start="2005-01-01", end="2025-12-31", cut=None):
                 if risk > 0 and (w4 - entry) * dirn > 0:
                     cost = cost_price(sym, entry)
                     dd, ww = ctx("D1", kn), ctx("W1", kn)
-                    rng = (entry - w4) * dirn
                     x2 = max(1.0, 0.618 * whole / ((p1 - w4) * s5))  # rest at 0.618 of 0 -> 5, never short of wave 4
                     r, j = follow(dirn, entry, sl, w4, None, h, l, kn + 1)
                     row.update(result="gevuld", fill=str(t[kn])[:16], date=str(t[kn])[:10], entry=entry, sl=sl,
-                               R_cost=cost / risk, rr1=rng / risk, d1=dd[0] * dirn, d1_lab=dd[1], w1=ww[0] * dirn,
+                               R_cost=cost / risk, rr1=(w4 - entry) * dirn / risk, d1=dd[0] * dirn, d1_lab=dd[1], w1=ww[0] * dirn,
                                w1_lab=ww[1], R_t1=r - cost / risk, x_t1=str(t[j])[:16] if j is not None else None,
                                R_m=managed(dirn, entry, sl, p1, (p1 - w4) * s5, 1.0, "entry", x2,
                                            h, l, kn + 1) - cost / risk)

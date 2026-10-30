@@ -226,3 +226,35 @@ komt.
   1,618) en `R_tight_m` (stop onder de low van de correctie, zoals in zijn live trades).
 
 Vóór deze vastlegging is de code op EURUSD gedraaid om te zien dat hij werkt (aantallen, geen rendement).
+
+### Uitkomst test E1: verworpen (beide cellen)
+Run: `python research/ew/ew_bt.py <34 symbolen>` en daarna `python research/ew/ew_eval.py`. Eén positie per
+richting, na kosten:
+
+| Cel | Trades | 2005-14 | 2015-20 | 2021-25 | t |
+|---|---|---|---|---|---|
+| Setup 1, dag mee + week niet tegen, `R_m` | 858 | -0,01R (PF 0,96) | -0,06R (PF 0,77) | -0,12R (PF 0,55) | -2,2 |
+| Setup 2, vijf golven tegen in, `R_m` | 930 | -0,02R (PF 0,97) | -0,28R (PF 0,58) | -0,21R (PF 0,68) | -2,1 |
+
+- **Setup 1:**
+  - Wint vaak (73-75%), maar te klein: de hertest van punt 1 ligt op ±0,25R en de stop onder het begin van golf 1.
+  - Ook bruto (zonder kosten) negatief: -0,02R.
+  - Geen variant redt het:
+    - alles op de 1,618-extensie (`R_t2`): +0,04 / -0,19 / -0,21R;
+    - een krappe stop zoals in zijn live trades: -0,04 / -0,05 / -0,09R;
+    - week mee, of dag en week samen mee: niet beter dan zonder filter (-0,03 / -0,05 / -0,03R, 4.291 trades).
+  - De telling op dag en week voegt dus niets toe.
+- **Setup 2:** -0,15R netto, -0,04R bruto. Met "dag niet tegen" positief in 2005-14 (+0,08R), maar negatief
+  daarna (-0,25 / -0,26R).
+- Lookahead: alle beslissingen vallen op een 4u-slot. De dag- en weektelling gebruikt alleen candles die op dat
+  moment gesloten waren.
+
+**Conclusie E1.** Zijn Elliott Wave-regels, zo concreet mogelijk gemaakt (fib-zones per golf, telling op week en dag,
+MACD-kruising als instap, stop onder het begin van golf 1, de helft op de top en de rest op 1,618), geven op 4 uur
+over 34 instrumenten en 21 jaar geen voordeel. Dat geldt ook vóór kosten.
+
+Wat niet getest is, omdat het in de video's niet eenduidig te maken is:
+- zijn keuze tussen alternatieve tellingen;
+- het volumeprofiel;
+- divergenties als vereiste (hier alleen de MACD-kruising);
+- het 1-minuut-scalpen op crypto uit video 2.
