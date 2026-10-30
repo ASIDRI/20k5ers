@@ -1566,3 +1566,19 @@ na elkaar daalde = de terugval naar de fib): 547 trades (26 per jaar, 0,5 per we
 de resultaten, en beide sets zijn nu gebruikt -> alleen vooruit (live) te bevestigen. Logica: de confirmed call in de
 trendrichting komt laat (achterna lopen); een call tegen de trend binnen de setting markeert juist de terugval waarop
 de trader instapt.
+
+## Test 56 (vooraf vastgelegd): sneller VectorVest-signaal
+De trader: "Misschien ook een sneller signaal gebruiken van vector vest?" `vv_fast` = richting van één week-over-week
+beweging (slot vs slot 5 handelsdagen eerder). **Beslissend: test 53 + `vv_fast == -1` (de laatste week tegen de
+trade = de terugval), `R_m`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05,
+t >= 2,0; holdout elke periode > 0). Gerapporteerd: snelle call mee, confirmed call tegen (test 55).
+
+## Nieuwsscore uit de MT5-kalender (test 57, wacht op data)
+De trader: "Graag implementeren en mt5 nieuws niet goed genoeg?" MT5 heeft een volledige economische kalender
+(actueel, verwachting, vorige, belang, en per publicatie of ze positief / negatief is voor de munt), maar de Python-
+koppeling van MT5 kan ze niet lezen. Daarom: `deploy/mql5/ExportCalendar.mq5` (MQL5-script, schrijft de kalender
+vanaf 2010 naar `mt5_calendar.csv` in de Common-map van MT5) en `news_strength.py` (score 0-2 per munt en per paar:
+verrassing actueel - verwachting, geschaald per indicator, teken van MT5's impact, gewogen hoog 3 / gemiddeld 1, som
+over 6 weken, 1 + tanh(som / 6); paar = 1 + (basis - quote) / 2). Geen AI nodig. In de engine: kolom `news` (in de
+handelsrichting) zodra `data/calendar/mt5_calendar.csv` er is. **Test 57 (vooraf vastgelegd, te draaien zodra de
+export er is)**: test 53 + `news > 1`, `R_m`, zelfde lat.

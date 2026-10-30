@@ -34,6 +34,12 @@ from test2 import cost_price  # noqa: E402
 import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 from sr_quality import methods as sr_methods  # noqa: E402
+sys.path.insert(0, str(HERE.parents[1]))
+try:  # test 57: the fundamental news score from the MT5 calendar export, when it is there
+    from news_strength import NewsScore, DEFAULT as NEWS_CSV  # noqa: E402
+    NEWS = NewsScore(NEWS_CSV) if NEWS_CSV.exists() else None
+except Exception:  # noqa
+    NEWS = None
 
 REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
 ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
@@ -368,6 +374,8 @@ def run(sym, tf, start, end):
     vv = np.zeros(len(c), int)
     for i in range(10, len(c)):
         vv[i] = 1 if c[i] > c[i - 5] > c[i - 10] else (-1 if c[i] < c[i - 5] < c[i - 10] else vv[i - 1])
+    # test 56, a faster call: one week-over-week move (close vs the close 5 trading days earlier)
+    vvf = np.r_[np.zeros(5, int), np.sign(c[5:] - c[:-5]).astype(int)]
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -516,7 +524,8 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn, vv_fast=int(vvf[f]) * dirn,
+                   news=(NEWS.pair(sym, ts) if dirn == 1 else 2 - NEWS.pair(sym, ts)) if NEWS is not None else np.nan,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)
