@@ -22,6 +22,8 @@ En dan opnieuw kijken op de 4u chart naar confirmation dat het toch nog een bull
    re-anchor.
 A setup still waiting when the data ends is "actief" (zone, fib 1, liquidity, touched or not, and the level a 4-hour
 close must clear to confirm), for the scanner.
+With --fib bodywick (test 32): fib 1 on the body of the start candle; below that body but above its wick is
+allowed, below the wick only after a sweep (liq is then searched below the wick). `cont` as test 31.
 Features at the entry (for "when does the confirmation work"): swept, l_fib (depth of L* in the fib), conf_bars
 (4-hour candles from the touch to the confirmation), entry_fib, rr, and the context of test 20 (wk_struct, htf_sup,
 m_ma).
@@ -42,13 +44,14 @@ import test5  # noqa: E402
 from test18 import follow, managed  # noqa: E402
 
 REV, LEG, EXPIRY_D, K4, MIN_RR = 3.0, 6.0, 40, 2, 1.5
+FIB = "wick"  # --fib bodywick (test 32): fib 1 on the body of the start candle, 0 on the wick of the end
 TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65}
 
 
 def run(sym, start, end):
     d = load(sym, "D1")
     d["done"] = complete_times(d["time"], "D1")
-    dh, dl = d.high.values, d.low.values
+    dh, dl, do, dc = d.high.values, d.low.values, d.open.values, d.close.values
     h4 = load(sym, "H4")
     t4 = h4.time.values
     o4, hh, ll, c4 = (h4[k].values for k in ("open", "high", "low", "close"))
@@ -75,20 +78,25 @@ def run(sym, start, end):
             continue
         dirn = 1 if kind == "H" else -1
         top, b1 = p_end, p_start
+        w1 = p_start  # wick of the leg start: below it only after a sweep
+        if FIB == "bodywick":
+            b1 = min(do[si], dc[si]) if dirn == 1 else max(do[si], dc[si])
+        # continuation (test 31): the leg's end beyond the previous turn on the same side
+        cont = k >= 2 and (p_end - turns[k - 2][2]) * dirn > 0
         rng = (top - b1) * dirn
         A = atr[ci]
         if rng < LEG * A:
             continue
         # liquidity: the nearest earlier daily swing low below fib 1 (high for a short), known before the leg started
-        cand = [dl[i] for i in sw_lo if si - 120 <= i < si - 2 and dl[i] < b1] if dirn == 1 else \
-               [dh[i] for i in sw_hi if si - 120 <= i < si - 2 and dh[i] > b1]
+        cand = [dl[i] for i in sw_lo if si - 120 <= i < si - 2 and dl[i] < w1] if dirn == 1 else \
+               [dh[i] for i in sw_hi if si - 120 <= i < si - 2 and dh[i] > w1]
         liq = (max(cand) if dirn == 1 else min(cand)) if cand else None
-        floor = (liq - dirn * A) if liq is not None else (b1 - dirn * 0.1 * A)
+        floor = (liq - dirn * A) if liq is not None else (w1 - dirn * 0.1 * A)
         hi, lo = (hh, ll) if dirn == 1 else (-ll, -hh)  # mirrored so the long logic serves both
         cm = c4 if dirn == 1 else -c4
-        topm, b1m, floorm = top * dirn, b1 * dirn, floor * dirn
+        topm, b1m, w1m, floorm = top * dirn, b1 * dirn, w1 * dirn, floor * dirn
         liqm = liq * dirn if liq is not None else None
-        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(d.time[si])[:10], top_t=str(d.time[ti])[:10],
+        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(d.time[si])[:10], top_t=str(d.time[ti])[:10], cont=cont,
                    b1=b1, top=top, rng=rng, liq=liq)
         a = int(np.searchsorted(t4, np.datetime64(ready.tz_convert(None))))
         deadline = ready + pd.Timedelta(days=EXPIRY_D * 7 / 5)
@@ -123,7 +131,7 @@ def run(sym, start, end):
             s = f - K4  # a 4-hour swing high at s is known now
             if s >= touch - 10 and hi[s] == hi[s - K4:s + K4 + 1].max():
                 swings.append(s)
-            below1 = lo[low_i] < b1m
+            below1 = lo[low_i] < w1m
             if below1 and not swept:
                 continue
             prev = [x for x in swings if x < low_i]
@@ -177,7 +185,9 @@ if __name__ == "__main__":
     ap.add_argument("--start", default="2005-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default="t24_")
+    ap.add_argument("--fib", default="wick", choices=["wick", "bodywick"])
     a = ap.parse_args()
+    FIB = a.fib
     for s in a.symbols:
         try:
             df = run(s, a.start, a.end)

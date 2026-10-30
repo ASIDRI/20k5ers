@@ -1039,3 +1039,11 @@ Kolom `cont` als test 31.
 positie per richting, 33 instrumenten met 4u-data, 2005-2025.** Geslaagd als elke periode (2005-14, 2015-20,
 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: zonder S/R-eis, regel zonder continuation,
 `R_t020`, en de vergelijking met de dag-afwijzingscandle van 30b / 31 (zelfde poten).
+
+### Uitkomst test 32: verworpen
+Continuation + regel, `R_m_top_1`: 368 trades, +0,10 / -0,50 / -0,32R (PF 1,12 / 0,45 / 0,65, t -1,1); `R_t020`
++0,06 / -0,46 / -0,23R. Zonder S/R-eis: +0,07 / -0,26 / +0,18R (t 0,1). Alle grote poten: +0,08 / -0,16 / -0,03R.
+Winnend slechts 11-22%: de krappe stop onder de 4u-reactie-low (L*) wordt te vaak geraakt voordat -0,2 komt. Op
+dezelfde poten is de dag-afwijzingscandle met de stop voorbij de wick van fib 1 (30b / 31: +0,16 / +0,03 / +0,14R)
+duidelijk beter. Conclusie: de 4u-bevestiging als instap met een krappe stop kost meer dan ze oplevert; de 4u-grafiek
+blijft nuttig voor timing, maar de stop hoort voorbij de structuur (de wick van fib 1), niet onder de 4u-reactie.
