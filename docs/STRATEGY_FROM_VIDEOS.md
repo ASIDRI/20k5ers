@@ -1094,3 +1094,12 @@ Continuation + regel, `R_m_top_1`: 1148 trades (±55 per jaar), -0,09 / -0,07 / 
 7097 trades (±340 per jaar), -0,06 / -0,01 / -0,06R (t -2,9). Mediane kosten maar 0,024R; bruto gemiddeld -0,02R:
 het is niet de kost, de setup heeft op 4u geen voorsprong. Dezelfde regels op de dag: +0,16 / +0,02 / +0,11R.
 De voorsprong zit in de grote (dag-)structuur; meer trades via een lager tijdsframe vernietigt hem.
+
+## Test 35 (vooraf vastgelegd, 2026-10-30): kleinere dagpoten, ±4 trades per week
+De trader: "Er zijn wekelijks toch zeker 4 trades op basis van de daily." Met de grote poten (3 / 6 ATR) bestaan er
+maar ±70 setups per jaar op 37 instrumenten. Test 30b (fib body -> wick, dag-afwijzingscandle, SL voorbij de wick van
+fib 1, beheer) met kleinere dagpoten: zigzag-keerpunt na 1,5 dag-ATR, poot >= 3 ATR (`t35_`); ook gerapporteerd
+1 / 2 (`t35s_`) en 2 / 4. 37 instrumenten van de trader.
+**Beslissend: 1,5 / 3, `cont & wk_struct == 1` (continuation met de weekstructuur, zonder S/R-eis om het aantal te
+houden), `R_m_top_1`, één positie per richting.** Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen
+t >= 2,0. Gerapporteerd: trades per jaar en de andere regels.
