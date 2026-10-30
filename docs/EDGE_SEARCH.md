@@ -42,3 +42,50 @@ Controles:
   significant van de rest (t 1,0). Het grootste deel is de stijging van goud zelf. Er is ook geen reden voor het
   effect, en het is één van de ±20 gerapporteerde cijfers. Daarom telt dit niet als vondst.
 - **EURUSD:** niets (2005-25 t -0,2).
+
+## VectorVest market timing: bronnen
+
+- De VectorVest-handleiding van de trader (`help.pdf`, 225 p., VectorVest 7), hoofdstuk "Market Timing Explained" en
+  "VectorVest Timing Systems" (p. 162-175).
+- VectorVest-websites: [VectorVest Timing Systems](http://www.vectorvest.com/realtime/training/help/VectorVest_Timing_Systems1.htm),
+  [The DEW timing signal (AU)](https://www.vectorvest.com.au/the-dew-timing-signal/),
+  [DPO-blog (BE)](https://www.vectorvest.be/blog/vectorvest/dpo-of-detrended-price-oscillator/),
+  [webinar "When to buy & sell"](http://www.vectorvest.com/e-reports/webcast-pdfs/AU_PPX_SESSION_3_BW.pdf).
+- Onafhankelijke reviews ([TraderHQ](https://traderhq.com/vectorvest-review-insights/),
+  [Liberated Stock Trader](https://www.liberatedstocktrader.com/vectorvest-review/)) vonden geen onafhankelijke
+  backtest van de timingsignalen. De resultaten op de VectorVest-sites zijn voorbeelden, geen statistiek.
+
+**Wat VectorVest zelf beschrijft** (alles op de VVC, het gemiddelde van ±8.000 Amerikaanse aandelen):
+
+| Systeem | Regel | Volgens VectorVest |
+|---|---|---|
+| Primary Wave | slot VVC hoger dan een week eerder = Up, lager = Dn | het snelst, "fairly reliable" |
+| Two-Week Rule | twee weken omhoog zonder tussenliggende daalweek = Up (omgekeerd Dn) | trager, ±1 keer per jaar omgedraaid |
+| Confirmed Up/Dn | Two-Week Rule + de BSR (aandelen met koopadvies / verkoopadvies) kruist 1,00 | het traagst, het betrouwbaarst |
+| DEW (ProTrader) | Up: slot boven de 30-daagse **gewogen** MA én DPO > 0. Down: slot onder de 30-WMA én DPO < 0. "It's that simple." | gematigd; sneller dan Confirmed, betrouwbaarder dan de Primary Wave |
+| "Prudent-Aggressive" | slot boven de 40-daagse MA én MTI > 1,00 | |
+
+- **DPO:** het slot van n/2+1 dagen geleden min het SMA van n dagen, met n = 20 (VectorVest-blog en -webinar).
+- **Enveloppen:** zelden gebruikte uitzondering (bij een slot buiten de envelop volstaat één van beide voorwaarden).
+  Hun breedte is niet gepubliceerd; daarom laten we ze weg.
+- **BSR en MTI:** niet na te maken zonder de VectorVest-ratings van alle aandelen.
+
+## Test V1 (vooraf vastgelegd, 2026-10-30): de VectorVest-timing (DEW) op de aandelenindices
+
+Tests 15 en 16 pasten een benadering van RT, MTI en DEW toe op forex. Hier staan de **gepubliceerde** regels op de
+markt waarvoor ze gemaakt zijn. SPX500 en NAS100 dienen als benadering van de VVC (dagdata 2005-2025).
+
+**Regels** (dagelijks na het slot, gesloten candles; de positie geldt van dat slot tot het volgende):
+- **DEW:** Up -> long. Down -> long-only: uit de markt; long/short: short. Geen nieuw signaal: de positie blijft.
+- **Primary Wave:** slot > slot van 5 handelsdagen eerder -> long, anders uit (of short bij long/short).
+- **Two-Week Rule:** op afgesloten weekcandles, twee weken omhoog -> long tot twee weken omlaag.
+- Kosten per positiewissel (`test2.cost_price`). Swaps niet meegeteld; die zijn bij timing lager dan bij kopen en
+  houden, omdat je minder dagen in de markt zit.
+
+**Beslissend: DEW long-only tegenover kopen en houden**, op het gemiddelde van SPX500 en NAS100. Slaagt als in elke
+periode (2005-14, 2015-20, 2021-25) zowel de Sharpe minstens zo hoog is als die van kopen en houden, als de maximale
+drawdown kleiner is. Dat is de voorsprong die voor de 5ers telt: hetzelfde rendement per risico met minder diepe
+dalen.
+
+**Gerapporteerd, niet beslissend:** DEW long/short, Primary Wave, Two-Week Rule, UK100 (2015-25), goud. Een geslaagde
+regel gaat naar een eigen vastlegging: de 5ers-challenge op het echte 15-minutenpad (`research/rnd/prop_m15.py`).
