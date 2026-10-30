@@ -58,3 +58,32 @@ alleen labels, alle patronen, T2, beheer, en kosten <= 0,1R.
 Eerlijkheidsnoot: vóór deze vastlegging is de code één keer op EURUSD (dag) gedraaid om te controleren dat hij werkt.
 Er zijn daarna geen regels of parameters aangepast. Wel zijn de uitstappen vervangen door die van de bestaande motor
 (eerst stond er een tijdslimiet in).
+
+### Uitkomst test N1: verworpen (alle vier de cellen)
+Run: `python research/neely/neely_bt.py <34 symbolen> --tf D1` (en `--tf W1`), daarna `python research/neely/neely_eval.py`.
+Beslissend (`htf == 1 & lab_ok`, `R_t1`, één positie per richting, na kosten):
+
+| Cel | Trades | 2005-14 | 2015-20 | 2021-25 | t |
+|---|---|---|---|---|---|
+| A triangle-thrust, dag | 2.403 | -0,19R (PF 0,61) | -0,15R (PF 0,64) | -0,08R (PF 0,78) | -8,4 |
+| B zigzag/flat-hervatting, dag | 14.476 | -0,09R (PF 0,82) | -0,11R (PF 0,77) | -0,07R (PF 0,84) | -9,4 |
+| A triangle-thrust, week | 479 | +0,02R (PF 1,06) | +0,01R (PF 1,03) | -0,09R (PF 0,75) | -0,3 |
+| B zigzag/flat-hervatting, week | 2.884 | -0,03R (PF 0,92) | -0,08R (PF 0,83) | -0,08R (PF 0,82) | -3,0 |
+
+- **Ook vóór kosten geen voordeel.** Bruto `R_t1`: dag A -0,08R, dag B -0,03R, week A +0,02R, week B -0,03R. De
+  kosten (mediaan 0,02-0,05R) zijn dus niet de oorzaak.
+- **De patronen zijn klein.** Zonder Compaction (hoofdstuk 7) zijn het patronen van losse monowaves: mediaan 3-4
+  candles, stop ±0,8-1,0 ATR, T1 op 0,5-0,7R. Op de dag geeft setup B ±20 trades per instrument per jaar.
+- **De labelfilter (startlijsten 5.2) filtert bij setup B niets.** Een zigzag-a die ≤ 61,8% wordt teruggenomen valt
+  altijd in Rule 1-3 (alle hebben :5), en een b die door c > 100% wordt teruggenomen valt in Rule 5+ (heeft :F3).
+  Bij flats is het bijna net zo. Zonder de volledige alinea's per Conditie (bouwplan 5.3-5.4) zegt de startlijst te
+  weinig. Bij triangles zijn bij de instap gemiddeld maar 2,4 van de 5 golven toetsbaar (m2 nog niet af).
+- Gerapporteerd, niet beslissend: week A met beheer (`R_m`) +0,09 / +0,11 / +0,00R (PF 1,28 / 1,33 / 1,00, t 1,7).
+  Dit is één van ±60 gerapporteerde cijfers en haalt de lat ook niet (2021-25 = 0). Het is daarom geen kandidaat. Een
+  eventuele vervolgtest moet eerst vooraf worden vastgelegd en dan gemeten op de 31 holdout-instrumenten van test 33.
+
+**Conclusie:** de standaardpatronen uit hoofdstuk 5 (triangle-thrust, hervatting na zigzag/flat), herkend op
+monowaves per tijdframe en verhandeld op gesloten candles, voorspellen op deze 34 instrumenten niets, op dag noch week.
+Wat ontbreekt om het boek eerlijker te testen, zijn hoofdstuk 6-12: Compaction/graad, Post-Constructive bevestiging,
+complexe correcties en de Exception Rule. Ook de volledige opzoektabel van 5.3 ontbreekt. Zonder die onderdelen is
+"Neely" hier in feite patroonherkenning op swings, en die heeft net als de eerdere tests geen voorsprong.
