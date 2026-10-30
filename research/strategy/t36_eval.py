@@ -14,7 +14,11 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 47: test 46 + geen maand-S/R tussen instap en doel": "hi_bias == 1 & ~m_block",
+RULES = {"test 48: maand-BoS-trend + geen maand-S/R in de weg": "mn_bias == 1 & ~m_block",
+         "maand + week mee, geen maand-S/R in de weg": "mn_bias == 1 & hi_bias == 1 & ~m_block",
+         "maand + week mee + dag-BoS, geen maand-S/R in de weg": "mn_bias == 1 & hi_bias == 1 & bos & ~m_block",
+         "maand-BoS-trend": "mn_bias == 1", "tegen de maandtrend": "mn_bias == -1",
+"test 47: test 46 + geen maand-S/R tussen instap en doel": "hi_bias == 1 & ~m_block",
          "test 47 + maand-S/R achter de instap": "hi_bias == 1 & ~m_block & m_sup", "maand-S/R in de weg": "hi_bias == 1 & m_block",
          "zonder weekbias, geen maand-S/R in de weg": "~m_block",
 "test 45: basis-zone + dagbevestiging + weekbias": "hi_bias == 1",

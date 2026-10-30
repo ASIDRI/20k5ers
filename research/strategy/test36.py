@@ -242,6 +242,7 @@ def run(sym, tf, start, end):
     go, gc = g.open.values, g.close.values
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
+    mb = bos_bias(sym, "MN")  # test 48: the monthly trend after a monthly BoS (GBPJPY 2021: above 144.1 after the 124 low)
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
     mlev = monthly_levels(sym)
@@ -381,7 +382,7 @@ def run(sym, tf, start, end):
         cost = cost_price(sym, fill)
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
-                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn,
+                   m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
         tp20 = top + dirn * 0.2 * rng
         ml = mlev(ts)

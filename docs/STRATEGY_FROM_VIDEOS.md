@@ -1404,3 +1404,18 @@ tussen de instap en het doel (-0,2) -> geen trade in die richting. **Beslissend:
 Wel duidelijk: trades **mét een maandniveau tussen instap en doel** zijn op de holdout sterk negatief (-0,30 / -0,18 /
 -0,33R, t -3,4) en op de 37 in 2021-25 -0,14R -> de maand-S/R van de trader als "niet ertegenin handelen" klopt; het
 maakt de rest alleen nog niet stabiel positief.
+
+## GBPJPY 2020-2022 van de trader en test 48 (vooraf vastgelegd): de maandtrend via een maand-BoS
+De trader (GBPJPY 1M + 5 dagtrades): "Start of bullish trend after a BOS from a previous low" (laatste low 124,06 in
+2020, maand-BoS 144,116 gebroken in feb 2021) -> "Now you can trade all setups towards the monthly s/r higher"
+(194,117). Dagtrades: eerste long na de maand-BoS op de retest van de BoS-lijn; instap op 0,796 met een lange wick;
+"1 to 1 fib, then a very bullish daily candle as confirmation"; een short met tweezer bij een S/R-zone op 0,796;
+"always wait for a top to form ... after several daily candles"; "you would long here (0,66) but it didn't fill the
+whole daily FVG"; "S/L quite below the low". En: "Maand bos, week bos, daily bos. Mag je allemaal gebruiken. Een
+maand bos is wel belangrijk natuurlijk."
+**Test 48**: de dagsetups van test 46/47 (basis-zone + candlestickbevestiging, fib 0 verleggen, SL voorbij de wick van
+fib 1, TP -0,2) met `mn_bias` = de maandtrend na een maand-BoS (`bos_bias` op maandcandles: +1 na een maandslot
+boven de laatste bevestigde maand-swinghigh, tot een slot onder de laatste swinglow). **Beslissend: `mn_bias == 1 &
+~m_block` (met de maandtrend, geen maand-S/R tussen instap en doel), `R_t020`, één positie per richting, 37
+instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: + week-
+BoS, + dag-BoS, tegen de maandtrend.
