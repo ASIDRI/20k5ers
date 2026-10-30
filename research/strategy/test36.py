@@ -39,6 +39,8 @@ REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
 ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
 CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a daily confirmation candle (bullish, closing
 # above the previous high, still at or below fib 0.382) instead of the limit
+REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
+# of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
 HIGHER = {"D1": "W1", "W1": "MN"}
 DAYS = {"D1": 1, "W1": 5}  # daily candles per --tf candle (for the expiry)
@@ -156,6 +158,14 @@ def run(sym, tf, start, end):
         while f < last:
             beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
             if beyond and ((l[f] if dirn == 1 else h[f]) - entry) * dirn > 0:
+                if REANCHOR and not touched:
+                    top = h[f] if dirn == 1 else l[f]
+                    rng = (top - b1) * dirn
+                    entry = top - dirn * ENTRY * rng
+                    last = min(f + 1 + EXPIRY * DAYS[tf], len(d))
+                    row.update(top=top, rng=rng, entry=entry, has_ob=False, reanchored=True)
+                    f += 1
+                    continue
                 res = "weggelopen"
                 break
             if not CONFIRM and ((l[f] if dirn == 1 else h[f]) - entry) * dirn <= 0:
@@ -205,8 +215,9 @@ if __name__ == "__main__":
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--entry", type=float, default=0.618)
     ap.add_argument("--confirm", action="store_true")
+    ap.add_argument("--reanchor", action="store_true")
     a = ap.parse_args()
-    SWEEP, ENTRY, CONFIRM = a.sweep, a.entry, a.confirm
+    SWEEP, ENTRY, CONFIRM, REANCHOR = a.sweep, a.entry, a.confirm, a.reanchor
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)

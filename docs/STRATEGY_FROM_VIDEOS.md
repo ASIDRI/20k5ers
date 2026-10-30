@@ -1276,3 +1276,17 @@ S/R-definitie uit `sr_quality.py`), tussen de wick van fib 1 en de instap (`wk_s
 **Beslissend: `bos & wk_sr`, `R_t020` (vol op -0,2, zoals in de screenshots), één positie per richting, 37
 instrumenten.** Geslaagd als elke periode > 0 met PF >= 1,05 en t >= 2,0, én op de holdout elke periode > 0.
 Gerapporteerd: trades per week, met weekbias, beheer `R_m`, en of de 5 screenshot-trades gevonden worden.
+
+### Uitkomst test 41: verworpen
+`bos & wk_sr`, `R_t020`: 1116 trades (53 per jaar, 1,0 per week), +0,08 / +0,00 / -0,10R (t 0,3); holdout -0,02 /
++0,06 / -0,09R. Met weekbias: +0,22 / +0,02 / -0,05R.
+Naast de screenshots (NZDCAD 2023-24): de engine vindt de poot van de trader in jun-24 (0,8098 -> 0,8496, instap
+0,8224), maar schrapt hem omdat de prijs vóór de instap nog een hogere top maakt (0,8519); **de trader verlegt fib 0
+naar die nieuwe top** (zijn 0 = 0,8515) en wacht opnieuw op 0,66. Omgekeerd neemt de engine setups die de trader niet
+toont (nov-23 short, dec-23 long, apr-24 short: alle -1R).
+
+## Test 42 (vooraf vastgelegd): fib 0 verleggen bij een nieuwe extreme vóór de instap
+`test36.py --tf D1 --entry 0.66 --reanchor`: maakt de prijs vóór de instap een nieuwe top (long), dan wordt dat fib 0;
+limiet opnieuw op 0,66 van de nieuwe poot (OB vervalt), verlooptijd opnieuw. Verder test 41.
+**Beslissend: `bos & wk_sr`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF
+>= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd: alle setups, met weekbias, `R_m`.
