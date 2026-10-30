@@ -944,3 +944,7 @@ Elke test is positief in 2021-2025 en zwak daarvoor. Is dat vooraf te zien? Rege
 laatste 20 afgesloten trades van dezelfde regel (alle instrumenten; afgesloten vóór de vuldag) samen >= 0R waren.
 Toegepast op (a) test 20 regel (week + S/R), `R_m_top_1`; (b) test 24 (4u-bevestiging) + regel, `R_t020`; één positie
 per richting. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
+
+### Uitkomst test 27: verworpen
+(a) test 20 regel: zonder filter +0,05 / +0,05 / +0,22R; met filter -0,05 / +0,03 / +0,10R (t 0,0).
+(b) test 24 + regel: zonder -0,00 / -0,25 / +0,35R; met +0,11 / -0,84 / +0,16R (t 0,1).
