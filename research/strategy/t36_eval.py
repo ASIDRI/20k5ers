@@ -1,0 +1,41 @@
+"""Test 36 evaluation: one position per direction per instrument; the pre-registered rule and its parts.
+
+    python research/strategy/t36_eval.py [--prefix t36_]
+"""
+import argparse
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from t17_eval import one_per_dir, pf  # noqa: E402
+
+P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
+RULES = {"regel: OB in golden pocket + hogere structuur + S/R": "has_ob & hi_struct == 1 & htf_sup",
+         "OB + hogere structuur": "has_ob & hi_struct == 1", "OB + S/R": "has_ob & htf_sup",
+         "OB + hogere structuur + maandtrend": "has_ob & hi_struct == 1 & m_ma == 1",
+         "alleen OB": "has_ob", "zonder OB (limiet 0,618) + structuur + S/R": "~has_ob & hi_struct == 1 & htf_sup",
+         "zonder OB": "~has_ob", "alle": "index == index"}
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--prefix", default="t36_")
+    a = ap.parse_args()
+    f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
+    f = f[f.result == "gevuld"].reset_index(drop=True)
+    for k in ("htf_sup", "has_ob"):
+        f[k] = f[k].astype(str).str.lower().eq("true")
+    for lab, rule in RULES.items():
+        o = one_per_dir(f.query(rule), "t065")
+        print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
+        for col in ("R_m", "R_t025", "R_t065"):
+            out, pool = [], []
+            for p, s, e in P:
+                x = o[(o.date >= s) & (o.date < e)][col].dropna()
+                pool.append(x)
+                out.append(f"{p} n{len(x):4d} {x.mean():+.3f}R PF {pf(x):.2f} win {(x > 0).mean()*100:.0f}%")
+            x = pd.concat(pool)
+            print(f"  {col:7} " + " | ".join(out) + f" | t {x.mean() / x.std() * np.sqrt(len(x)):.2f}")

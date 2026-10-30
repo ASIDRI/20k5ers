@@ -1146,3 +1146,18 @@ archief; de nieuwe engine (`test36.py`) gebruikt alleen wat video 12 zegt (trans
 **Beslissend: dagpoten, `hi_struct == 1 & htf_sup` (alle setups met een OB in de golden pocket), `R_m`, één positie per
 richting.** Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
 Gerapporteerd: trades per jaar, zonder OB (limiet op 0,618), zonder context, weekpoten.
+
+### Uitkomst test 36: beslissende regel (dagpoten) verworpen; weekpoten met dag-OB veelbelovend (beschrijvend)
+Dagpoten, OB in golden pocket + hogere structuur + S/R, `R_m`: 193 trades (9 per jaar), -0,04 / +0,12 / +0,00R
+(t 0,15) -> verworpen. Alle dagsetups: 122 per jaar, +0,02 / -0,06 / -0,09R.
+Weekpoten (fib op de week-impuls, OB uit de dag-FVG - zoals de video het eigenlijk doet), beschrijvend:
+- alleen OB in de golden pocket: 373 trades (18 per jaar), +0,15 / +0,22 / +0,10R (PF 1,23 / 1,37 / 1,17, t 1,91);
+- OB + S/R: 273 trades, +0,10 / +0,31 / +0,20R (t 1,89);
+- zonder OB (limiet 0,618): 104 trades, -0,00 / -0,32 / +0,37R -> de OB maakt het verschil op de week;
+- hogere (maand)structuur als filter helpt niet (2015-20 negatief).
+
+## Test 36b (vooraf vastgelegd): weekpoot + dag-OB in de golden pocket op een holdout
+De regel "weekpoten, alleen OB" (`has_ob`, `R_m`) is gekozen na het zien van de 37 instrumenten. Controle op de 31
+exoten van test 33 (niet om te handelen - de trader handelt geen exoten - alleen als onafhankelijke markten die nooit
+voor deze regel gebruikt zijn), kosten zoals test 33. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen
+t >= 2,0 op de 31; daarnaast gerapporteerd: OB + S/R.
