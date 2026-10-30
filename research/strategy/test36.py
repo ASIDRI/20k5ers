@@ -47,8 +47,8 @@ PATTERNS = False  # --patterns (test 46): every bullish / bearish pattern of the
 REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
 # of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
-HIGHER = {"D1": "W1", "W1": "MN"}
-DAYS = {"D1": 1, "W1": 5}  # daily candles per --tf candle (for the expiry)
+HIGHER = {"D1": "W1", "W1": "MN", "MN": "MN"}  # MN (test 49): legs on monthly candles, the monthly trend itself
+DAYS = {"D1": 1, "W1": 5, "MN": 21}  # daily candles per --tf candle (for the expiry)
 
 
 def structure(sym, tf):
@@ -238,7 +238,7 @@ def run(sym, tf, start, end):
     dt = d.time.values
     g = d if tf == "D1" else load(sym, tf)
     if tf != "D1":
-        g["done"] = complete_times(g["time"], tf)
+        g["done"] = complete_times(g["time"], tf, d["time"] if tf == "MN" else None)
     go, gc = g.open.values, g.close.values
     st = structure(sym, HIGHER[tf])
     bb = bos_bias(sym, HIGHER[tf])
@@ -394,7 +394,7 @@ def run(sym, tf, start, end):
             ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
             row["w_rej"] = any((ext - p) * dirn > 0 and (cl - p) * dirn < 0 for p in clus(ts))
         hit_sl = not (CONFIRM or BASE) and ((l[f] if dirn == 1 else h[f]) - sl) * dirn <= 0  # a confirmation entry is at the close
-        for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65)):
+        for name, x in (("t020", 0.2), ("t025", 0.25), ("t065", 0.65), ("t100", 1.0), ("t1618", 1.618)):
             r, j = (-1.0, f) if hit_sl else follow(dirn, fill, sl, top + dirn * x * rng, None, h, l, f + 1)
             row[f"R_{name}"] = r - cost / risk
             row[f"x_{name}"] = str(dt[j])[:10] if j is not None else None
@@ -406,7 +406,7 @@ def run(sym, tf, start, end):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("symbols", nargs="+")
-    ap.add_argument("--tf", default="D1", choices=["D1", "W1"])
+    ap.add_argument("--tf", default="D1", choices=["D1", "W1", "MN"])
     ap.add_argument("--start", default="2005-01-01")
     ap.add_argument("--end", default="2025-12-31")
     ap.add_argument("--prefix", default="t36_")

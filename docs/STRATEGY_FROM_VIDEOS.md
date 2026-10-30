@@ -1427,3 +1427,12 @@ winnend 45-58%; holdout -0,04 / -0,02 / -0,14R. Tegen de maandtrend: +0,02 / -0,
 beeld: 2005-14 duidelijk positief, 2015-20 negatief, 2021-25 rond nul, holdout rond nul of negatief.
 Opmerking: onze maand-BoS (wick van de maand-swinghigh, zigzag) kantelt GBPJPY pas in de lente van 2021; de trader
 gebruikt de body (144,116) en ziet de breuk in februari 2021.
+
+## Maand-setups (goud 1M van de trader, 2026-10-30), beschrijvend (test 49)
+De trader: goud 1M, poot dec-2015 (1037) -> 2016 (1378), BoS-basis 1141 op 0,796, SL onder fib 1, doel tot -1,618
+(+7,9R): "Hier begint de uptrend voor goud ... dit mag je ook altijd nemen." `test36.py --tf MN --reanchor --confl`
+(maandpoten 2 / 4 maand-ATR, instap op de BoS / weekly S/R in 0,60-0,81, SL voorbij de wick van fib 1), 37
+instrumenten, 2005-2025: 271 poten, 159 trades (±7 per jaar over alle instrumenten). `R_t020` -0,10R gemiddeld
+(win 30%), `R_t1618` -0,56R (win 7%), beheer -0,24R. Goud: 2 trades, beide groot gewonnen (+2,1R op -0,2 / +5,4-5,5R
+op -1,618); de goud-poot van 2016 zelf is kleiner dan 4 maand-ATR en wordt niet als poot gezien. Over alle
+instrumenten geen voorsprong; te weinig trades voor de lat - niet verder als regel.
