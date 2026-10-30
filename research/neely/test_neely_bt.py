@@ -30,3 +30,17 @@ def test_cut_changes_nothing_before_it(sym, tf, cut):
     b = part[(part.result == "gevuld") & (part.fill < last)][COLS].reset_index(drop=True)
     assert len(a) > 0
     pd.testing.assert_frame_equal(a, b)
+
+
+@pytest.mark.parametrize("tf,cut", [("D1", "2013-09-18"), ("D1", "2022-02-02"), ("W1", "2017-05-10")])
+def test_counter_cut_changes_nothing_before_it(tf, cut):
+    import neely_count
+    cut = pd.Timestamp(cut, tz="UTC")
+    full, _, _ = neely_count.run("EURUSD", tf=tf)
+    part, _, _ = neely_count.run("EURUSD", tf=tf, cut=cut)
+    last = str((cut - pd.Timedelta(days=8 if tf == "W1" else 2)).date())
+    cols = ["name", "cx", "dir", "op_tijd", "start_t", "end_t", "fill", "p0", "p1", "result"]
+    a = full[full.fill < last][cols].reset_index(drop=True)
+    b = part[part.fill < last][cols].reset_index(drop=True)
+    assert len(a) > 0
+    pd.testing.assert_frame_equal(a, b)

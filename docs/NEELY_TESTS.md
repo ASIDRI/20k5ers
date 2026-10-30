@@ -87,3 +87,53 @@ monowaves per tijdframe en verhandeld op gesloten candles, voorspellen op deze 3
 Wat ontbreekt om het boek eerlijker te testen, zijn hoofdstuk 6-12: Compaction/graad, Post-Constructive bevestiging,
 complexe correcties en de Exception Rule. Ook de volledige opzoektabel van 5.3 ontbreekt. Zonder die onderdelen is
 "Neely" hier in feite patroonherkenning op swings, en die heeft net als de eerdere tests geen voorsprong.
+
+## Test N2 (vooraf vastgelegd, 2026-10-30): EURUSD tellen zoals Neely, met een reconstructie van hoofdstuk 6-12
+
+Vraag van de trader: de ontbrekende hoofdstukken zelf invullen door de markt te tellen en te volgen zoals Neely,
+alleen voor EURUSD. Code: `research/neely/neely_count.py`. Alles wat met **[R]** is gemarkeerd, is een **eigen
+reconstructie**, niet gelezen uit de pdf.
+
+**De teller (online, één gesloten candle per stap).**
+- Twee tellers, omdat het boek met meerdere grafieken werkt: dag (volgorde high/low uit 4u) en week (volgorde uit
+  dag). Elk houdt één reeks golven bij, monowaves en samengevoegde patronen, steeds afwisselend in richting.
+- Patronen: impuls 5-3-5-3-5, terminal 3-3-3-3-3 met overlap, triangle, zigzag 5-3-5 en flat 3-3-5, met de toetsen uit
+  hoofdstuk 5.
+  - [R, hfst. 8] dubbele correctie 3-x-3: x kleiner dan beide, de tweede voorbij de eerste.
+  - [R, hfst. 8] driedubbele 3-x-3-x-3, op dezelfde manier.
+- Structuur van een monowave: :5 of :3 volgens zijn startlijst (5.2). Een samengevoegd patroon is :5 (impuls) of :3.
+- Similarity and Balance gelden voor elk paar buren. Daarnaast DETOUR: de impuls gaat vóór de zigzag die erin past.
+- [R, hfst. 6, Post-Constructive stage 1] Een patroon is af als de prijs de 2-4-lijn (b-d bij een triangle, 0-B bij
+  een zigzag/flat/dubbele) breekt vóórdat het eind van de laatste golf wordt overschreden. `op_tijd` = die breuk kwam
+  binnen de tijd van de laatste golf plus één candle.
+- [R, hfst. 7, Compaction] Een afgerond patroon wordt één golf, met Complexity = hoogste binnen + 1. Bij meerdere
+  tegelijk gaat het patroon met de minste prijs x tijd voor (7.1).
+
+**Aanpassingen aan de teller, gedaan voordat er één rendement bekeken is.** Ze zijn gebaseerd op de vorm van de
+telling, niet op winst. Ze zijn nodig omdat de telling anders niet opbouwt (eerst bleven er 3.245 losse golven en
+Complexity max 3):
+1. Een samengevoegd patroon moet netto in de richting van zijn eerste golf eindigen. Anders breekt de afwisseling.
+2. [R, 7.2 / hfst. 12 missing waves] Een golf die kleiner is dan 1/3 van beide buren, in prijs én tijd, hoort bij de
+   grotere beweging en wordt opgenomen ("opgenomen").
+3. DETOUR-voorrang voor de impuls.
+4. Voor het tellen geldt de tijdregel van stage 1 niet, voor het handelen wel (`op_tijd`).
+5. [R] De Complexity-regel (7.4) geldt alleen tussen samengevoegde patronen. Een dagmonowave kan intraday-structuur
+   verbergen.
+6. De driedubbele correctie toegevoegd.
+
+Ook zo bouwt de telling **niet** op tot de grote meerjarige graad. Op de dag zijn de grootste patronen een paar weken,
+op de week een paar maanden (`docs/neely_eurusd_D1.png`, `docs/neely_eurusd_W1.png`).
+
+**Handelen** (zelfde motor als N1). Bij het slot van de candle die een patroon bevestigt, wordt er een trade genomen
+tegen de laatste golf in.
+- Doel T1 bij zigzag, flat, dubbele, driedubbele en terminal: het begin van het patroon (volledige terugname).
+- Doel T1 bij een triangle: eind van e + 75% van de breedste poot.
+- Doel T1 bij een impuls [R, stage 2]: het eind van golf 4, of 61,8% terug van golf 5 als 5 de verlengde is.
+- Stop: 0,1 ATR voorbij het eind van het patroon.
+- Uitstap: `test18.follow`; kosten van EURUSD.
+
+**Beslissend:** `cx >= 2 & op_tijd`, `R_t1`, één positie per richting, EURUSD, instappen 2005-2025. Er zijn twee
+cellen (dagteller en weekteller). Een cel slaagt als elke periode (2005-14, 2015-20, 2021-25) gemiddeld boven 0 zit met
+PF >= 1,05, en de drie samen t >= 2,0 halen. Omdat dit één instrument is, is een geslaagde cel alleen een kandidaat.
+Hij moet dan eerst op de andere 33 instrumenten getest worden (eigen vastlegging). Gerapporteerd: per Complexity, per
+patroon, met en zonder `op_tijd`.
