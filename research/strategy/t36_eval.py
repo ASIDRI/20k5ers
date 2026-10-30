@@ -14,7 +14,8 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 59: test 58 + SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == True",
+RULES = {"test 61: test 60 + diepe instap (fib >= 0,66)": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66",
+"test 59: test 58 + SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == True",
          "test 58 met partner maar zonder SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == False",
 "test 58: swing-setup in de setting (maand + week), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
          "test 58, alleen 4u-vertraging": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & pattern == '4u-vertraging'",

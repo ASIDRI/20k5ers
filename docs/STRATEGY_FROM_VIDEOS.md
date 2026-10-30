@@ -1642,3 +1642,16 @@ test 53 zonder SMT op die instrumenten: +0,15 / +0,11 / +0,08R (t 2,0). De SMT-b
 neemt zijn low tijdens de terugval, dit paar houdt) voegt geen voorsprong toe; eerder het omgekeerde.
 Test 60, extra (de trader: meerdere posities in dezelfde richting mogen): ook geëvalueerd met `t36_eval.py --stack`
 (elke setup telt, exacte dubbels één keer); de vooraf vastgelegde regel blijft één positie per richting.
+
+## Waarom zo weinig runners? (2026-10-31) en test 61 (vooraf vastgelegd vóór het bekijken van de holdout)
+De trader: "bij mij heb je soms echt wel heel veel runners, waarom jij niet?" Op de 37 instrumenten van test 60
+(beschrijvend): 46% bereikt -0,2, 34% -0,618, 28% -1 en 21% -1,618 vóór de oorspronkelijke SL - de runners bestaan,
+maar met de ladder eindigt 6% boven 2R (30% wordt na TP1 op fib 0 uitgestopt). Ruimere stops (break-even na -0,2;
+stop pas na -0,618 naar break-even) veranderen het gemiddelde niet (±0R). Het verschil zit in de instapdiepte:
+instap 0,5-0,618: win 43%, gem. winnaar 1,34R, gem +0,00R; 0,618-0,7: win 36%, 1,89R, +0,02R; **0,7-0,8: win 31%, gem.
+winnaar 2,74R, 26% > 2R, gem +0,15R (+0,22 / +0,07 / +0,09R per periode)**. De 4u-patronen geven vaak al een instap
+zodra de zone net geraakt wordt (mediaan fib 0,50); de trader stapt dieper in (0,66-0,796).
+**Test 61**: test 60 met alleen instappen op fib >= 0,66 (`entry_fib >= 0.66`), zelfde runs. **Beslissend:
+`((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66`, `R_lad`, één positie per richting;
+geslaagd als op de 37 elke periode > 0 met PF >= 1,05 en t >= 2,0 én op de 29 holdout-exoten (nog niet bekeken) elke
+periode > 0.** De drempel 0,66 komt van de trader (zijn instap); de 37 zijn al gezien, dus de holdout beslist.
