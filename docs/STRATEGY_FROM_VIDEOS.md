@@ -1448,3 +1448,10 @@ trend (`ms_trend`). Controle: GBPJPY +1 vanaf 2021-02; goud +1 vanaf 2016-11.
 **Test 50**: de dagsetups van test 48 met `ms_trend`. **Beslissend: `ms_trend == 1 & ~m_block`, `R_t020`, één positie
 per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
 Gerapporteerd: + week- en dag-BoS, geen trend, tegen de trend.
+
+### Uitkomst test 50: verworpen
+`ms_trend == 1 & ~m_block`, `R_t020`: 844 trades (40 per jaar), +0,15 / -0,09 / -0,03R (t 1,1); holdout -0,01 / +0,10 /
+-0,05R. Met week- en dag-BoS: 596 trades, +0,24 / -0,02 / +0,05R (PF 1,56 / 0,95 / 1,11, t 2,7), holdout -0,06 /
+-0,05 / -0,13R. Tegen de maandtrend: -0,01 / -0,04 / -0,13R (37) maar +0,04 / -0,00 / +0,03R (holdout). De
+maandtrend herkent nu de voorbeelden van de trader (GBPJPY feb 2021, goud eind 2016), maar maakt de dagsetups niet
+stabiel winstgevend: zelfde beeld als test 47-48.
