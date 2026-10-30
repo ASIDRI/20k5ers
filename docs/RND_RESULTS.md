@@ -133,3 +133,18 @@ en winst in minstens 6 van de 10 jaren. Een geslaagde regel gaat door naar fase 
 | R2 AUDNZD tegen 12-mnd-trend | +0,21 | 5/10 |
 | R3 USDJPY 3-mnd-momentum | +0,14 | 4/10 |
 Wat in 2015-2025 per paar goed oogde, houdt in de tien jaren daarvoor niet stand (te klein en wisselend van jaar tot jaar).
+
+## Neely Elliott Wave (N1-N4, 2026-10-30): geschrapt
+
+"Mastering Elliott Wave" (Neely, hoofdstuk 1-5) als strategie op de bestaande motor (gesloten candles, kosten, één
+positie per richting). De code staat in de git-geschiedenis (`research/neely/`, `docs/NEELY_TESTS.md`, branch
+`claude/dazzling-noether-useixp`, commit `26bd7ad`).
+- **N1**, triangle-thrust en zigzag/flat-hervatting, 34 instrumenten, dag en week: alle vier de cellen negatief.
+  Dag -0,19 / -0,15 / -0,08R en -0,09 / -0,11 / -0,07R.
+- **N2**, EURUSD-telling over meerdere graden met een eigen reconstructie van hoofdstuk 6-12: negatief (dag t -3,3,
+  week t -1,5).
+- **N3**, stops, doelen en instap met Optuna op 2005-14: verdwijnt in 2015-25.
+- **N4**, Optuna ook op de signalen: verdwijnt in 2015-25 (dag -0,15 / -0,18R).
+- **Controle:** dezelfde trades in de omgekeerde richting (zelfde stop, doel en motor) doen het even goed of beter.
+  De hoge trefkans (55-63%) kwam alleen uit de plaats van het doel.
+- Stop en doel in dezelfde dagcandle: 2-6% van de trades. Opgelost met 4u verandert de conclusie niet.

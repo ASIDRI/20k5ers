@@ -8,7 +8,6 @@ Nu: een nieuwe strategie op basis van de Market Matrix-video's, getest in een ge
 
 | Wat | Waar |
 |---|---|
-| Neely Elliott Wave: bouwplan, test N1 (verworpen) | `docs/NEELY_BOT_STRATEGIE.md`, `docs/NEELY_TESTS.md`, `research/neely/` |
 | Regels uit de video's, tests 1-3 | `docs/STRATEGY_FROM_VIDEOS.md`, `research/strategy/` |
 | R&D-programma (fases, register, resultaten) | `docs/RND_PLAN.md`, `docs/RND_RESULTS.md`, `research/rnd/` |
 | S/R-niveaus (maand/week, wick-tikken, point in time) | `research/strategy/sr_levels.py` |
