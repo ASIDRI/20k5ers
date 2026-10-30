@@ -971,3 +971,13 @@ samen t >= 2,0.
 (a) test 20, cluster-S/R + week: +0,08 / -0,07 / +0,19R (t 0,9) - niet beter dan met de oude S/R (+0,05 / +0,05 /
 +0,22R). (b) test 24: -0,07 / -0,32 / +0,46R (t -0,2). Een betere S/R-definitie verandert de uitkomst niet: het
 S/R-filter voegt in beide gevallen weinig of niets toe (cluster in de poot of niet: geen vast verschil).
+
+## Video 13 ("TradeRecap EUR/JPY - EUR/USD") en test 29 (vooraf vastgelegd, 2026-10-30)
+
+`research/videos/video13`: intraday shorts EURUSD en EURJPY. De prijs neemt de high van vorige week (liquiditeit),
+breekt dan op 15/5 min de "key higher low" en hij short in de fair value gap; doelen: evenwicht van gisteren,
+weekopening, New York-middernacht; helft dicht, SL in winst; monthly open als order block.
+**Test 29** (`research/strategy/test29.py`), 4 uur, 28 paren, 2005-2025: high van vorige week genomen, dan een
+4u-slot onder de laatste 4u-swing-low van vóór de sweep-high -> short; SL boven de sweep-high (+ 0,1 dag-ATR); doel
+weekopening (anders midden van vorige week), RR >= 1; uit bij doel, SL of einde van de week; omgekeerd voor longs.
+Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.
