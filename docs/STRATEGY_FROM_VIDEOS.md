@@ -994,3 +994,8 @@ you never touch the golden pocket; if you take it from the body, it is clearly w
 **Test 30:** precies test 20 (grote dagpoten, afwijzingscandle, SL 0,1 ATR voorbij 1, regel week + S/R, beheer), maar
 `--fib body`. Beslissend `wk_struct == 1 & htf_sup`, `R_m_top_1`, één positie per richting, 34 instrumenten.
 Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0. Gerapporteerd: alle setups en R_t020.
+
+### Uitkomst test 30 (body -> body): regel +0,13 / +0,07 / -0,07R (t 0,9), niet geslaagd; volgens de trader is dit
+ook niet de juiste manier: "body to wick, altijd".
+**Test 30b (vooraf vastgelegd):** fib 1 = body van de start-candle, 0 = wick van het uiterste; SL voorbij de wick van
+de start (0,1 ATR); verder exact test 20. Zelfde regel, beheer en lat.

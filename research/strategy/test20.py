@@ -20,6 +20,8 @@
 7. --fib body (test 30, video 12 "take the body instead of the wick"): fib 1 = the body extreme of the leg-start
    candle, 0 = the body extreme of the leg-end candle; a new high moves 0 only when a body goes beyond it. Stop stays
    beyond the body fib 1 by 0.1 ATR.
+   --fib bodywick (test 30b, the trader: "body to wick, always"): fib 1 = body of the leg-start candle, 0 = wick of
+   the leg end; the stop stays beyond the WICK of the leg start by 0.1 ATR.
 5. A setup still waiting when the data ends is "actief" (with its zone, stop, -0.2 and the context now): for the
    scanner (scan.py).
 """
@@ -74,9 +76,11 @@ def run(sym, start, end):
             continue
         dirn = 1 if kind == "H" else -1
         top, b1 = p_end, p_start
+        w1 = p_start  # wick of the leg start: the stop stays beyond it
+        if FIB in ("body", "bodywick"):
+            b1 = min(o[si], c[si]) if kind == "H" else max(o[si], c[si])
         if FIB == "body":
             top = max(o[ti], c[ti]) if kind == "H" else min(o[ti], c[ti])
-            b1 = min(o[si], c[si]) if kind == "H" else max(o[si], c[si])
         rng = (top - b1) * dirn
         if rng < LEG * atr[ci]:
             continue
@@ -90,11 +94,11 @@ def run(sym, start, end):
             if (c[f] - b1) * dirn < 0:
                 res = "ongeldig"
                 break
-            if ((ext[f] if FIB == "wick" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))) - top) * dirn > 0:
+            if ((ext[f] if FIB != "body" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))) - top) * dirn > 0:
                 if touched:
                     res = "weggelopen"
                     break
-                top = ext[f] if FIB == "wick" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))
+                top = ext[f] if FIB != "body" else (max(o[f], c[f]) if dirn == 1 else min(o[f], c[f]))
                 rng = (top - b1) * dirn
                 row.update(top=top, rng=rng, top_t=str(t[f])[:10], reanchored=True)
                 deadline = f + 1 + EXPIRY
@@ -135,7 +139,7 @@ def run(sym, start, end):
         row.update(**context(f, entry))
         row.update(result="gevuld", fill=str(t[f])[:10], entry=entry, touch_n=touch_n)
         for pre, buf in zip(("R_", "R_w_"), SL_BUF):
-            sl = b1 - dirn * buf * atr[f]
+            sl = (w1 if FIB == "bodywick" else b1) - dirn * buf * atr[f]
             risk = abs(entry - sl)
             if pre == "R_":
                 row.update(sl=sl, entry_fib=(top - entry) * dirn / rng, R_cost=cost / risk)
@@ -159,7 +163,7 @@ if __name__ == "__main__":
     ap.add_argument("--leg", type=float, default=LEG)
     ap.add_argument("--band", default=f"{BAND[0]},{BAND[1]}")
     ap.add_argument("--tf", default="D1", choices=["D1", "W1"])
-    ap.add_argument("--fib", default="wick", choices=["wick", "body"])
+    ap.add_argument("--fib", default="wick", choices=["wick", "body", "bodywick"])
     a = ap.parse_args()
     REV, LEG, BAND, TF, FIB = a.rev, a.leg, tuple(float(x) for x in a.band.split(",")), a.tf, a.fib
     for s in a.symbols:
