@@ -763,3 +763,11 @@ alleen trades met `gezien` >= 2026-10-29 en `regel = ja` (weekstructuur + week/m
 afgesloten trades beoordelen (gemiddeld > 0, PF >= 1,05). Eerste scan: 2026 tot nu, regel = ja: 9 afgesloten,
 +2,30R (4 winnaars); zonder regel (alle 49): 33 afgesloten, -10,53R. Let op: GBPNZD-candle van 28 okt. 2026 bij Yahoo
 heeft een piek tot 2,3809 (broker: 2,3769).
+
+## Test 22 (vooraf vastgelegd, 2026-10-30): walk-forward-optimalisatie
+
+`research/strategy/t22_walkforward.py`: elk jaar 2010-2025 de beste combinatie (uit de 1.152 van test 21, >= 100
+trades in het venster) kiezen op de jaren ervóór, en dan dat jaar handelen. Vier varianten, niets meer: venster 5
+jaar of alle eerdere jaren; beste combinatie of top 5 samen. Geslaagd als een variant over 2010-2025 gemiddeld > 0
+met PF >= 1,05, in >= 10 van de 16 jaren positief, en t (op de jaarsommen) >= 2,0. Bij vier varianten is één
+toevallige treffer mogelijk: een geslaagde variant moet ook in de andere drie in dezelfde richting wijzen.
