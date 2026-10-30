@@ -1522,3 +1522,17 @@ shorts: +0,02 / +0,07 / -0,00R. Tegengesteld na het maanddoel: 76 trades (4 per 
 holdout +0,44 / +0,44 / -0,01R.
 5ers-simulatie (start elke maand 2006-2024, +8% / +5%, -10% statisch): `R_t020` 37 per jaar, gem. +0,07R: geslaagd
 39% / 43% / 39% bij 1 / 1,5 / 2% risico (breach 57 / 54 / 60%); `R_m` 34% / 36% / 24%.
+
+## EURNZD nov-dec 2017 van de trader en test 54 (vooraf vastgelegd)
+- nov-17: prijs in 0,66-0,796 na een eerste BoS, "maar er is geen dagelijkse candle patroon die zegt dat het nu
+  bearish wordt" -> geen trade (de engine eist al een patroon).
+- dec-17 short: de poot breekt door het **maandniveau 1,7189** en de BoS 1,7159; terug naar de S/R-zone op **fib 0,5**
+  met een dagpatroon -> short, doel -1,618. Het maandniveau ligt tussen instap en doel maar is door de poot zelf
+  gebroken (geflipt) - geen blokkade, juist de reden voor de trade (tegen de maandtrend in).
+**Test 54** (`--base --fibzone --patterns`): zone = de basis/S-R-zone als die er is (fib 0,382-0,81, dus ook 0,5),
+anders fib 0,618-0,796; `m_block2` = maandniveau tussen instap en doel dat de poot níet zelf brak; `m_flip` = de poot
+brak zelf een maandniveau -> mag ook tegen de maandtrend. **Beslissend: `((((ms_trend == 1) | (mt_done == -1)) &
+wk_trig == 1) | m_flip) & ~m_block2`, `R_m` (beheer van de trader: half op -0,25, stop naar de oude top, rest -0,65),
+één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode
+> 0). Opmerking: de dec-17-short zelf wordt laat gezien - de zigzag bevestigt de low 1,7104 pas na 2 ATR opleving,
+toen de prijs al in de zone stond.

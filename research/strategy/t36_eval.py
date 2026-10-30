@@ -14,7 +14,10 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 53: setting + na het maanddoel tegengesteld (week-trigger), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
+RULES = {"test 54: (setting of na maanddoel of gebroken maandniveau) + week-trigger/flip, niet geblokkeerd": "((((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1) | m_flip) & ~m_block2",
+         "alleen de maandniveau-flips": "m_flip & ~(((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1) & ~m_block2",
+         "test 53-regel met nieuwe zone en blokkade": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block2",
+"test 53: setting + na het maanddoel tegengesteld (week-trigger), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
          "alleen na het maanddoel tegengesteld": "mt_done == -1 & wk_trig == 1 & ~m_block",
          "setting, alleen longs": "ms_trend == 1 & wk_trig == 1 & ~m_block & dir == 1",
          "setting, alleen shorts": "ms_trend == 1 & wk_trig == 1 & ~m_block & dir == -1",
@@ -65,7 +68,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
-    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr", "m_block", "m_sup"):
+    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr", "m_block", "m_sup", "m_flip", "m_block2"):
         if k not in f:
             f[k] = False
         f[k] = f[k].astype(str).str.lower().eq("true")

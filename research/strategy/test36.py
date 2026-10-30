@@ -435,7 +435,10 @@ def run(sym, tf, start, end):
         zone = None
         if BASE:
             if FIBZONE:
-                zone = (top - dirn * 0.618 * rng, top - dirn * 0.796 * rng) if bos else None
+                # test 54: the base / S/R zone if there is one (EURNZD Dec 2017: short at fib 0.5 in the S/R zone), else
+                # fib 0.618-0.796 itself
+                zone = (base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None) or \
+                    ((top - dirn * 0.618 * rng, top - dirn * 0.796 * rng) if bos else None)
             else:
                 zone = base_zone(o, h, l, c, si, ti, key, dirn, A, top, rng) if tf == "D1" else None
             if zone is None:
@@ -513,7 +516,11 @@ def run(sym, tf, start, end):
         ml = mlev(ts)
         row.update(m_block=any(min(fill, tp20) < p < max(fill, tp20) for p in ml),  # test 47: monthly S/R in the way
                    m_sup=any(min(sl, fill) <= p <= max(sl, fill) for p in ml),  # monthly S/R behind the entry
-                   n_mlev=len(ml))
+                   n_mlev=len(ml),
+                   # test 54: the leg itself broke a monthly level (it flipped: EURNZD Dec 2017 through 1.7189) - such a
+                   # level is no obstacle and allows the trade against the monthly trend
+                   m_flip=any(min(w1, top) < p < max(w1, top) for p in ml),
+                   m_block2=any(min(fill, tp20) < p < max(fill, tp20) and not min(w1, top) < p < max(w1, top) for p in ml))
         if top_day is not None:  # test 43: the week of the leg's extreme swept a weekly S/R level and closed back
             wi = int(np.searchsorted(wkt, top_day, side="right")) - 1
             ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
