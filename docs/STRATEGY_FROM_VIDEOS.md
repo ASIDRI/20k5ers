@@ -835,3 +835,28 @@ regel + maandtrend mee: +0,07 / +0,09 / +0,15R, samen +0,09R PF 1,14 t 1,28 (483
 + max. één positie per munt: +0,02 / +0,23 / -0,33R (166 trades) - slechter, niet gebruiken
 5ers (start elke maand 2006-2024) met regel + maandtrend: 1% risico 40% geslaagd / 50% breach; 0,75%: 30% / 55%;
 1,5%: 32% / 65%; 2%: 26% / 69%. Jaarsommen -13R tot +24R. Nog altijd meer breach dan geslaagd.
+
+## Heranalyse van de trades van de trader (`trader_profile.py`, 2026-10-30)
+
+9 dagtrades van de trader (EURUSD jun-25, EURAUD dec-25, GBPAUD nov-25, NZDCAD okt-23 / feb-24 / jun-24 / feb-25,
+GBPNZD mrt-26 / aug-26) opgemeten met dezelfde kenmerken als 12.406 motor-setups (test 19/23 + test 20):
+poot in ATR, duur poot en terugval, tijdverhouding correctie/impuls, snelheid, instapdiepte, afstand start tot
+maand/week-niveau, niveau in de zone, BoS, beweging vooraf, maand/week-trend, weekstructuur, poot t.o.v. de range.
+Uitkomst: op geen enkel kenmerk liggen de trades van de trader apart; ze zijn verspreid over de hele verdeling
+(poot 1,2-10 ATR = percentiel 0-92; maandtrend 4x mee, 5x tegen; BoS 5 van 9; niveau in de zone 5 van 9). Enige
+constante: instapdiepte 0,61-0,69 (limiet rond 0,65); bij de motor maakt instapdiepte geen verschil
+(0,5-0,6: -0,01R; 0,6-0,65: +0,01R; 0,65-0,7: -0,06R).
+De 50 meest gelijkende motor-setups per trade: gemiddeld -0,25 tot +0,52R, winnend 32-52% (gemiddeld ±+0,07R, ±40%).
+Dat alle 9 voorbeelden winnen terwijl gelijkaardige setups ±40% winnen (kans 0,4^9 ≈ 0,03%) wijst op selectie van de
+voorbeelden (getoonde winnaars) of op een oordeel van de trader dat niet in deze kenmerken zit; om dat te vinden zijn
+ook de verliezende of overgeslagen setups nodig.
+
+## Video's opnieuw: wat is gecodeerd en wat niet
+
+Video 8 (FTMO): maand-S/R met reactiegeschiedenis (ja, Levels), impuls/correctie (ja, poten/zigzag), week 3-poot
+correctie (nee), week -0,27 + bullish indicatiecandle (nee), dag momentum vertraagt (test 10), institutionele candle
+(nee), dag H&S dan bullish N (deels: N in test 8/12, H&S-volgorde nee), 4u 3 candles respecteren de zone (test 8),
+bijschalen (nee), TP -0,27 + BE (ja).
+Video 9: week 4 fases (test 12), trendwissel pas na de tweede lower low (nee), fib wick -> body (ja, test 11),
+zone 0,618 tot eerste structuur of 1 (test 8), TP -0,27 anders -0,68 (ja), 4u: vertraging (test 8), 4u bullish N (nee),
+4u inverse H&S (test 14), BE (ja), correctie = veel tijd weinig prijs (tijdverhouding: geen verschil, zie hierboven).
