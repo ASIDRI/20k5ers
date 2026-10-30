@@ -787,3 +787,17 @@ afwijzingscandle met slot 0,5-0,786, SL 0,1 ATR voorbij 1, doel -0,2 en beheer),
 structuurfilter gebruikt de maand-zigzag. Regel `wk_struct == 1 & htf_sup`, één positie per richting, 34
 instrumenten, 2005-2025. Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en
 samen t >= 2,0. Daarnaast: D1 + W1 samen gerapporteerd.
+
+### Uitkomst test 20w (weekgrafiek): verworpen
+Regel, `R_t020`: 2005-14 +0,05R (58 trades) / 2015-20 -0,41R (37) / 2021-25 -0,22R (17); t -1,1. Te weinig trades
+(0,2 per paar per jaar) en negatief sinds 2015.
+
+## Test 23 (vooraf vastgelegd, 2026-10-30): kleine poot, TP op de volgende structuur (GBPNZD maart 2026)
+
+Trade van de trader: kleine poot die een BoS breekt, instap 2,256 op de terugtest, SL onder de grote bodem (2,23295),
+TP op de volgende BoS 2,32089 (RR 2,8). `test19.py` (poten met break + retest in de pocket, instap op de dag-
+afwijzingscandle) met extra kolommen: SL onder de laagste low van de 20 candles voor de instap (- 0,1 ATR), TP = de
+dichtstbijzijnde eerdere swingtop boven de poot die nog intact is (`R_struct`); context `wk_struct`, `htf_sup` als
+test 20. Controle: de motor vindt de GBPNZD-poot van maart 2026 niet (andere poten); test toch zoals vastgelegd.
+Regel `wk_struct == 1 & htf_sup`, `R_struct`, één positie per richting (op de eigen uitstap), 34 instrumenten,
+2005-2025. Geslaagd als elke periode gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0.

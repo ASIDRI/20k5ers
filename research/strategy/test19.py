@@ -1,4 +1,7 @@
-"""Test 19: entry timing (the trader, 2026-10-29: "timing wanneer je erin gaat"). Same legs and exits as test 18, but
+"""Test 23 columns (R_struct, x_struct, tp_struct, sl_major, rr_struct, wk_struct, htf_sup): the trader's small-leg
+trade (GBPNZD March 2026) - stop beneath the major low (20 candles), target the next intact swing high above the leg.
+
+Test 19: entry timing (the trader, 2026-10-29: "timing wanneer je erin gaat"). Same legs and exits as test 18, but
 no blind limit order: wait for a DAILY rejection candle in the zone (long: low at or below the 0.618 level, close
 above its open, close in the upper 40% of its range, and the close itself in the zone between the 0.5 and 0.786
 levels), enter at its close. Stop as test 18 (beyond the wick of the
@@ -42,6 +45,7 @@ sys.path[:0] = [str(HERE), str(HERE.parents[1] / "backtest" / "src")]
 from setup_study import load, Levels  # noqa: E402
 from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
+import test5  # noqa: E402
 
 K, KS, ENTRY, EXPIRY, LOOKBACK = 2, 1, 0.65, 40, 120  # KS: swing size for the leg start
 TPS = {"t020": 0.2, "t027": 0.27, "t065": 0.65, "t0618": 0.618, "t1": 1.0, "t1618": 1.618}
@@ -103,6 +107,13 @@ def run(sym, tf, start, end):
     tr = np.r_[h[0] - l[0], np.maximum(h[1:], c[:-1]) - np.minimum(l[1:], c[:-1])]
     atr = pd.Series(tr).rolling(14).mean().bfill().values
     lv = Levels(sym)
+    w = load(sym, "W1")
+    w["done"] = complete_times(w["time"], "W1")
+    test5.REV, test5.LEG = 2.0, 4.0
+    wt, _ = test5.legs(w)
+    w_done = np.array([w["done"][ci].value for ci, *_ in wt])
+    w_kind = np.array([kk for *_, kk in wt])
+    w_px = np.array([p for _, _, p, _ in wt])
     t0, t1 = pd.Timestamp(start, tz="UTC"), pd.Timestamp(end, tz="UTC")
     hi, lo = swings(h, l)
     hi1, lo1 = swings(h, l, KS)
@@ -197,6 +208,26 @@ def run(sym, tf, start, end):
             sl_t = opp[f] - dirn * 0.1 * atr[f]
             r_t, _ = follow(dirn, entry, sl_t, top + dirn * 0.2 * rng, None, h, l, f + 1)
             row["R_tight_t020"] = r_t - cost / abs(entry - sl_t)
+            # test 23: stop beneath the major low (lowest low of the 20 candles before the entry), target the next
+            # structure (the nearest earlier swing high above the top that is still intact)
+            sl_m = (l[max(f - 20, 0):f].min() if dirn == 1 else h[max(f - 20, 0):f].max()) - dirn * 0.1 * atr[f]
+            above = [ext[x] for x in hi if x < i and (ext[x] - top) * dirn > 0
+                     and not ((ext[x + 1:f + 1] - ext[x]) * dirn > 0).any()] if dirn == 1 else \
+                    [ext[x] for x in lo if x < i and (ext[x] - top) * dirn > 0
+                     and not ((ext[x + 1:f + 1] - ext[x]) * dirn > 0).any()]
+            kw = int(np.searchsorted(w_done, pd.Timestamp(t[f]).tz_localize("UTC").value, side="right")) - 1
+            hs, ls = w_px[:kw + 1][w_kind[:kw + 1] == "H"], w_px[:kw + 1][w_kind[:kw + 1] == "L"]
+            T = 0
+            if len(hs) >= 2 and len(ls) >= 2:
+                T = 1 if hs[-1] > hs[-2] and ls[-1] > ls[-2] else (-1 if hs[-1] < hs[-2] and ls[-1] < ls[-2] else 0)
+            lo_, hi_ = sorted([b1, entry])
+            row.update(wk_struct=T * dirn, htf_sup=any(lo_ <= p <= hi_ for p in levs))
+            if above and (entry - sl_m) * dirn > 0:
+                tp_s = min(above) if dirn == 1 else max(above)
+                r_s, j_s = follow(dirn, entry, sl_m, tp_s, None, h, l, f + 1)
+                row.update(R_struct=r_s - cost / abs(entry - sl_m), tp_struct=tp_s, sl_major=sl_m,
+                           rr_struct=abs(tp_s - entry) / abs(entry - sl_m),
+                           x_struct=str(t[j_s])[:10] if j_s is not None else None)
             if False:  # entry at the close: the entry candle cannot have reached the stop
                 for name in TPS:
                     row[f"R_{name}"] = row[f"R_{name}_be"] = -1.0 - cost / risk
@@ -244,7 +275,7 @@ if __name__ == "__main__":
     ap.add_argument("--reset-expiry", action="store_true")
     a = ap.parse_args()
     RESET_EXPIRY = True
-    prefix = a.prefix or f"t19{a.tf[0].lower()}_"
+    prefix = a.prefix or f"t23{a.tf[0].lower()}_"
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)
