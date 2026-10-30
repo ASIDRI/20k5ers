@@ -14,7 +14,10 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 45: basis-zone + dagbevestiging + weekbias": "hi_bias == 1",
+RULES = {"test 47: test 46 + geen maand-S/R tussen instap en doel": "hi_bias == 1 & ~m_block",
+         "test 47 + maand-S/R achter de instap": "hi_bias == 1 & ~m_block & m_sup", "maand-S/R in de weg": "hi_bias == 1 & m_block",
+         "zonder weekbias, geen maand-S/R in de weg": "~m_block",
+"test 45: basis-zone + dagbevestiging + weekbias": "hi_bias == 1",
          "basis-zone + dagbevestiging + weekbias + grote BoS": "hi_bias == 1 & bos",
 "test 44: BoS + confluentie-instap + weekbias": "bos & hi_bias == 1",
          "BoS + confluentie-instap": "bos", "BoS + confluentie + weekbias + fib 1 op HTF-S/R": "bos & hi_bias == 1 & origin_sr",
@@ -44,7 +47,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
-    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr"):
+    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr", "m_block", "m_sup"):
         if k not in f:
             f[k] = False
         f[k] = f[k].astype(str).str.lower().eq("true")

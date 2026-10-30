@@ -1382,3 +1382,17 @@ engulfing +0,04 (257), hammer +0,06 (228), spinning top +0,07 (213), harami +0,0
 inverted hammer -0,05 (87), three white soldiers +0,13 (57), morning star +0,11 (29). Meer patronen = meer trades
 (1,1 per week), zelfde kwaliteit: de bevestigingscandle zelf geeft geen voorsprong die over periodes en markten
 standhoudt.
+
+## Maand-S/R zoals de trader (GBPJPY 1M, 2026-10-30) en test 47 (vooraf vastgelegd)
+De trader: "Do you see why I take these monthly s/r levels (GBPJPY 194,1 / 140,0). From now on only take the monthly
+S/R levels. But this doesn't mean you can't trade in between. You do have to take all setups on the daily. The S/R
+could be an eventual target. And if we're trading close to it, it might act as support or resistance to decide a
+trade setup." Zijn niveaus zijn er maar een paar per paar: prijzen waar maandcandles jarenlang met de wick weigeren,
+van boven én van onder (flip). Onze eerdere S/R (Levels, week-clusters) gaf tientallen kleine lijnen.
+`test36.monthly_levels`: per kandidaat-prijs (maand open/close/high/low) score = aantal maandcandles met een
+support-afwijzing (low tot 0,1 maand-ATR erboven of erdoor, body erboven) + resistance-afwijzingen (spiegel), beide
+>= 1, score >= 5; de 4 beste, minstens 2 maand-ATR uit elkaar; alleen afgesloten maanden (GBPJPY: o.a. 143,7 / 186,4).
+**Test 47**: de dagsetups van test 46 (basis-zone + candlestickbevestiging, weekbias) + `m_block` = een maandniveau
+tussen de instap en het doel (-0,2) -> geen trade in die richting. **Beslissend: `hi_bias == 1 & ~m_block`, `R_t020`,
+één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode
+> 0). Gerapporteerd: met maandniveau achter de instap (`m_sup`), zonder weekbias, en de trades mét een niveau in de weg.

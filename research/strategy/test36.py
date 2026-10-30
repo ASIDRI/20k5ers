@@ -61,6 +61,47 @@ def structure(sym, tf):
             np.array([p for _, _, p, _ in wt]))
 
 
+def monthly_levels(sym, n=4):
+    """The trader's monthly S/R (GBPJPY 194 / 140, 2026-10-30): price levels where monthly candles reject with the wick
+    while the body stays on one side, from both sides (support and resistance). Score per candidate price (monthly
+    opens, closes, highs, lows) = support rejections (low within 0.1 monthly ATR above the level or through it, body
+    above) + resistance rejections (mirror), both >= 1; the n best, at least 2 monthly ATR apart, score >= 5.
+    Point in time: only completed monthly candles. Returns a function ts -> [levels] (GBPJPY late 2025: 143.5, 197.0)."""
+    m = load(sym, "MN")
+    m["done"] = complete_times(m["time"], "MN", load(sym, "D1")["time"])
+    o, h, l, c = (m[k].values for k in ("open", "high", "low", "close"))
+    tr = np.r_[h[0] - l[0], np.maximum(h[1:], c[:-1]) - np.minimum(l[1:], c[:-1])]
+    atr = pd.Series(tr).rolling(12, min_periods=3).mean().bfill().values
+    done = np.array([x.value for x in m["done"]])
+    cache = {}
+
+    def at(ts):
+        k = int(np.searchsorted(done, ts.value, side="right"))  # completed monthly candles
+        if k < 24:
+            return []
+        if k in cache:
+            return cache[k]
+        A = atr[k - 1]
+        tol = 0.1 * A
+        oo, hh, ll, cc = o[:k], h[:k], l[:k], c[:k]
+        bl, bh = np.minimum(oo, cc), np.maximum(oo, cc)
+        sc = []
+        for p in np.unique(np.r_[oo, cc, hh, ll]):
+            sup = int(((ll <= p + tol) & (bl >= p - tol)).sum())
+            res = int(((hh >= p - tol) & (bh <= p + tol)).sum())
+            if sup and res and sup + res >= 5:
+                sc.append((sup + res, p))
+        out = []
+        for _, p in sorted(sc, reverse=True):
+            if all(abs(p - q) > 2 * A for q in out):
+                out.append(float(p))
+            if len(out) == n:
+                break
+        cache[k] = out
+        return out
+    return at
+
+
 def bos_bias(sym, tf):
     """Video 4 / 12: on tf, +1 after a close above the last confirmed swing high (zigzag 2 / 4), -1 after a close below
     the last confirmed swing low; it holds until the opposite key level breaks. (done times, state) per candle."""
@@ -203,6 +244,7 @@ def run(sym, tf, start, end):
     bb = bos_bias(sym, HIGHER[tf])
     lv = Levels(sym)
     clus = sr_methods(sym)[0]["cluster"]
+    mlev = monthly_levels(sym)
     wk = load(sym, "W1")
     wkt, wkh, wkl, wkc = wk.time.values, wk.high.values, wk.low.values, wk.close.values  # weekly S/R: >= 2 weekly swing points within 0.25 weekly ATR (test 41)
     test5.REV = REV
@@ -341,6 +383,11 @@ def run(sym, tf, start, end):
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
                    m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn,
                    wk_sr=any(min(w1, fill) <= p <= max(w1, fill) for p in clus(ts)))
+        tp20 = top + dirn * 0.2 * rng
+        ml = mlev(ts)
+        row.update(m_block=any(min(fill, tp20) < p < max(fill, tp20) for p in ml),  # test 47: monthly S/R in the way
+                   m_sup=any(min(sl, fill) <= p <= max(sl, fill) for p in ml),  # monthly S/R behind the entry
+                   n_mlev=len(ml))
         if top_day is not None:  # test 43: the week of the leg's extreme swept a weekly S/R level and closed back
             wi = int(np.searchsorted(wkt, top_day, side="right")) - 1
             ext, cl = (wkh[wi], wkc[wi]) if dirn == 1 else (wkl[wi], wkc[wi])
