@@ -885,3 +885,5 @@ aanraking) +0,19R tegen trage (> 47) -0,22R; sweep van een eerdere low onder 1 e
 diepte L*, instapdiepte en RR zonder duidelijke lijn.
 **Vastgelegd voor controle op 2015-2025:** (a) `conf_bars <= 15`, (b) `swept`. Geslaagd als gemiddeld > 0 met
 PF >= 1,05 en t >= 2,0 op 2015-2025.
+Controle 2015-2025: (a) snelle bevestiging -0,08R (157 trades, PF 0,91); (b) sweep -0,07R (38 trades, PF 0,91).
+Beide verworpen: de voorsprong van 2005-2014 houdt niet stand.
