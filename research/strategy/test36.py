@@ -39,6 +39,8 @@ REV, LEG, EXPIRY, OB_BACK, SL_BUF = 2.0, 4.0, 40, 5, 0.1
 ENTRY = 0.618  # --entry 0.66 (test 39, video 3: "enter around 66")
 CONFIRM = False  # --confirm (test 40): after the touch, enter at the close of a daily confirmation candle (bullish, closing
 # above the previous high, still at or below fib 0.382) instead of the limit
+CONFL = False  # --confl (test 44): limit at the BoS (key) level or a weekly S/R cluster inside fib 0.618-0.796 (the
+# first one price reaches); no such level -> no trade
 REANCHOR = False  # --reanchor (test 42): a new extreme beyond fib 0 before the fill moves fib 0 there (limit at ENTRY
 # of the new leg, OB dropped, expiry restarts) instead of voiding the setup
 SWEEP = False  # --sweep (test 38): a wick beyond fib 0 before the fill is a liquidity sweep, the fib stays; void only at a close beyond 0
@@ -150,10 +152,30 @@ def run(sym, tf, start, end):
             entry = min(near * dirn, gp_hi * dirn) * dirn
         else:
             entry, ob_t = gp_hi, None
+        cands = ([key] if key is not None else []) + list(clus(ready))
+        if tf == "D1" and k >= 2:  # smaller BoS levels: daily swing points (2 candles each side) since the previous
+            # same-side turn that the leg closed beyond (the trader's BoS line, e.g. NZDCAD Sep 2024)
+            ext = h if dirn == 1 else l
+            beyond = c[si:ti + 1].max() if dirn == 1 else c[si:ti + 1].min()
+            for i in range(max(turns[k - 2][1], 2), si - 1):
+                if (ext[i] == (ext[i - 2:i + 3].max() if dirn == 1 else ext[i - 2:i + 3].min())) and (beyond - ext[i]) * dirn > 0:
+                    cands.append(ext[i])
+
+        def conf_level(top_, rng_):
+            fibs = [((top_ - p) * dirn / rng_, p) for p in cands]
+            ok = [x for x in fibs if 0.6 <= x[0] <= 0.81]
+            return min(ok)[1] if ok else None
+        conf = conf_level(top, rng)
+        if CONFL:
+            if conf is None:
+                rows.append(dict(sym=sym, dir=dirn, date=str(ready.date()), result="geen confluentie"))
+                continue
+            entry = conf
+        origin_sr = any(abs(p - w1) <= 0.5 * A or abs(p - b1) <= 0.5 * A for p in list(clus(ready)) + [q for q, _ in lv.at(ready)])
         sl = w1 - dirn * SL_BUF * A
         row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(g.time.values[si])[:10],
                    top_t=str(g.time.values[ti])[:10], b1=b1, w1=w1, top=top, rng=rng, has_ob=bool(obs), ob_t=ob_t, bos=bos, shift=shift,
-                   n_ob=len(obs), entry=entry, sl=sl, entry_fib=(top - entry) * dirn / rng)
+                   n_ob=len(obs), entry=entry, sl=sl, conf=conf is not None, origin_sr=origin_sr, entry_fib=(top - entry) * dirn / rng)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
         res, touched = "verlopen", False
@@ -165,6 +187,11 @@ def run(sym, tf, start, end):
                     top = h[f] if dirn == 1 else l[f]
                     rng = (top - b1) * dirn
                     entry = top - dirn * ENTRY * rng
+                    if CONFL:
+                        entry = conf_level(top, rng)
+                        if entry is None:
+                            res = "weggelopen"
+                            break
                     last = min(f + 1 + EXPIRY * DAYS[tf], len(d))
                     row.update(top=top, rng=rng, entry=entry, has_ob=False, reanchored=True)
                     top_day = dt[f]
@@ -224,8 +251,9 @@ if __name__ == "__main__":
     ap.add_argument("--entry", type=float, default=0.618)
     ap.add_argument("--confirm", action="store_true")
     ap.add_argument("--reanchor", action="store_true")
+    ap.add_argument("--confl", action="store_true")
     a = ap.parse_args()
-    SWEEP, ENTRY, CONFIRM, REANCHOR = a.sweep, a.entry, a.confirm, a.reanchor
+    SWEEP, ENTRY, CONFIRM, REANCHOR, CONFL = a.sweep, a.entry, a.confirm, a.reanchor, a.confl
     for s in a.symbols:
         try:
             df = run(s, a.tf, a.start, a.end)

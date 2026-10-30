@@ -1322,3 +1322,20 @@ holdout is hier extra belangrijk.
 -0,07 / +0,04 / +0,10R. Poten mét een week-sweep op de top zijn over alle markten niet slechter (+0,01 / +0,20 /
 -0,01R). Wat de NZDCAD-verliezers verklaart (top in HTF-weerstand, bodem op range-support) is achteraf duidelijk, maar
 als mechanische regel over 37 markten en 20 jaar geeft het geen voorsprong.
+
+## Twee hertekende NZDCAD-trades van de trader (2026-10-30) en test 44 (vooraf vastgelegd)
+- sep-24 long (engine: okt-24 -1R): de trader neemt de poot 14 aug -> 28 aug (fib 1 0,8202, 0 0,8475) en stapt in op
+  de **retest van de BoS-lijn 0,8317 die op 0,618 ligt** (9-10 sep), SL onder 1, TP -0,2 -> +2,03R. De engine wachtte
+  op 0,66 (0,8305), miste met ±12 pips, verlegde fib 0 naar de spike van 30 sep en verloor.
+- jun-24 long: fib 1 = **monthly S/R 0,8085** ("bounce from s/r level"); de BoS (0,832) ligt boven de zone; instap
+  dieper op **0,796** (0,8202), TP -0,2 -> +3,13R.
+- Data: ICE (trader) vs onze data verschillen hier ±13 pips (BoS 0,8317 vs 0,8330).
+Regel daaruit: **instap op het niveau dat in de golden zone (0,618-0,796) samenvalt met de gebroken BoS-lijn of een
+weekly S/R**, niet blind op 0,66; geen samenvallend niveau = geen trade.
+**Test 44** (`test36.py --tf D1 --reanchor --confl`): dagpoten 2 / 4 met breuk; kandidaten = het key level, de
+kleinere dag-swingpunten (2 candles elke kant) sinds het vorige keerpunt die de poot met een slot brak, en de weekly
+S/R-clusters; het eerste dat de prijs bereikt met fib tussen 0,60 en 0,81 wordt de limiet; bij een nieuwe extreme
+vóór de instap fib 0 verleggen en opnieuw zoeken. SL 0,1 ATR voorbij de wick van fib 1, TP -0,2. `origin_sr` = fib 1
+binnen 0,5 ATR van een weekly cluster of maand/week-niveau (gerapporteerd).
+**Beslissend: `bos & hi_bias == 1`, `R_t020`, één positie per richting, 37 instrumenten**; zelfde lat (elke periode
+> 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0).
