@@ -1536,3 +1536,10 @@ wk_trig == 1) | m_flip) & ~m_block2`, `R_m` (beheer van de trader: half op -0,25
 één positie per richting, 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode
 > 0). Opmerking: de dec-17-short zelf wordt laat gezien - de zigzag bevestigt de low 1,7104 pas na 2 ATR opleving,
 toen de prijs al in de zone stond.
+
+### Uitkomst test 54: verworpen - test 53 blijft de beste
+Beslissend `R_m`: 1587 trades (76 per jaar, 1,5 per week), +0,07 / -0,04 / -0,03R (t 0,6); holdout +0,01 / +0,05 /
++0,11R. Alleen de maandniveau-flips (845 trades): -0,01 / -0,03 / -0,02R (holdout idem) -> een door de poot gebroken
+maandniveau geeft op zich geen voorsprong. De test 53-regel met de nieuwe zone (basis óf fib) en de nieuwe blokkade:
++0,11 / -0,08 / -0,03R - slechter dan test 53 (alleen fib 0,618-0,796): instappen op 0,5 in een S/R-zone kost meer
+dan het oplevert.
