@@ -1059,3 +1059,12 @@ dubbele reeksen (olie, SPX500_USD). Kosten per kant in basispunten van de prijs 
 BTC 5, ETH 6, SGD/NOK/SEK/PLN/CZK/HUF 3 (±3-10x de majors).
 Geslaagd als elke periode (2005-14, 2015-20, 2021-25) gemiddeld > 0 met PF >= 1,05 en samen t >= 2,0 op deze 31;
 daarnaast samen met de 34 van test 31 (65 instrumenten).
+
+### Uitkomst test 33: holdout positief in elke periode, lat (t >= 2) net niet gehaald
+31 nieuwe instrumenten, continuation + regel, `R_m_top_1`: 307 trades, +0,03 / +0,18 / +0,08R (PF 1,05 / 1,31 /
+1,13, t 1,0); `R_t020` +0,02 / +0,23 / +0,15R (t 1,25). Elke periode > 0 met PF >= 1,05, maar t < 2 -> niet
+geslaagd. Wel belangrijk: de regel, gekozen op de 34 oude instrumenten, blijft positief op markten die nooit getest
+zijn (ook na 3-10x hogere kosten) - geen teken van overfitting.
+Samen 65 instrumenten, continuation + regel: 724 trades (0,5 per paar per jaar), +0,10 / +0,09 / +0,11R (PF 1,16 /
+1,15 / 1,19, t 1,85) - de stabielste uitkomst tot nu toe. Continuation zonder S/R-eis: 1072 trades, +0,07 / +0,14 /
++0,10R (t 2,05, beschrijvend, niet vooraf als beslissend vastgelegd).
