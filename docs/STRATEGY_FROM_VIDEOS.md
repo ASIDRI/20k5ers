@@ -1511,3 +1511,14 @@ voorbij en mag de tegengestelde richting zodra de week-trigger (engulfing + week
 **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block`, `R_t020`, één positie per richting,
 37 instrumenten**; zelfde lat (elke periode > 0, PF >= 1,05, t >= 2,0; holdout elke periode > 0). Gerapporteerd:
 alleen de tegengestelde trades, longs / shorts apart.
+
+### Uitkomst test 53: beslissend net niet (PF 2015-20 1,01), met het beheer van de trader overal positief
+Beslissend `R_t020`: 788 trades (38 per jaar, 0,7 per week), +0,13 / +0,00 / +0,02R (PF 1,25 / 1,01 / 1,04, t 1,6)
+-> niet geslaagd; holdout +0,01 / +0,17 / +0,11R (PF 1,01 / 1,32 / 1,20). Met het beheer van de trader (`R_m`: half
+op -0,25, stop naar de oude top, rest -0,65): 37 instrumenten +0,16 / +0,03 / +0,04R (PF 1,30 / 1,06 / 1,07, t 2,1),
+holdout +0,01 / +0,22 / +0,12R (PF 1,01 / 1,42 / 1,21) - de eerste regel die met beheer in elke periode op beide
+sets positief is, maar `R_m` was niet de vooraf beslissende kolom. Longs in de setting: +0,25 / -0,01 / +0,05R;
+shorts: +0,02 / +0,07 / -0,00R. Tegengesteld na het maanddoel: 76 trades (4 per jaar), 37: +0,04 / -0,30 / +0,01R,
+holdout +0,44 / +0,44 / -0,01R.
+5ers-simulatie (start elke maand 2006-2024, +8% / +5%, -10% statisch): `R_t020` 37 per jaar, gem. +0,07R: geslaagd
+39% / 43% / 39% bij 1 / 1,5 / 2% risico (breach 57 / 54 / 60%); `R_m` 34% / 36% / 24%.
