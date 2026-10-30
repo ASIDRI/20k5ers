@@ -1374,3 +1374,11 @@ inverted hammer, dragonfly doji, spinning top, engulfing, harami, tweezers, morn
 inside up, three outside up (definities in `test36.pattern`); de extreme van het patroon (laatste 3 candles) raakt de
 zone. Instap op het slot. Verder exact test 45. **Beslissend: `hi_bias == 1`, `R_t020`**; zelfde lat. Gerapporteerd:
 per patroon.
+
+### Uitkomst test 46: verworpen
+`hi_bias == 1`, `R_t020`: 1196 trades (57 per jaar, 1,1 per week), +0,15 / -0,03 / +0,00R (PF 1,32 / 0,95 / 1,00,
+t 2,07) -> 2015-20 negatief; holdout -0,09 / +0,01 / -0,06R. Per patroon (37 instrumenten, alle periodes samen):
+engulfing +0,04 (257), hammer +0,06 (228), spinning top +0,07 (213), harami +0,07 (211), tweezers +0,25 (99),
+inverted hammer -0,05 (87), three white soldiers +0,13 (57), morning star +0,11 (29). Meer patronen = meer trades
+(1,1 per week), zelfde kwaliteit: de bevestigingscandle zelf geeft geen voorsprong die over periodes en markten
+standhoudt.
