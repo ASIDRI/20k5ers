@@ -1666,3 +1666,11 @@ bekeken) 815 trades, +0,21 / +0,15 / +0,16R (PF 1,28 / 1,19 / 1,21, t 2,5) - in 
 37), maar de onafhankelijke controle bevestigt de diepe instap duidelijk.
 Rendement (37 instrumenten, 1 per richting): gem. +0,09R, ±4,9R per jaar (mediaan; slechtste jaar -18R, beste +40R):
 1% risico ±5% per jaar (grootste daling -18%), 2% ±9% (-25%). 5ers: geslaagd 26% (1%) / 21% (2%).
+
+## Test 62 (vooraf vastgelegd): krappe stop onder het candlestickpatroon
+De trader: "Mss de stoploss dichter zetten wanneer je dus een goede setup hebt met candle stick pattern." Test 61
+(`test36b.py`, instap >= 0,66), maar SL 0,1 dag-ATR voorbij de extreme van het patroon (laatste 3 dag- of 4u-candles)
+i.e.p.v. voorbij de wick van fib 1 (mediaan 3,5x kleiner risico); zelfde ladder (`R_lad_t`). **Beslissend: regel van
+test 61, `R_lad_t`, één positie per richting, 37 instrumenten + holdout**; zelfde lat.
+Archer Academy / The Forex Dictionary: geen publieke handelsregels gevonden (archer.academy toont alleen het traject:
+demo, consistentie, challenge, extern kapitaal; regels in hun cursus / TradePlan).

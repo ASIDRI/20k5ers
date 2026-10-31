@@ -14,7 +14,8 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 61: test 60 + diepe instap (fib >= 0,66)": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66",
+RULES = {"test 62: test 61 met krappe stop onder het patroon": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66 & R_lad_t == R_lad_t",
+"test 61: test 60 + diepe instap (fib >= 0,66)": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66",
 "test 59: test 58 + SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == True",
          "test 58 met partner maar zonder SMT": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & smt == False",
 "test 58: swing-setup in de setting (maand + week), geen maand-S/R in de weg": "((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block",
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         except Exception:  # noqa - a column this run does not have
             continue
         print(f"\n### {lab}: {len(o)} trades ({len(o) / 21:.0f} per jaar, {len(o) / 21 / 52:.1f} per week)")
-        for col in [c for c in ("R_lad", "R_m2", "R_m", "R_t020") if c in o]:
+        for col in [c for c in ("R_lad_t", "R_lad", "R_m2", "R_m", "R_t020") if c in o]:
             out, pool = [], []
             for p, s, e in P:
                 x = o[(o.date >= s) & (o.date < e)][col].dropna()

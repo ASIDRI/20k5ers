@@ -537,7 +537,7 @@ def run(sym, tf, start, end):
             row.update(zone_near=zone[0], zone_far=zone[1], entry=entry)
         f = int(np.searchsorted(dt, ready.tz_convert(None).to_datetime64()))
         last = min(f + EXPIRY * DAYS[tf], len(d))
-        res, touched, h4fill = "verlopen", False, None
+        res, touched, h4fill, pat_ext = "verlopen", False, None, None
         top_day = g.time.values[ti] if tf == "D1" else None  # the daily candle of the leg's extreme
         while f < last:
             beyond = ((c[f] if SWEEP else (h[f] if dirn == 1 else l[f])) - top) * dirn > 0
@@ -576,11 +576,11 @@ def run(sym, tf, start, end):
                             continue
                         ups = int(((h4c[w] - h4o[w]) * dirn > 0).sum())
                         if H4SLOW and ups >= 2 and np.ptp(h4c[w]) <= 0.25 * A:
-                            h4fill, h4lab = h4c[q], "4u-vertraging"
+                            h4fill, h4lab, pat_ext = h4c[q], "4u-vertraging", ext
                             break
                         p4 = pattern(h4o, h4h, h4l, h4c, q, dirn) if H4PAT else None
                         if p4:
-                            h4fill, h4lab = h4c[q], "4u-" + p4
+                            h4fill, h4lab, pat_ext = h4c[q], "4u-" + p4, ext
                             break
                     if h4fill is not None:
                         res = "gevuld"
@@ -592,6 +592,7 @@ def run(sym, tf, start, end):
                         and (c[f] - zone[1]) * dirn > 0 and (top - c[f]) * dirn >= 0.2 * rng:
                     res = "gevuld"
                     row["pattern"] = pat
+                    pat_ext = ext3
                     break
                 f += 1
                 continue
@@ -646,6 +647,13 @@ def run(sym, tf, start, end):
         row["R_m2"] = (-1.0 if hit_sl else managed(dirn, fill, sl, top, rng, 0.2, "top", 0.65, h, l, f + 1)) - cost / risk
         row["R_m3"] = (-1.0 if hit_sl else managed(dirn, fill, sl, top, rng, 0.2, "top", 1.0, h, l, f + 1)) - cost / risk
         row["R_lad"] = (-1.0 if hit_sl else ladder(dirn, fill, sl, top, rng, h, l, f + 1)) - cost / risk
+        if pat_ext is not None:  # test 62: the stop 0.1 daily ATR beyond the candlestick pattern's extreme
+            sl_t = pat_ext - dirn * SL_BUF * A
+            if (fill - sl_t) * dirn > 0 and abs(fill - sl_t) < risk:
+                risk_t = abs(fill - sl_t)
+                hit_t = h4fill is not None and ((l[f] if dirn == 1 else h[f]) - sl_t) * dirn <= 0
+                row.update(sl_t=sl_t, R_tight=risk / risk_t,
+                           R_lad_t=(-1.0 if hit_t else ladder(dirn, fill, sl_t, top, rng, h, l, f + 1)) - cost / risk_t)
         rows.append(row)
     return pd.DataFrame(rows)
 
