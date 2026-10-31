@@ -1699,3 +1699,9 @@ Combinatie van de drie sterkste (achteraf, dus alleen vooruit te bevestigen): te
 gemiddelde + week HH/HL + 2 weken terugval: 37 401 trades (19 per jaar), +0,31 / +0,11 / +0,14R (PF 1,43 / 1,15 /
 1,19, t 2,1); holdout 321 trades, +0,36 / +0,40 / +0,25R (PF 1,51 / 1,55 / 1,35, t 2,8). Zonder de terugval-eis:
 37 +0,24 / -0,04 / +0,12R, holdout +0,27 / +0,27 / +0,10R.
+
+### Trechter van alle setups (test 62-runs, gestapeld, `R_lad`, beschrijvend)
+37 instrumenten: alle setups 991 per jaar (±19 per week, ±27 per ticker), win 44%, -0,01R gem. = -10R per jaar; in de
+setting 261 per jaar, +0,02R = +4R per jaar; setting + instap >= 0,66: 61 per jaar, +0,09R = +6R per jaar; buiten de
+setting 730 per jaar, -0,02R = -14R per jaar. Holdout: alle 821 per jaar -32R; setting 222 per jaar -1R; setting +
+diep 49 per jaar +8R; buiten de setting -31R per jaar. De filters halen geen winst weg: ze halen verliezers weg.
