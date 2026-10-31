@@ -1705,3 +1705,12 @@ gemiddelde + week HH/HL + 2 weken terugval: 37 401 trades (19 per jaar), +0,31 /
 setting 261 per jaar, +0,02R = +4R per jaar; setting + instap >= 0,66: 61 per jaar, +0,09R = +6R per jaar; buiten de
 setting 730 per jaar, -0,02R = -14R per jaar. Holdout: alle 821 per jaar -32R; setting 222 per jaar -1R; setting +
 diep 49 per jaar +8R; buiten de setting -31R per jaar. De filters halen geen winst weg: ze halen verliezers weg.
+
+### Filters één voor één af (beschrijvend, gestapeld, `R_lad`, 2026-10-31)
+Vanaf de beste versie (maand-setting + week-trigger + geen maand-S/R in de weg + instap >= 0,66): 37 61 per jaar
++6R/jaar; holdout 49 per jaar +8R/jaar. **Zonder week-trigger**: 37 90 per jaar (1,7 per week), +0,12R gem., +11R per
+jaar (+0,13 / +0,02 / +0,19R); holdout 75 per jaar, +0,10R, +8R per jaar (+0,10 / +0,19 / +0,02R) - meer trades,
+zelfde of meer totaal, op beide sets in elke periode positief. Zonder maandtrend: 37 +2R/jaar (2015-20 -0,07R), holdout
++9R/jaar. Zonder blokkade: 37 +7R, holdout +9R. Zonder diepe instap: 37 +4R, holdout -1R -> de diepe instap is de
+belangrijkste filter, daarna de maandtrend; de week-trigger kost vooral trades. Alle filters af: -10R / -32R per jaar.
+Kandidaat (achteraf, vooruit te volgen): maand-setting + geen maand-S/R in de weg + instap >= 0,66, zonder week-trigger.
