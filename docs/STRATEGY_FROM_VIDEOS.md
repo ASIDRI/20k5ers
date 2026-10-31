@@ -1674,3 +1674,9 @@ i.e.p.v. voorbij de wick van fib 1 (mediaan 3,5x kleiner risico); zelfde ladder 
 test 61, `R_lad_t`, één positie per richting, 37 instrumenten + holdout**; zelfde lat.
 Archer Academy / The Forex Dictionary: geen publieke handelsregels gevonden (archer.academy toont alleen het traject:
 demo, consistentie, challenge, extern kapitaal; regels in hun cursus / TradePlan).
+
+### Uitkomst test 62: verworpen - de krappe stop wordt te vaak geraakt
+Krappe stop (`R_lad_t`), 37 instrumenten 984 trades: +0,24 / -0,23 / -0,17R (win 11-16%, t 0,2); holdout +0,10 /
+-0,55 / -0,17R. Op dezelfde trades met de stop onder fib 1 (`R_lad`): 37 +0,16 / +0,02 / +0,16R (PF 1,23 / 1,02 /
+1,22, t 2,1), holdout +0,23 / +0,22 / +0,19R (PF 1,32 / 1,29 / 1,25, t 3,0). De ruime stop onder de structuur blijft
+beter: de prijs prikt na het patroon vaak nog onder de low van het patroon voor de bounce doorzet.
