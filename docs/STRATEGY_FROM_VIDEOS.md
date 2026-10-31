@@ -1714,3 +1714,18 @@ zelfde of meer totaal, op beide sets in elke periode positief. Zonder maandtrend
 +9R/jaar. Zonder blokkade: 37 +7R, holdout +9R. Zonder diepe instap: 37 +4R, holdout -1R -> de diepe instap is de
 belangrijkste filter, daarna de maandtrend; de week-trigger kost vooral trades. Alle filters af: -10R / -32R per jaar.
 Kandidaat (achteraf, vooruit te volgen): maand-setting + geen maand-S/R in de weg + instap >= 0,66, zonder week-trigger.
+
+### Wat onderscheidt runners en winnaars in alle ±1000 setups per jaar? (beschrijvend, beide sets)
+Volledige tabel: `docs/analyse_alle_setups_runners.txt`. Basis: gem. -0,01R (37) / -0,04R (holdout), runners (> 2R)
+±6%. Consistent op beide sets:
+- **Instapdiepte is de sterkste factor voor runners**: 0,50-0,55 -> 0,1% runners, -0,03 / -0,07R; 0,75-0,80 -> 23-25%
+  runners, +0,02 / +0,08R; dieper dan 0,8 (verlegde poot, oude zone diep in de nieuwe poot) 18-20% runners, +0,10 /
+  +0,16R.
+- Lang wachten na de top (> 30 dagen): +0,07 / +0,10R, 19-20% runners; 8-14 dagen: -0,05 / -0,06R.
+- Grote poot (bovenste kwart in % van de prijs): 11% runners (klein: 4%).
+- Poot die vóór de instap nog verlengd werd: 9-10% runners (anders 3-4%).
+- Long beter dan short; three white soldiers, (inverted) hammer, poot van 3-4 dagen en dagpatronen zwak.
+Combinaties (per jaar, 37 | holdout): diepte >= 0,70: +7R | +6R; + long: +4R | +16R; + grote poot: +3R | +10R; diepte
+>= 0,66 + grote poot + maand-setting zonder blokkade: 58/jaar +7R (+0,15 / -0,01 / +0,19) | 47/jaar +9R (+0,12 / +0,42 /
++0,10). Op de holdout bijna alles positief; op de 37 blijft 2015-20 rond nul of negatief. Geen combinatie haalt
+duidelijk meer dan ±+10R per jaar.
