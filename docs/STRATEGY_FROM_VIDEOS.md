@@ -1739,3 +1739,11 @@ high (de BoS-lijn); `bos_atr` = hoe ver het beste slot van de poot voorbij die l
 0,5 <= key_fib <= 0,9 & entry_fib >= key_fib - 0,05` (continuation, duidelijke BoS, instap bij de retest van het
 gebroken niveau), `R_lad`, één positie per richting, 37 instrumenten; holdout elke periode > 0**; zelfde lat.
 Gerapporteerd: + maand-setting, zonder retest-eis, gestapeld.
+
+### Uitkomst test 63: verworpen (beslissende regel), maand-setting erbij in bijna alle periodes positief
+Beslissend (continuation + BoS >= 0,5 ATR + retest van het BoS-niveau), `R_lad`: 37 2166 trades (103 per jaar, 2 per
+week), +0,03 / -0,01 / +0,09R (t 0,8); holdout 1748 trades, +0,08 / -0,10 / -0,03R. Met maand-setting en geen
+blokkade: 37 839 trades (40 per jaar), +0,04 / +0,13 / +0,10R (PF 1,06 / 1,20 / 1,15, t 1,3); holdout 700 trades,
++0,19 / +0,10 / -0,01R. Continuation met duidelijke BoS (alle dieptes) vs zonder: 37 -0,01 / -0,00 / -0,01R tegen
+-0,01 / -0,01 / -0,03R; holdout -0,01 / -0,03 / -0,05R tegen -0,06 / -0,09 / -0,04R - continuation met een duidelijke
+BoS is consequent iets beter, maar op zich niet winstgevend; de retest van het BoS-niveau voegt weinig toe.
