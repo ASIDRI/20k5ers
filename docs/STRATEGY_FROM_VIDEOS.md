@@ -1655,3 +1655,14 @@ zodra de zone net geraakt wordt (mediaan fib 0,50); de trader stapt dieper in (0
 `((ms_trend == 1) | (mt_done == -1)) & wk_trig == 1 & ~m_block & entry_fib >= 0.66`, `R_lad`, één positie per richting;
 geslaagd als op de 37 elke periode > 0 met PF >= 1,05 en t >= 2,0 én op de 29 holdout-exoten (nog niet bekeken) elke
 periode > 0.** De drempel 0,66 komt van de trader (zijn instap); de 37 zijn al gezien, dus de holdout beslist.
+
+### Uitkomst test 60 en 61
+Test 60 (alle instapdieptes, `R_lad`): 3054 trades (2,8 per week), +0,04 / -0,02 / -0,04R (t 0,25) -> verworpen;
+holdout +0,03 / +0,05 / -0,05R.
+**Test 61 (instap >= fib 0,66)**: 37 instrumenten 1042 trades (50 per jaar, 1 per week), +0,14 / -0,03 / +0,12R (PF
+1,20 / 0,96 / 1,16, t 1,6), win ±30% -> lat op de 37 niet gehaald (2015-20 net negatief); **holdout (vooraf niet
+bekeken) 815 trades, +0,21 / +0,15 / +0,16R (PF 1,28 / 1,19 / 1,21, t 2,5) - in elke periode positief**. Gestapeld:
+37 +0,13 / +0,01 / +0,09R (t 1,8), holdout +0,13 / +0,19 / +0,11R (t 2,3). Formeel niet geslaagd (één periode op de
+37), maar de onafhankelijke controle bevestigt de diepe instap duidelijk.
+Rendement (37 instrumenten, 1 per richting): gem. +0,09R, ±4,9R per jaar (mediaan; slechtste jaar -18R, beste +40R):
+1% risico ±5% per jaar (grootste daling -18%), 2% ±9% (-25%). 5ers: geslaagd 26% (1%) / 21% (2%).
