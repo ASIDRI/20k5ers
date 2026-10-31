@@ -1729,3 +1729,13 @@ Combinaties (per jaar, 37 | holdout): diepte >= 0,70: +7R | +6R; + long: +4R | +
 >= 0,66 + grote poot + maand-setting zonder blokkade: 58/jaar +7R (+0,15 / -0,01 / +0,19) | 47/jaar +9R (+0,12 / +0,42 /
 +0,10). Op de holdout bijna alles positief; op de 37 blijft 2015-20 rond nul of negatief. Geen combinatie haalt
 duidelijk meer dan ±+10R per jaar.
+
+## Test 63 (vooraf vastgelegd): continuation met een duidelijke dag-BoS en de retest van het BoS-niveau
+De trader: "Mss toch meer met s/r levels. Duidelijke bos constant op daily, zeker voor continuation setups. Daar op
+focussen." Nieuwe kenmerken in `test36b.py` (swing-setup van test 60/61): `hl` = de start van de poot is een hogere low
+(lagere high bij short) dan de vorige swing aan die kant (continuation: HL + HH); `bos` = slot voorbij de vorige swing
+high (de BoS-lijn); `bos_atr` = hoe ver het beste slot van de poot voorbij die lijn kwam, in ATR (duidelijke breuk);
+`key_fib` = waar de gebroken BoS-lijn in de fib van de poot ligt (S/R-flip). **Beslissend: `hl & bos & bos_atr >= 0,5 &
+0,5 <= key_fib <= 0,9 & entry_fib >= key_fib - 0,05` (continuation, duidelijke BoS, instap bij de retest van het
+gebroken niveau), `R_lad`, één positie per richting, 37 instrumenten; holdout elke periode > 0**; zelfde lat.
+Gerapporteerd: + maand-setting, zonder retest-eis, gestapeld.

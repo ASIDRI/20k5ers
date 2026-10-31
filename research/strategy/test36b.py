@@ -473,6 +473,10 @@ def run(sym, tf, start, end):
             continue
         key = turns[k - 2][2] if k >= 2 else None  # previous same-side turn: the key level
         bos = key is not None and bool(((gc[si:ti + 1] - key) * dirn > 0).any())
+        # test 63: continuation = the start is a higher low (lower high for a short) than the previous swing on that
+        # side; bos_atr = how far the leg's best close went beyond the broken key level, in ATR (a clear BoS)
+        hl = k >= 3 and (p_start - turns[k - 3][2]) * dirn > 0
+        bos_atr = float(((gc[si:ti + 1] - key) * dirn).max() / A) if key is not None else np.nan
         shift = bos and k >= 4 and (key - turns[k - 4][2]) * dirn < 0
         gp_hi, gp_lo = top - dirn * ENTRY * rng, top - dirn * 0.786 * rng  # near / far edge of the golden pocket
         # daily candles of the leg: from the start candle to the end of the extreme candle
@@ -516,7 +520,7 @@ def run(sym, tf, start, end):
             entry = conf
         origin_sr = any(abs(p - w1) <= 0.5 * A or abs(p - b1) <= 0.5 * A for p in list(clus(ready)) + [q for q, _ in lv.at(ready)])
         sl = w1 - dirn * SL_BUF * A
-        row = dict(sym=sym, dir=dirn, date=str(ready.date()), start_t=str(g.time.values[si])[:10],
+        row = dict(sym=sym, dir=dirn, date=str(ready.date()), hl=hl, bos_atr=bos_atr, key=key, start_t=str(g.time.values[si])[:10],
                    top_t=str(g.time.values[ti])[:10], b1=b1, w1=w1, top=top, rng=rng, has_ob=bool(obs), ob_t=ob_t, bos=bos, shift=shift,
                    n_ob=len(obs), entry=entry, sl=sl, conf=conf is not None, origin_sr=origin_sr, entry_fib=(top - entry) * dirn / rng)
         zone = None
@@ -619,6 +623,7 @@ def run(sym, tf, start, end):
         ts = pd.Timestamp(dt[f]).tz_localize("UTC")
         lo_, hi_ = sorted([b1, fill])
         cost = cost_price(sym, fill)
+        row.update(key_fib=(top - key) * dirn / rng if key is not None else np.nan)  # where the BoS level sits in the fib
         row.update(result="gevuld", fill=str(ts.date()), entry=fill, entry_fib=(top - fill) * dirn / rng, R_cost=cost / risk,
                    hi_struct=trend_at(st, ts) * dirn, htf_sup=any(lo_ <= p <= hi_ for p, _ in lv.at(ts)),
                    m_ma=lv.trend(ts, "MN") * dirn, hi_bias=bias_at(bb, ts) * dirn, mn_bias=bias_at(mb, ts) * dirn, ms_trend=bias_at(ms, ts) * dirn, wk_trig=bias_at(wt, ts) * dirn, mt_done=bias_at(mr, ts) * dirn, vv_call=int(vv[f]) * dirn, smt=smt_flag(sym, dirn, g.time.values[si], top_day if top_day is not None else g.time.values[ti], dt[f]), vv_fast=int(vvf[f]) * dirn,
