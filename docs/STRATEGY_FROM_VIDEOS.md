@@ -1680,3 +1680,22 @@ Krappe stop (`R_lad_t`), 37 instrumenten 984 trades: +0,24 / -0,23 / -0,17R (win
 -0,55 / -0,17R. Op dezelfde trades met de stop onder fib 1 (`R_lad`): 37 +0,16 / +0,02 / +0,16R (PF 1,23 / 1,02 /
 1,22, t 2,1), holdout +0,23 / +0,22 / +0,19R (PF 1,32 / 1,29 / 1,25, t 3,0). De ruime stop onder de structuur blijft
 beter: de prijs prikt na het patroon vaak nog onder de low van het patroon voor de bounce doorzet.
+
+## Analyse: waarom werken de goede en de verliezers niet? (test 61-trades, beschrijvend, 2026-10-31)
+Per kenmerk win-rate en gem. `R_lad`, op de 37 instrumenten én de holdout (alleen wat op beide sets dezelfde kant op
+wijst telt; alles hier is achteraf bekeken). Basis: 37 1040 trades +0,09R win 30%; holdout 812 trades +0,18R win 32%.
+Consistent op beide sets:
+- **Long beter dan short**: long +0,15 / +0,34R, short +0,04 / -0,01R.
+- **Maandtrend (slot vs 10-maandsgemiddelde) mee**: +0,12 / +0,23R; tegen -0,03 / -0,17R.
+- **Weekstructuur (HH/HL) mee**: +0,14 / +0,20R; tegen -0,10 / +0,11R.
+- **Korte, impulsieve poot** (<= 3 dagen): +0,13 / +0,26R; poot van 8-15 dagen -0,01 / -0,37R.
+- **Prijs daalde 2 weken na elkaar vóór de instap (call tegen = terugval)**: +0,14 / +0,36R; call mee +0,05 / +0,03R.
+- Dieper is beter: instap 0,66-0,70 +0,01 / +0,03R; 0,70-0,80 +0,06 tot +0,13R.
+- Weekniveau in de zone licht beter (+0,11 / +0,28R vs +0,08 / +0,14R). OB (zelden): negatief op beide.
+- Patronen: hammer +0,19 / +0,16R en engulfing +0,11 / +0,09R consistent positief; three white soldiers -0,10 /
+  -0,19R consistent negatief; harami, inverted hammer, tweezers wisselend.
+Niet consistent: dag van de week, dag-BoS, fib 1 op HTF-S/R, maandniveau achter de instap, maand-BoS.
+Combinatie van de drie sterkste (achteraf, dus alleen vooruit te bevestigen): test 61 + maandslot boven 10-maands-
+gemiddelde + week HH/HL + 2 weken terugval: 37 401 trades (19 per jaar), +0,31 / +0,11 / +0,14R (PF 1,43 / 1,15 /
+1,19, t 2,1); holdout 321 trades, +0,36 / +0,40 / +0,25R (PF 1,51 / 1,55 / 1,35, t 2,8). Zonder de terugval-eis:
+37 +0,24 / -0,04 / +0,12R, holdout +0,27 / +0,27 / +0,10R.

@@ -1,0 +1,26 @@
+basis: 37 instr 1040 trades gem +0.09R win 30% | holdout 812 trades gem +0.18R win 32%
+
+## richting
+  long                   37: n 491 +0.15R win  31% | holdout: n 437 +0.34R win  35%
+  short                  37: n 549 +0.04R win  28% | holdout: n 375 -0.01R win  27%
+
+## context
+  maandtrend mee         37: n 942 +0.10R win  29% | holdout: n 718 +0.17R win  31%
+  na maanddoel (tegen)   37: n  98 +0.04R win  32% | holdout: n  94 +0.27R win  39%
+
+## patroon
+  4u                     37: n 930 +0.07R win  29% | holdout: n 799 +0.18R win  32%
+  dag                    37: n 110 +0.24R win  31% | holdout: n  13 -0.04R win  31%
+
+## patroonnaam
+  engulfing              37: n 151 +0.11R win  31% | holdout: n 111 +0.09R win  29%
+  hammer                 37: n 185 +0.19R win  30% | holdout: n 140 +0.16R win  27%
+  harami                 37: n 172 -0.08R win  26% | holdout: n 115 +0.23R win  34%
+  inverted hammer        37: n  95 +0.40R win  35% | holdout: n  84 -0.15R win  21%
+  morning star           37: n  15 +0.18R win  33% | holdout: n  13 +0.22R win  38%
+  spinning top           37: n 177 +0.09R win  30% | holdout: n 137 +0.24R win  34%
+  three white soldiers   37: n  45 -0.10R win  29% | holdout: n  22 -0.19R win  32%
+  tweezers               37: n  66 -0.03R win  29% | holdout: n  51 +0.41R win  37%
+  vertraging             37: n 115 +0.12R win  31% | holdout: n 123 +0.39R win  41%
+
+## diepte
