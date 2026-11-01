@@ -508,3 +508,33 @@ bearish structuur, onder de week-S/R 1,11622. Inzoomen op de dag.
 2. **Ongeldig bij een dagslot boven de fib-start (swing high)**: dan geen trade meer op deze fib.
 3. Geen patroon = geen trade, ook niet op het tweede niveau (de uitzondering "tik van de fib-start" uit setup 8 zou hier
    ook niet gelden: het dag-S/R ligt ver onder de fib-start).
+
+---
+
+## Setup 10 - EURUSD maart 2020: echte of mislukte bullish week-BoS? (context)
+Grafieken: `docs/setups_trader/10_eurusd_2020_short/01.png`, `02.png`.
+
+### 1. Wat er gebeurt
+- **Wekelijkse BoS-lijn 1,11755**: body-high van de laatste week-swing high (weken van 23/30 december 2019, top 1,1239).
+- **Week van 2 maart 2020: slot 1,12839** boven die lijn (open 1,1045, top 1,1355 door maand-S/R 2 1,13125).
+- **Week van 9 maart: bearish engulfing** (open 1,1351, top 1,1496 = exact aan week-S/R 1,1500, slot 1,1105 - terug
+  onder de BoS-lijn; omvat de bullish body van de week ervoor). Week van 16 maart: slot 1,0696.
+
+### 2. De vijf criteria van setup 5 toegepast (ATR 14 weken ± 140 pips)
+| criterium | waarde | oordeel |
+|---|---|---|
+| 1. grote swing? | de top van december liep 460 pips (± 4 ATR) omlaag tot 1,0778 | **ja**, echte swing high |
+| 2. kwaliteit van de breuk | slot 107 pips (0,77 ATR) boven de lijn, body 240 pips | **ja** |
+| 3. acceptatie | de week erna sluit terug onder de lijn, met een bearish engulfing | **nee -> mislukte BoS** |
+| 4. chaos-filter (efficiëntie 10 weken) | 0,12 in de breukweek (twee weken V-vorm, +5%) | **nee** (< 0,2) |
+| 5. hogere tijdframe | maandstructuur bearish; slot net onder maand-S/R 2 (1,13125), daarna lont tot week-S/R 1,1500 | **nee** |
+
+**Wat de bot had gezegd:**
+- Na het slot van de week van 2 maart: **"BoS onbevestigd"** - criteria 1 en 2 kloppen, maar 4 en 5 niet. Nog geen
+  bullish structuur; geen longs, de shorts nog niet afschrijven; één week wachten op acceptatie.
+- Na het slot van de week van 9 maart: **"mislukte BoS"** -> de bearish weekstructuur blijft, en de bearish engulfing
+  aan week-S/R 1,1500 / boven maand-S/R 2 is meteen een **week-trigger voor shorts**.
+De prijs: week van 16 maart slot 1,0696, onder maand-S/R 3.
+
+Kanttekening: criterium 3 vraagt per definitie een week geduld; in die week is de status "onbeslist". Dat moet de
+bot zo behandelen: geen nieuwe trades in de richting van de nieuwe BoS tot hij bevestigd is.
