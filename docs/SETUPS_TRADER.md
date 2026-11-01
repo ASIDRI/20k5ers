@@ -270,14 +270,14 @@ Grafieken: `docs/setups_trader/05_eurusd_2019_short/01.png` ... `04.png`.
   bearish engulfing** (1,1361 -> 1,1226), terug onder 1,13239 en onder maand-S/R 2.
 
 ### 3. Vraag van de trader: hoe ziet een bot dat deze kleine BoS geen trendwissel is?
-Gemeten op onze weekdata (ATR 14 weken ± 120 pips):
+Gemeten op onze weekdata (ATR 14 weken: ± 120 pips in juni 2019, ± 185 pips in mei 2018):
 
 | kenmerk | deze "BoS" (juni 2019) | echte BoS (setup 1, mei 2018) |
 |---|---|---|
-| grootte van de swing waaruit de top komt | opwaartse poot 1,1184 -> 1,1324 = 140 pips = **1,1 ATR** | de top van december 2017 kwam na een poot van > 3 ATR |
+| grootte van de swing waaruit de top komt | opwaartse poot 1,1184 -> 1,1324 = 140 pips = **1,1 ATR** | vanaf de swing low van december 2017 (1,1718) liep de poot tot 1,2556 = 840 pips = **4,5 ATR** |
 | hoe ver het slot voorbij het niveau | 1,1333 vs 1,1324 = **9 pips = 0,07 ATR** | week van 21 mei sloot 100 pips (0,6 ATR) onder 1,1750 |
-| acceptatie | **volgende week sluit er weer onder** | bleef eronder |
-| efficiëntie van de beweging (netto / som van weekbewegingen, 10 weken) | **0,01 - 0,18** (zijwaarts) | 0,3 - 0,6 (trend) |
+| acceptatie | **volgende week sluit er weer onder** | **bleef eronder** |
+| efficiëntie van de beweging (netto / som van weekbewegingen, 10 weken) | **0,01 - 0,18** (zijwaarts) | **0,70 - 0,85** (trend) |
 | hogere tijdframe | breuk loopt recht in maand-S/R 2 (van onder, nu weerstand) en week-S/R 1,1393 | breuk weg van de week-S/R, maandtrend nog niet tegen |
 
 Voorstel om dit objectief te maken (te testen, nog niet verwerkt):
