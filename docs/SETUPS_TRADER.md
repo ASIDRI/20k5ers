@@ -954,3 +954,9 @@ week-swing low telt pas als de prijs daarna boven de vorige swing high kwam (hig
 lower low. Gevolg: de bearish BoS van maart 2021 verdwijnt (volgende bearish BoS oktober 2021), maar de bullish BoS van
 juni 2020 schuift naar juli 2020 (de top van 30 maart 2020 maakte geen lower low; lijn wordt de top van 9 maart,
 1,1351) -> setup 11 en 13 worden gemist. Optie staat **uit** tot de trader uitlegt waarom juni 2020 wel een BoS is.
+Aanvulling van de trader (juni 2020): "ik tel dit omdat het eigenlijk wel van een swing low komt, alleen zijn het equal
+lows (16 en 23 maart 2020: 1,0638 / 1,0636) ... de markt was duidelijk akkoord". Regel: een week-swing telt ook als de
+swing ervóór een equal high / equal low was (twee weken op rij binnen 0,1 week-ATR, `EQ_TOL`). Rond januari 2021 is er
+geen equal high (1,2310 / 1,2350, 39 pips). `STRUCT_SWINGS` staat nu **aan**: bullish BoS breukweek 1 juni 2020 blijft,
+de bearish BoS van maart 2021 verdwijnt (volgende bearish BoS oktober 2021), de shorts van april en juni 2021 vallen weg.
+Replicatie: 8/9 trades (setup 14 nog niet), 4/4 no-trades.

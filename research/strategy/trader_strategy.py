@@ -54,7 +54,8 @@ from test2 import cost_price  # noqa: E402
 import sr_levels as sr_mod  # noqa: E402  (the monthly S/R method of lesson 1)
 
 W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.0, 0.05
-STRUCT_SWINGS = False  # a weekly swing counts for the structure only after the move from it made a BoS (setup 14)
+STRUCT_SWINGS = True  # a weekly swing counts for the structure only after the move from it made a BoS (setup 14)
+EQ_TOL = 0.1  # weekly ATR: two weekly extremes this close are equal highs / lows
 BREAK_WICK = True  # the BoS close must also be beyond the swing wick (replaces the efficiency filter, 2026-11-01)
 WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the trader's FOREXCOM charts
 D_REV = 1.5
@@ -128,7 +129,12 @@ def weekly_structure(o, h, l, c):
                 last[kind] = k_
             else:  # the trader (setup 14): a swing low counts only once the move from it made a higher high (a BoS)
                 ref = prev[-kind]  # the previous opposite swing; a low needs a high above it, a high a low below it
-                if ref is None:
+                # ... unless that previous swing was an equal high / equal low (two weeks in a row at the same
+                # extreme): a strong turn (2020: equal lows 16 / 23 March, so the high of 30 March counts)
+                eq = ref is not None and any(
+                    0 <= j < len(c) and j != ref and abs((l[j] - l[ref]) if kind == 1 else (h[j] - h[ref])) <= EQ_TOL * a[ref]
+                    for j in (ref - 1, ref + 1))
+                if ref is None or eq:
                     last[kind] = k_
                 else:
                     waiting.append((k_, kind, h[ref] if kind == -1 else l[ref]))
