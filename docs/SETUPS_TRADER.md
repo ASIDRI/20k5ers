@@ -787,3 +787,13 @@ engulfing van 26 juni 2018 liggen, hoewel 25 juni boven het niveau sloot en 26 j
 setup 11 nam hij de engulfing van 22 juni 2020, hoewel 18 en 19 juni ónder 1,12121 sloten (ook een reclaim). Het
 verschil zit in welk niveau als dag-S/R telt (1,1704 / 1,1716 in 2018 niet, 1,12121 in 2020 wel); tellen van
 lont-reacties (3/5 pip, op draaipunten of alle kaarsen) scheidt die niet. Vraag aan de trader.
+
+### Engine: de week-BoS als trigger voor de eerste trade (setup 11)
+Nieuw (`BOS_TRIGGER`): bij elke bevestigde week-BoS start de engine meteen een eerste-trade-setup, naast de gewone
+week-triggers: fib 1 = de hoogste body rond de laatste dag-swing die bevestigd was vóór de breukweek (het begin van de
+impuls; juni 2020: 25 mei, 1,08969), fib 0 = het extreem sindsdien (schuift mee), niveaus = dag-S/R tussen de BoS-lijn
+en het slot van de BoS-week (juni 2020: 1,11194 - 1,12916); verder dezelfde instapregels. Vervalt bij een slot voorbij
+fib 1 of na de eerste trade.
+Resultaat juni 2020: **long 17 juni 2020** (hammer aan dag-S/R 1,12313, instap 1,12436, stop 1,09940 = boven de
+0,796) -> T1 gehaald, +1,75R. De trader: 22 juni (engulfing aan 1,12121, instap 1,12609, stop 1,11088). Zelfde trade,
+3 handelsdagen eerder; de engine-stop ligt verder (0,796-regel), dus minder R. Replicatie 2018-2020 blijft 6/6.

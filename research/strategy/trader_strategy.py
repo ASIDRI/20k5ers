@@ -65,6 +65,7 @@ SL_BUF, DEEP, BE = 0.1, 0.66, 0.1
 BEST_ONLY = False  # only the strongest daily S/R level inside the fib zone
 NO_CLOSE_ABOVE = True  # no daily close above the level during the test (setup 1, 26 Jun 2018)
 REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in the last REJ_BACK days (setups 1-4, 6, 7)
+BOS_TRIGGER = True  # the confirmed weekly BoS arms the first trade itself (setup 11)
 FLIP_BAND = 0.35  # daily ATR around the weekly break line: the levels of the first trade after a weekly BoS (setup 1)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
 T1, T2, T3 = 0.2, 0.58, 1.0  # T3: the trader closes everything at fib -1 (setup 11)
@@ -291,6 +292,68 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                 best = (k, s, line)
         return best
 
+    def try_entry(k, fd, trig_label, band=None):
+        """Entry check at the close of day k for the fib fd; band = (line, close) of the weekly BoS for the first
+        trade after it (setup 11), else the fib zone (and the weekly break line of setup 1). Returns the trade."""
+        nonlocal last_exit_t
+        f0, f1 = fd["f0"], fd["f1"]
+        rng = f1 - f0
+        if k <= fd["bos"] or rng <= 0:
+            return None
+        tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
+        lv = sr_levels(o, h, l, c, SR_TOL * a[k - 1], k)
+        if band is not None:  # first trade after a weekly BoS: daily S/R between the BoS line and the BoS-week close
+            blo, bhi = min(band), max(band)
+            inzone = [(p, n) for p, n in lv if blo - tol <= p <= bhi + tol and f0 < p < f1]
+        else:
+            zlo, zhi = f0 + ZONE[0] * rng, f0 + ZONE[1] * rng
+            inzone = [(p, n) for p, n in lv if zlo - tol <= p <= zhi + tol]
+            if fd.get("flip") and f0 <= fd["flip"] <= f1:  # first trigger after a weekly BoS: only the levels that
+                fl = fd["flip"]  # belong to the break (setup 1); a break line outside the fib does not restrict
+                inzone = [(fl, 0)] + [(p, n) for p, n in inzone if abs(p - fl) <= FLIP_BAND * a[k - 1]]
+        for p, n in (inzone[:1] if BEST_ONLY else inzone):
+            if h[k] < p - tol or c[k] >= p:
+                continue
+            pat = pattern(o, h, l, c, k, p, tol, ENG_TOL * a[k - 1])
+            if not pat:
+                continue
+            back = range(max(fd["bos"] + 1, k - REJ_BACK + 1), k + 1)
+            rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
+            if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
+                continue
+            if NO_CLOSE_ABOVE and any(c[i] > p + tol for i in back):  # the level must hold: bodies stay below it
+                continue
+            entry = c[k]
+            depth = (entry - f0) / rng
+            if depth < MIN_DEPTH:
+                continue
+            sl = (fd["hi"] if depth >= DEEP else max(f0 + 0.796 * rng, h[k], h[k - 1])) + SL_BUF * a[k]
+            if sl <= entry:
+                continue
+            mres = manage(h, l, k, entry, sl, f0, rng, BE * a[k])
+            risk = sl - entry
+            cost = cost_price(sym, abs(entry))
+            when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
+            if dirn == 1:  # the long runs on negated prices: name the pattern as it looks on the real chart
+                pat = {"shooting star / doji": "hammer / doji", "bearish engulfing": "bullish engulfing",
+                       "tweezer / bearish na test": "tweezer / bullish na test"}[pat]
+            trades.append(dict(
+                sym=sym, dir=dirn, trigger_week=trig_label, bos=day_label(dt[fd["bos"]]),
+                fib1=f1 * sgn, fib0=f0 * sgn, level=p * sgn, entry_day=day_label(dt[k]),
+                entry=entry * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
+                depth=round(depth, 2), pattern=pat, t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]),
+                exit_day=when(mres["exit_i"]), open=mres["open"],
+                R=round((mres["pnl"] - cost) / risk, 2), R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[k],
+                m_sr_next=next((q for q in sorted(mlev, key=lambda q: -q * sgn) if q * sgn < entry), None),
+                m_sr_before_t2=any(f0 - T2 * rng < q * sgn < entry for q in mlev)))
+            log.append((day_label(dt[k]), f"TRADE {pat} aan dag-S/R {p * sgn:.5f} ({n} reacties), instap {entry * sgn:.5f}, "
+                        f"stop {sl * sgn:.5f}, diepte {depth:.2f} -> R {trades[-1]['R']:+.2f}", dirn))
+            last_exit_t = dt[mres["exit_i"]] if mres["exit_i"] is not None else np.datetime64("2100-01-01")
+            return trades[-1]
+        return None
+
+    bos_weeks = {i1: (i0, line) for i0, i1, dd, line in events if dd == -1}  # bearish (in this view) BoS confirmations
+    fibB, done_bos = None, set()
     for k in range(k0, min(k1, len(c))):
         if m is not None and (next_refresh is None or pd.Timestamp(ddone[k]) >= next_refresh):
             mlev = monthly_levels(m, mdone, ddone[k])  # redrawn every MN_REFRESH months (1 Jan / 1 Jul)
@@ -305,8 +368,30 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         if state[wi] != -1:
             if armed is not None:
                 log.append((day_label(dt[k]), "structuur niet meer bearish: trigger vervalt", dirn))
-            armed, fib = None, None
+            armed, fib, fibB = None, None, None
             continue
+        if BOS_TRIGGER and wi in bos_weeks and wi not in done_bos:  # setup 11: the weekly BoS itself is the trigger
+            done_bos.add(wi)
+            i0, line = bos_weeks[wi]
+            kb0 = int(np.searchsorted(dt, wstart[i0], "left"))  # first day of the break week
+            hs = [sw_ for sw_, kind, cf in dsw if kind == 1 and cf < kb0]  # the swing the impulse started from
+            if hs and dt[k] > last_exit_t and not any(
+                    t["dir"] == dirn and t["entry_t"] >= wstart[run_start[wi]] for t in trades):
+                sh = hs[-1]
+                f1b = float(np.max(np.maximum(o[sh - 1:sh + 2], c[sh - 1:sh + 2])))  # highest body around the swing
+                fibB = dict(bos=k, f1=f1b, hi=float(h[sh]), f0=float(np.min(l[sh:k + 1])), band=(line, wc[i0]))
+                log.append((day_label(dt[k]), f"week-BoS als trigger (breukweek {week_label(wstart[i0])}): fib 1 = body "
+                            f"vorige dag-swing {f1b * sgn:.5f}, niveaus tussen BoS-lijn {line * sgn:.5f} en slot "
+                            f"BoS-week {wc[i0] * sgn:.5f}", dirn))
+        if fibB is not None:
+            if c[k] > fibB["f1"]:
+                log.append((day_label(dt[k]), "BoS-trigger: slot voorbij fib 1, vervalt", dirn))
+                fibB = None
+            elif try_entry(k, fibB, "week-BoS " + week_label(wstart[wi]), band=fibB["band"]):
+                armed, fib, fibB = None, None, None
+                continue
+            else:
+                fibB["f0"] = min(fibB["f0"], l[k])
         if armed is None:
             cand = [j for j, kind in trig if run_start[wi] <= j <= wi and wstart[j] > last_exit_t]
             if cand:
@@ -339,58 +424,10 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             log.append((day_label(dt[k]), f"slot boven fib 1 ({fib['f1'] * sgn:.5f}): fib vervalt", dirn))
             fib = None
             continue
-        f0, f1 = fib["f0"], fib["f1"]
-        rng = f1 - f0
-        if k > fib["bos"] and rng > 0:
-            tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
-            zlo, zhi = f0 + ZONE[0] * rng, f0 + ZONE[1] * rng
-            inzone = [(p, n) for p, n in sr_levels(o, h, l, c, SR_TOL * a[k - 1], k) if zlo - tol <= p <= zhi + tol]
-            if fib.get("flip") and f0 <= fib["flip"] <= f1:  # first trade after a weekly BoS: only the levels that
-                fl = fib["flip"]  # belong to the break (setup 1); a break line outside the fib does not restrict
-                inzone = [(fl, 0)] + [(p, n) for p, n in inzone if abs(p - fl) <= FLIP_BAND * a[k - 1]]
-            best = inzone[:1] if BEST_ONLY else inzone  # the trader takes the one clear level of the fib
-            for p, n in best:
-                if h[k] < p - tol or c[k] >= p:
-                    continue
-                pat = pattern(o, h, l, c, k, p, tol, ENG_TOL * a[k - 1])
-                if not pat:
-                    continue
-                back = range(max(fib["bos"] + 1, k - REJ_BACK + 1), k + 1)
-                rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
-                if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
-                    continue
-                if NO_CLOSE_ABOVE and any(c[i] > p + tol for i in back):  # the level must hold: bodies stay below it
-                    continue
-                entry = c[k]
-                depth = (entry - f0) / rng
-                if depth < MIN_DEPTH:
-                    continue
-                sl = (fib["hi"] if depth >= DEEP else max(f0 + 0.796 * rng, h[k], h[k - 1])) + SL_BUF * a[k]
-                if sl <= entry:
-                    continue
-                mres = manage(h, l, k, entry, sl, f0, rng, BE * a[k])
-                risk = sl - entry
-                cost = cost_price(sym, abs(entry))
-                when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
-                if dirn == 1:  # the long runs on negated prices: name the pattern as it looks on the real chart
-                    pat = {"shooting star / doji": "hammer / doji", "bearish engulfing": "bullish engulfing",
-                           "tweezer / bearish na test": "tweezer / bullish na test"}[pat]
-                trades.append(dict(
-                    sym=sym, dir=dirn, trigger_week=week_label(wstart[armed]), bos=day_label(dt[fib["bos"]]),
-                    fib1=f1 * sgn, fib0=f0 * sgn, level=p * sgn, entry_day=day_label(dt[k]),
-                    entry=entry * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
-                    depth=round(depth, 2), pattern=pat, t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]),
-                    exit_day=when(mres["exit_i"]), open=mres["open"],
-                    R=round((mres["pnl"] - cost) / risk, 2), R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[k],
-                    m_sr_next=next((q for q in sorted(mlev, key=lambda q: -q * sgn) if q * sgn < entry), None),
-                    m_sr_before_t2=any(f0 - T2 * rng < q * sgn < entry for q in mlev)))
-                log.append((day_label(dt[k]), f"TRADE {pat} aan dag-S/R {p * sgn:.5f} ({n} reacties), instap {entry * sgn:.5f}, "
-                            f"stop {sl * sgn:.5f}, diepte {depth:.2f} -> R {trades[-1]['R']:+.2f}", dirn))
-                last_exit_t = dt[mres["exit_i"]] if mres["exit_i"] is not None else np.datetime64("2100-01-01")
-                armed, fib = None, None
-                break
-            if fib is None:
-                continue
+        tr = try_entry(k, fib, week_label(wstart[armed]))
+        if tr:
+            armed, fib, fibB = None, None, None
+            continue
         fib["f0"] = min(fib["f0"], l[k])
     return trades
 
