@@ -18,8 +18,9 @@ Beheer van de trader: **T1 = -0,2**, daarna stop in winst; **T2 = -0,6** (bij ee
 | 2 | EURUSD | short | 16 okt 2018 | 0,41 (lont 0,55) | ja | ja (-0,6) | +1,8 | +2,9 | +2,4R |
 | 3 | EURUSD | short | 1 feb 2019 | 0,66 | ja | nee, stop in winst | +1,8 | - | ± +1,5R |
 | 4 | EURUSD | short | 2 mei 2019 | 0,31 (lont 0,796) | nee | nee | - | - | **-1R** |
+| 5 | EURUSD | short | - (juli 2019) | geen pullback naar het dag-S/R | - | - | - | - | geen trade |
 
-**Win rate: 3 / 4 (75%) T1 geraakt; T2 2 / 4.** Totaal bij 50% op T1: ± +6,0R over 4 trades (± +1,5R gem.).
+**Win rate: 3 / 4 (75%) T1 geraakt; T2 2 / 4** (setup 5: geen trade). Totaal bij 50% op T1: ± +6,0R over 4 trades (± +1,5R gem.).
 
 ---
 
@@ -251,8 +252,8 @@ Mogelijke oorzaken (verschil met setup 1-3; nog geen regel, eerst meer setups):
 
 ---
 
-## Setup 5 - EURUSD short, juli 2019 (context; dag-instap volgt)
-Grafieken: `docs/setups_trader/05_eurusd_2019_short/01.png` ... `04.png`.
+## Setup 5 - EURUSD short, juli 2019 - geen trade (geen pullback naar het dag-S/R-niveau)
+Grafieken: `docs/setups_trader/05_eurusd_2019_short/01.png` ... `07.png`.
 
 ### 1. Week onder maand-S/R 2 -> terug naar de maandgrafiek (01.png, 02.png)
 - De week zit nu **onder maand-S/R 2 (1,13125)**. Dan opnieuw naar de maandgrafiek kijken of er lager een S/R-niveau
@@ -291,5 +292,25 @@ Voorstel om dit objectief te maken (te testen, nog niet verwerkt):
    van de range (hier week-S/R 1,1393 boven, swing low 1,1107 onder) en de week-kaarspatronen aan die randen.
 5. **Hogere tijdframe eerst**: een bullish week-BoS tegen een bearish maandstructuur, die eindigt net onder een maand-
    of week-S/R, is geen flip.
+
+---
+
+### 4. Dag: BoS en fib, maar geen pullback naar het dag-S/R-niveau -> geen trade (05.png - 07.png)
+- Na de nep-BoS blijft de weekstructuur bearish; week-doji/shooting star + bearish engulfing aan de week-S/R 1,1393.
+- **Daily BoS 1,11941**: body-low van 18 juni (slot 1,11942); 23 juli sluit eronder (1,1152).
+- **Fib**: body van de dag-swing high (18/19 juli, 1,12770) -> lont van de swing low (25 juli, 1,11014); bereik 176
+  pips. 0,5 = 1,1189 | 0,618 = 1,1210 | 0,66 = 1,1217 | 0,796 = 1,1241. -0,2 = 1,1066.
+- **Dag-S/R 1,12153** (± 0,65 in de fib): rejections half mei (rode pijlen), steun 6 juni, 5 juli en 18/19 juli (groene
+  pijlen).
+- De pullback na de swing low kwam maar tot **1,1162 (30 juli, ± 0,35)** - het S/R-niveau werd niet bereikt. Op 31 juli
+  zakt de prijs door tot 1,1060 (-0,2) en 1 augustus 1,1027.
+- **Geen trade**: geen terugkeer naar het dag-S/R-niveau = geen instap, ook al loopt de beweging daarna in de goede
+  richting. De trader jaagt de move niet na.
+
+### 5. Notities voor de engine (nog niet verwerken)
+1. **De instap is voorwaardelijk op het bereiken van het dag-S/R-niveau** (zoals een limietorder in de zone); geen
+   bereik -> setup vervalt. Gemiste moves horen erbij en tellen niet als verlies.
+2. Een **nep-BoS op de week** (zie de criteria hierboven) verandert de structuur niet; de week-triggers (doji +
+   bearish engulfing aan de week-S/R) blijven gelden.
 
 ---
