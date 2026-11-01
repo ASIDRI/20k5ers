@@ -27,6 +27,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--prefix", default="v2n37_")
     ap.add_argument("--risk", type=float, default=0.6)
+    ap.add_argument("--ladder", action="store_true", help="previous bot: 1.8%% below 300k (0.6%% above), risk down "
+                    "to 0.4 / 0.25 / 0.15%% from 1.5 / 2.5 / 5.5%% total drawdown, 3.5%% open-risk cap")
     ap.add_argument("--from", dest="start", default="2016-01-01")
     ap.add_argument("--to", dest="end", default="2026-01-01")
     a = ap.parse_args()
@@ -39,8 +41,14 @@ def main():
     level, bal, paid, open_, skipped, log, peak_level = 50_000.0, 50_000.0, 0.0, {}, 0, [], 50_000.0
     for day, kind, i in ev:
         if kind == 1:
-            risk = bal * a.risk / 100
-            if len(open_) >= 7 or sum(open_.values()) + risk > 0.05 * bal:
+            pct = a.risk
+            if a.ladder:
+                pct = 1.8 if level < 300_000 else 0.6
+                dd = (level - bal) / level * 100  # total drawdown vs the level's start
+                pct = 0.15 if dd >= 5.5 else 0.25 if dd >= 2.5 else 0.4 if dd >= 1.5 else pct
+            risk = bal * pct / 100
+            cap = 0.035 if a.ladder else 0.05
+            if len(open_) >= 7 or sum(open_.values()) + risk > cap * bal:
                 skipped += 1
                 continue
             open_[i] = risk
@@ -57,7 +65,7 @@ def main():
                 level, bal = nxt, nxt
                 peak_level = max(peak_level, level)
     yrs = (pd.Timestamp(a.end) - pd.Timestamp(a.start)).days / 365.25
-    print(f"{a.prefix} {a.start} - {a.end}, risico {a.risk}% per trade: {len(f)} trades ({skipped} overgeslagen: "
+    print(f"{a.prefix} {a.start} - {a.end}, risico {'1.8% met trappen (vorige bot)' if a.ladder else str(a.risk) + '%'} per trade: {len(f)} trades ({skipped} overgeslagen: "
           f"max 7 open / 5% open risico)")
     for day, msg in log:
         print(f"  {day} {msg}")

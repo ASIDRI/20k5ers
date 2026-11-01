@@ -867,3 +867,13 @@ en 5% open risico; bij +10% op het niveau uitbetaling (80% split onder 175k) en 
 | alleen EURUSD | 1,0% | ± 4.600 (2022) | 60k | |
 Conclusie: met deze versie en deze risico's ver van 50k per jaar; de winst per trade (± +0,1R over alle instrumenten)
 is te klein en bij 1% risico gaat de 10%-limiet eraan in een slechte periode.
+
+### Risicoregels van de vorige bot (trader: "1,8% en kijken of de markt volatiel is")
+De vorige bot had: 1,8% per trade in de challenge en gefund onder 300k (0,6% vanaf 300k), risico omlaag naar 0,4 /
+0,25 / 0,15% vanaf 1,5 / 2,5 / 5,5% totale drawdown, max 3,5% open risico, en een volatiliteitsfactor (rustige markt
+x1,7, onrustige x0,6; `backtest/RECOMMENDED_CONFIG.md`). Die waarden zijn met Optuna afgesteld op de vorige strategie,
+waarvan de winst uit een blik in de toekomst kwam - dus niet blind over te nemen.
+Benadering met v2 (zonder volatiliteitsfactor): 37 instrumenten -> geen enkele uitbetaling in 10 jaar (saldo 51.525;
+in elke drawdown zakt het risico naar 0,15-0,4% en het herstel duurt lang; 603 trades overgeslagen door de 3,5%-grens);
+alleen EURUSD -> 1 uitbetaling (5.189, oktober 2019). De risicoregels komen terug als de strategie vastligt: dan een
+nieuwe Optuna-ronde op v2, met walk-forward en een apart gehouden periode.
