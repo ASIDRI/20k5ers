@@ -427,3 +427,22 @@ precies op de swing low** (geen nieuwe low). Mogelijke filters om later te teste
 T1 pas tellen als de prijs eerst onder fib 0 sluit.
 
 ---
+
+## Setup 8 - EURUSD short, januari 2020 (vervolg op setup 7) - week-trigger zonder engulfing
+Grafieken: `docs/setups_trader/08_eurusd_2020_short/01.png`.
+
+### 1. Week: shooting star + body-slot onder de week-S/R (01.png)
+- Na setup 7 terug tot de **week-S/R 1,11622**; structuur nog bearish.
+- **Week van 30 december 2019: shooting star** (open 1,1177, top 1,1239, slot 1,1159).
+- **Week van 6 januari 2020: body-slot onder het niveau** (open 1,1167, slot 1,1121).
+- **Geen bearish engulfing**: de vorige week was zelf bearish, en de laatste up-candle (week van 23 december, open
+  1,1081) wordt pas in de week van 20 januari onder zijn open gesloten (1,1025) - 4 weken later, 100 pips lager.
+
+### 2. Vraag van de trader: inzoomen na shooting star + slot onder het niveau, of wachten op een engulfing?
+Voorstel voor de bot (te testen, nog niet verwerkt): **beide gelden als week-trigger aan een week-S/R in een bearish
+structuur**:
+- (a) bearish engulfing t.o.v. een up-candle van 1 of 2 weken terug (setup 1-4, 6, 7), of
+- (b) een afwijzingskaars aan het niveau (shooting star / doji / pin met lont door het niveau) **gevolgd door een
+  week-body-slot onder het niveau** (setup 8; vergelijk setup 4-5: doji, daarna engulfing).
+Wachten op (a) zou hier pas 2-4 weken later en 100 pips lager een trigger geven. Of (b) even goed werkt als (a), moet
+de backtest uitwijzen (beide varianten apart meten), niet deze ene trade.
