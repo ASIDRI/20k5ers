@@ -394,8 +394,10 @@ bijgewerkt naar de nieuwste exacte reactie.
 1. **S/R-niveaus bijwerken** naar de nieuwste exacte lont-reactie (maand 1,08739 -> 1,08792).
 2. **Week-S/R-kwaliteit**: 2 exacte hits als steun + 2 als weerstand (sterker dan het minimum 1 + 2 / 2 + 1).
 3. **Dag-S/R telt vanaf een exacte lont-bounce**, niet vanaf een slot erdoor.
-4. **Daily BoS = body-slot onder de lont van de laatste swing low** (in setup 1-4 werd de body-low als BoS-lijn
-   gebruikt; nog af te stemmen welke het is - mogelijk: lijn = body, of lijn = lont; hier is het de lont).
+4. **BoS-lijn = de body-low van de laatste swing low** (beslissing van de trader na setup 7; bij een short; bij een
+   long de body-high), met een body-slot eronder. Nagekeken: bij setup 1-5 geeft de lont-low precies dezelfde
+   BoS-dag (1: week van 21 mei 2018; 2: 27 sep; 3: 24 jan; 4: 24 apr; 5: 23 jul); alleen bij setup 7 is het met de
+   body een dag eerder (5 i.p.v. 6 november, body-low 1,10795 tegen lont 1,1073).
 5. **T2 (-0,58) valt samen met een maand-S/R** - zelfde soort confluentie als T2 in setup 1.
 
 ### 5. Patroon, trade en uitkomst: verlies (06.png, 07.png)
