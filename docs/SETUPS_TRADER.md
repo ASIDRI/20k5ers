@@ -687,3 +687,16 @@ Geen extra trades meer in 1 mei 2018 - 1 april 2020 (de extra trade van 23 aug 2
 trade 1, net als de trader). Totaal 6 trades, 4 winnaars (T1), +6,3R (50/25/25) of +7,4R (50/50).
 Nog steeds: de parameters zijn op deze setups afgesteld; replicatie, geen test.
 Daarna (april 2020 - 2025) vindt de engine op EURUSD nog 6 trades (+4,2R): ± 1 per jaar - weinig.
+
+### Eerste run buiten de replicatie: januari 2021 - januari 2022 (trader 2026-11-01)
+Engine v2 zoals hierboven (geen parameters veranderd), gedraaid vanaf juni 2019 zodat structuur en triggers op tijd
+staan, geteld: instappen in 2021.
+| set | trades | per week | win (T1) | T2 | R (50/25/25) | gem. R | R 50/50 |
+|---|---|---|---|---|---|---|---|
+| 37 instrumenten | 60 | 1,2 | **30%** | 22% | **-6,6R** | -0,11 | -8,7R |
+| holdout 29 exoten | 61 | 1,2 | **36%** | 23% | +1,6R | +0,03 | +0,9R |
+Winnaars gemiddeld +2,0R, verliezers -1,0 à -1,1R -> break-even ligt rond 34% win rate. 2021 is dus ongeveer
+break-even (37: iets negatief, holdout: iets positief). De 67% van de EURUSD-replicatie (4/6) herhaalt zich in 2021
+niet. Eén jaar en ± 60 trades per set is een kleine steekproef (onzekerheid op de win rate ± 6 procentpunt).
+Starten op 1 januari 2021 zonder aanloop geeft een opstart-piek (22 trades in januari, oude triggers); daarom de
+aanloop vanaf 2019.
