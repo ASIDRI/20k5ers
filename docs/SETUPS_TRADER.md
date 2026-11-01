@@ -877,3 +877,17 @@ Benadering met v2 (zonder volatiliteitsfactor): 37 instrumenten -> geen enkele u
 in elke drawdown zakt het risico naar 0,15-0,4% en het herstel duurt lang; 603 trades overgeslagen door de 3,5%-grens);
 alleen EURUSD -> 1 uitbetaling (5.189, oktober 2019). De risicoregels komen terug als de strategie vastligt: dan een
 nieuwe Optuna-ronde op v2, met walk-forward en een apart gehouden periode.
+
+---
+
+## Setup 12 - EURUSD long, oktober 2020 - geen trade (geen dagpatroon)
+Grafieken: `docs/setups_trader/12_eurusd_2020_long_notrade/01.png` ... `04.png`.
+- Na setup 11 (uit op fib -1, 18 augustus) weer longs zoeken: de weekstructuur is bullish.
+- **Week-S/R 1,16211** (onder de prijs; steun 2017 en 2018, weerstand aug-okt 2018), maand-S/R 1,15699 eronder. De prijs
+  zakt terug tot de week-S/R (eind september, low ± 1,1612) en de **week van 19 oktober is een bullish engulfing**.
+- **Dag**: daily BoS 1,18483; fib van de body van de swing low (± 1,1702) naar de lont van de swing high (± 1,1881); dag-S/R
+  **1,17814** op ± 0,6. De prijs zakt terug door de zone (eind oktober) zonder bullish dagpatroon en sluit onder fib 1 ->
+  **geen trade**; daarna verder tot de week-S/R.
+- **Engine**: geen trade, zelfde reden: daily BoS 21 oktober (lijn 1,18283), fib 1 1,17073, 29 oktober slot onder fib
+  1 -> fib vervalt. (De engine had nog de oudere week-trigger van de week van 24 augustus aan staan; de dag-afloop is
+  dezelfde.) Volgende engine-trade: long 28 januari 2021 (-1R) - nog niet door de trader bekeken.
