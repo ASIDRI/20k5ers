@@ -754,3 +754,36 @@ nep; minder flips over 2015-2025 (13 i.p.v. 18). Replicatie 2018-2020 blijft 6/6
 T1 (54%), +16,6R.
 De lijn zelf: engine 1,11194 (body van de swing-high-week 30 maart), trader 1,11423 (slot van de week ervoor) - de
 trader neemt de hoogste body rond de swing high; verschil 23 pips, geen gevolg voor de BoS-week.
+
+---
+
+## Setup 11 - EURUSD long, juni 2020 (eerste trade na de bullish week-BoS) - winst, T1 + T2 + T3
+Grafieken: `docs/setups_trader/11_eurusd_2020_long/01.png` ... `08.png` (01-03: maand en week, 04-08: dag).
+- **Week**: bullish week-BoS, breukweek 1 juni 2020 (slot 1,12920 boven de BoS-lijn 1,11423); geen extra week-engulfing:
+  de trader gaat na de BoS meteen naar de dag.
+- **Fib**: van de **body van de vorige dag-swing low** (25 mei, body-low 1,08969; trader ± 1,0900) naar de **lont van de
+  swing high**; eerst 5 juni (1,13839), daarna een nieuwe swing high op 10 juni (**1,14224**) -> fib 0 schuift mee, fib 1
+  blijft. 0,5 = 1,1160 | 0,618 = 1,1098 | -0,2 = 1,1528 | -0,58 = 1,1727 | **-1 = 1,1948** (trader 1,19510).
+- **Niveaus**: dag-S/R **1,12121** (± 0,40 in de fib), weekly BoS-lijn 1,11423, slot van de BoS-week 1,12920 - de
+  dag-S/R ligt tussen de BoS-lijn en het slot van de BoS-week (zoals in setup 1: 1,17273 / 1,17492 tussen 1,17503 en
+  1,16490).
+- **Instap**: **daily bullish engulfing op 22 juni** (open 1,11822, laag 1,11685 = lont tot de 0,5, slot 1,12616) aan
+  het dag-S/R; trader instap 1,12609, stop **1,11088** (onder de lont / boven de 0,618); risico 152 pips.
+- **Uitkomst**: T1 21 juli (top 1,1540), T2 28 juli (1,1774), **T3 = fib -1 op 18 augustus** (1,1966) -> in R: T1
+  +1,7R, T2 +3,0R, T3 +4,5R; bij 50/25/25 ± +2,8R.
+- **Nieuwe beheerregels van de trader**: na fib **-1 de volledige trade sluiten** (in de engine: T3 = -1 i.p.v. -1,618),
+  of met een tijdslimiet werken zodat we snel opnieuw trades kunnen zoeken ("we mogen er niet te lang in blijven");
+  meestal raakt na T2 de stop in winst, hier kwam T3 snel.
+
+### Wat de engine hier deed
+De engine zag de bullish BoS (breukweek 1 juni, bevestigd na 8 juni) maar wachtte op een week-trigger (engulfing 2
+weken terug, week van 29 juni) en nam een **long op 10 juli 2020** (1,13002, stop 1,12420, kleine fib 1,12187 ->
+1,13707 uit de triggerweek): T1 14 juli, T2 20 juli, T3 21 juli -> +2,5R. Dezelfde beweging, maar later en met een
+andere fib.
+Wat nodig is om de trade van de trader te vinden: (1) de bevestigde week-BoS zelf als trigger voor de eerste trade;
+(2) de fib van de eerste trade vanaf de body van de vorige dag-swing (low bij een long, high bij een short); (3) de
+dag-S/R tussen de BoS-lijn en het slot van de BoS-week. **Conflict met setup 1**: in setup 1 liet de trader de
+engulfing van 26 juni 2018 liggen, hoewel 25 juni boven het niveau sloot en 26 juni terug eronder (een reclaim); in
+setup 11 nam hij de engulfing van 22 juni 2020, hoewel 18 en 19 juni ónder 1,12121 sloten (ook een reclaim). Het
+verschil zit in welk niveau als dag-S/R telt (1,1704 / 1,1716 in 2018 niet, 1,12121 in 2020 wel); tellen van
+lont-reacties (3/5 pip, op draaipunten of alle kaarsen) scheidt die niet. Vraag aan de trader.

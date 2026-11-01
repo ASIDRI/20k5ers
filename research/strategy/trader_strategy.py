@@ -36,7 +36,7 @@ candle is used only after it has closed, a daily decision is taken at the daily 
    closed so far, redrawn every MN_REFRESH months (1 January / 1 July). For now context only: logged, and per trade
    the next monthly level in the trade direction (m_sr_next) and whether one lies before T2 (m_sr_before_t2).
 7. Management (setup 6): T1 = fib -0.2 (50%), stop then a little in profit (entry - BE daily ATR); T2 = fib -0.58
-   (25%), stop then to fib 0; the rest runs to fib -1.618 or the stop. R_5050: 50% at T1, 50% at T2 (stop after T1 a
+   (25%), stop then to fib 0; the rest runs to fib -1 (T3, setup 11) or the stop. R_5050: 50% at T1, 50% at T2 (stop after T1 a
    little in profit). A bar that reaches the stop and a target counts as the stop. Costs from test2.cost_price.
 """
 import argparse
@@ -67,7 +67,7 @@ NO_CLOSE_ABOVE = True  # no daily close above the level during the test (setup 1
 REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in the last REJ_BACK days (setups 1-4, 6, 7)
 FLIP_BAND = 0.35  # daily ATR around the weekly break line: the levels of the first trade after a weekly BoS (setup 1)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
-T1, T2, T3 = 0.2, 0.58, 1.618
+T1, T2, T3 = 0.2, 0.58, 1.0  # T3: the trader closes everything at fib -1 (setup 11)
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
