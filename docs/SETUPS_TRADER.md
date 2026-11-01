@@ -250,3 +250,46 @@ Mogelijke oorzaken (verschil met setup 1-3; nog geen regel, eerst meer setups):
    voor de trader; **de lont-tik van het patroon in de zone + het S/R-niveau** is wat telt.
 
 ---
+
+## Setup 5 - EURUSD short, juli 2019 (context; dag-instap volgt)
+Grafieken: `docs/setups_trader/05_eurusd_2019_short/01.png` ... `04.png`.
+
+### 1. Week onder maand-S/R 2 -> terug naar de maandgrafiek (01.png, 02.png)
+- De week zit nu **onder maand-S/R 2 (1,13125)**. Dan opnieuw naar de maandgrafiek kijken of er lager een S/R-niveau
+  ligt: **maand-S/R 3 = 1,08739** - heel duidelijk: 2015-2017 meerdere exacte taps als steun (groene pijlen) en
+  weerstand (rode pijlen), twee keer lonten erboven maar de volledige body eronder. Dit wordt het volgende maanddoel.
+
+### 2. Week: compact, chaotische kleine bullish BoS die geen echte flip is (03.png, 04.png)
+- De weekgrafiek is compact en geeft weinig aanwijzingen; de structuur blijft bearish.
+- Nieuw week-S/R-niveau om naar terug te keren: **week-S/R 1,13929** (steun aug-okt 2018, groene pijlen; weerstand
+  dec 2018 - maart 2019, rode pijlen).
+- **De kleine "weekly BoS" 1,13239** (top van de week van 8 april): de week van 3 juni sluit erboven (1,1333), de week
+  van 10 juni weer eronder (1,1210), de week van 17 juni weer erboven (1,1369). Volgens de trader **geen echte
+  structuurbreuk en geen echte last swing high**: "vrij chaotisch en niet zo duidelijk".
+- Daarna aan de week-S/R 1,1393: **week van 24 juni = doji** (1,1372 -> 1,1372, top 1,1412) en **week van 1 juli =
+  bearish engulfing** (1,1361 -> 1,1226), terug onder 1,13239 en onder maand-S/R 2.
+
+### 3. Vraag van de trader: hoe ziet een bot dat deze kleine BoS geen trendwissel is?
+Gemeten op onze weekdata (ATR 14 weken ± 120 pips):
+
+| kenmerk | deze "BoS" (juni 2019) | echte BoS (setup 1, mei 2018) |
+|---|---|---|
+| grootte van de swing waaruit de top komt | opwaartse poot 1,1184 -> 1,1324 = 140 pips = **1,1 ATR** | de top van december 2017 kwam na een poot van > 3 ATR |
+| hoe ver het slot voorbij het niveau | 1,1333 vs 1,1324 = **9 pips = 0,07 ATR** | week van 21 mei sloot 100 pips (0,6 ATR) onder 1,1750 |
+| acceptatie | **volgende week sluit er weer onder** | bleef eronder |
+| efficiëntie van de beweging (netto / som van weekbewegingen, 10 weken) | **0,01 - 0,18** (zijwaarts) | 0,3 - 0,6 (trend) |
+| hogere tijdframe | breuk loopt recht in maand-S/R 2 (van onder, nu weerstand) en week-S/R 1,1393 | breuk weg van de week-S/R, maandtrend nog niet tegen |
+
+Voorstel om dit objectief te maken (te testen, nog niet verwerkt):
+1. **Swing-hiërarchie**: alleen een **grote week-swing** telt voor een trendwissel (zigzag met omkeer >= ± 2 ATR, zoals
+   de `REV`-parameter van de engine). De top van april (1,1324) is dan geen swing; de laatste échte swing high blijft
+   1,1448 (maart) -> een bullish flip vraagt een weekslot boven 1,1448.
+2. **Kwaliteit van de breuk**: slot minstens ± 0,25-0,5 ATR voorbij het niveau, met een grote body.
+3. **Acceptatie**: geen slot terug binnen het niveau in de 1-2 weken erna; anders is het een **mislukte BoS** - en die
+   telt juist als signaal in de oude richting (zoals hier).
+4. **Chaos-filter**: bij een lage efficiëntie (< ± 0,2 over 10 weken) zijn kleine breuken ruis; dan gelden de randen
+   van de range (hier week-S/R 1,1393 boven, swing low 1,1107 onder) en de week-kaarspatronen aan die randen.
+5. **Hogere tijdframe eerst**: een bullish week-BoS tegen een bearish maandstructuur, die eindigt net onder een maand-
+   of week-S/R, is geen flip.
+
+---
