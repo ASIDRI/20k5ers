@@ -588,3 +588,17 @@ aanpassingen: setup 1 = echte BoS (alle criteria ✓), setup 10 = onbevestigd ->
   trader.
 - Setup 4 gebruikte een ruimere vorm (slot onder de open van een groene week van 2 weken terug, na een doji); dat is
   volgens deze harde regel geen engulfing, maar een eigen trigger-type.
+
+---
+
+## Voorstel: welke gemiste trades wél te nemen (te testen, elk apart vooraf vastgelegd)
+| gemist | wat had het gevangen | voorstel |
+|---|---|---|
+| setup 2, 3 strikt geen engulfing (open 2,5 / 7,8 pips onder het vorige slot) | tolerantie op de open | **engulfing met open >= slot vorige - 0,05 week-ATR**, slot strikt onder de open van de groene kaars |
+| setup 8 (tik van de fib-start, dag-S/R net erboven) | limiet op de fib-start | variant (i), voorkeur trader |
+| setup 8 week-trigger (shooting star + slot onder week-S/R, geen engulfing) | trigger-variant (b) | **afwijzingskaars aan week-S/R + volgende week body-slot onder het niveau** |
+| setup 5 (geen pullback tot het dag-S/R) | lagere tijdframe | **4u-instap**: 25 juli 2019 een 4u-shooting star (top 1,1188, slot 1,1134) precies bij de retest van de daily-BoS-lijn 1,1194 / fib 0,5; instap op 4u-patroon aan een dag-niveau (BoS-lijn of 0,5) als de prijs het dag-S/R niet haalt |
+| setup 9 (prijs schoot door alles) | - | **niet** vangen: zonder patroon had dit verloren |
+| setup 4-vorm (groene week 2 weken terug) | - | voorlopig **niet** als trigger: enige voorbeeld was een verliezer |
+Elke uitbreiding geeft meer trades én meer verliezers; alleen houden wat in de backtest (37 + holdout, per periode)
+de verwachting per trade niet verlaagt.
