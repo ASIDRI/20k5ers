@@ -512,28 +512,31 @@ bearish structuur, onder de week-S/R 1,11622. Inzoomen op de dag.
 ---
 
 ## Setup 10 - EURUSD maart 2020: echte of mislukte bullish week-BoS? (context)
-Grafieken: `docs/setups_trader/10_eurusd_2020_short/01.png`, `02.png`.
+Grafieken: `docs/setups_trader/10_eurusd_2020_short/01.png` ... `03.png`.
 
 ### 1. Wat er gebeurt
 - **Wekelijkse BoS-lijn 1,11755**: body-high van de laatste week-swing high (weken van 23/30 december 2019, top 1,1239).
 - **Week van 2 maart 2020: slot 1,12839** boven die lijn (open 1,1045, top 1,1355 door maand-S/R 2 1,13125).
-- **Week van 9 maart: bearish engulfing** (open 1,1351, top 1,1496 = exact aan week-S/R 1,1500, slot 1,1105 - terug
-  onder de BoS-lijn; omvat de bullish body van de week ervoor). Week van 16 maart: slot 1,0696.
+- **Week van 9 maart: GEEN engulfing** (correctie, de trader): open 1,1351, top 1,1496 = exact aan week-S/R 1,1500,
+  slot 1,1105 - terug onder de BoS-lijn, maar **boven de open van de groene week ervoor (1,1045)**, dus de groene body
+  wordt niet omsloten. Het is een bearish afwijzingskaars met een lange bovenlont. Week van 16 maart: slot 1,0696
+  (ook geen engulfing volgens de harde regel: de vorige week is rood).
 
 ### 2. De vijf criteria van setup 5 toegepast (ATR 14 weken ± 140 pips)
 | criterium | waarde | oordeel |
 |---|---|---|
 | 1. grote swing? | de top van december liep 460 pips (± 4 ATR) omlaag tot 1,0778 | **ja**, echte swing high |
 | 2. kwaliteit van de breuk | slot 107 pips (0,77 ATR) boven de lijn, body 240 pips | **ja** |
-| 3. acceptatie | de week erna sluit terug onder de lijn, met een bearish engulfing | **nee -> mislukte BoS** |
+| 3. acceptatie | de week erna sluit terug onder de lijn (bearish afwijzingskaars, geen engulfing) | **nee -> mislukte BoS** |
 | 4. chaos-filter (efficiëntie 10 weken) | 0,12 in de breukweek (twee weken V-vorm, +5%) | **nee** (< 0,2) |
 | 5. hogere tijdframe | maandstructuur bearish; slot net onder maand-S/R 2 (1,13125), daarna lont tot week-S/R 1,1500 | **nee** |
 
 **Wat de bot had gezegd:**
 - Na het slot van de week van 2 maart: **"BoS onbevestigd"** - criteria 1 en 2 kloppen, maar 4 en 5 niet. Nog geen
   bullish structuur; geen longs, de shorts nog niet afschrijven; één week wachten op acceptatie.
-- Na het slot van de week van 9 maart: **"mislukte BoS"** -> de bearish weekstructuur blijft, en de bearish engulfing
-  aan week-S/R 1,1500 / boven maand-S/R 2 is meteen een **week-trigger voor shorts**.
+- Na het slot van de week van 9 maart: **"mislukte BoS"** -> de bearish weekstructuur blijft. Een week-trigger voor
+  shorts is het **niet** volgens de engulfing-regel; hoogstens volgens variant (b) van setup 8 (afwijzingskaars met
+  lont door week-S/R 1,1500 + slot terug onder de BoS-lijn) - nog te beslissen.
 De prijs: week van 16 maart slot 1,0696, onder maand-S/R 3.
 
 Kanttekening: criterium 3 vraagt per definitie een week geduld; in die week is de status "onbeslist". Dat moet de
@@ -562,3 +565,24 @@ aanpassingen: setup 1 = echte BoS (alle criteria ✓), setup 10 = onbevestigd ->
 3. de week erna sluit niet terug voorbij de lijn (één week);
 4. efficiëntie over 10 weken >= ± 0,2;
 5. bij het slot >= ± 0,5 ATR ruimte tot het volgende maand- of week-S/R-niveau in de breukrichting.
+
+---
+
+## Harde regel bearish engulfing (week en dag) - vastgelegd door de trader
+- **Body over body**: open van de rode kaars >= slot van de groene kaars ervoor, en slot van de rode kaars < open van de
+  groene kaars. Lonten tellen niet.
+- Nagekeken op onze weekdata:
+| week | open rood vs slot groen | slot rood vs open groen | engulfing? |
+|---|---|---|---|
+| setup 1, 11 jun 2018 | +6,2 pips ✓ | ✓ | ja |
+| setup 2, 24 sep 2018 | **-2,5 pips** | ✓ | strikt nee (bijna) |
+| setup 3, 14 jan 2019 | **-7,8 pips** | ✓ | strikt nee (bijna) |
+| setup 7, 4 nov 2019 | +3,8 pips ✓ | ✓ | ja |
+| setup 9, 3 feb 2020 | +1,1 pips ✓ | ✓ | ja |
+| setup 10, 9 mrt 2020 | +67 pips ✓ | **slot 1,1105 > open 1,1045** | **nee** |
+- Bij forex opent de week bijna altijd op het slot van de vorige week (± een paar pips, verschilt per broker); de
+  open-voorwaarde faalt daardoor soms met 2-8 pips (setup 2 en 3, op FOREXCOM-data mogelijk wel geldig). Voorstel voor de
+  bot: **open >= slot groen min een kleine tolerantie (± 0,05 ATR)**, slot < open groen strikt. Te beslissen door de
+  trader.
+- Setup 4 gebruikte een ruimere vorm (slot onder de open van een groene week van 2 weken terug, na een doji); dat is
+  volgens deze harde regel geen engulfing, maar een eigen trigger-type.
