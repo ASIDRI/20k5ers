@@ -1773,3 +1773,16 @@ de fill, in de handelsrichting) en `poc_thru` (instap ligt op of voorbij de POC 
 **Beslissend: `((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0,66 & poc_thru`, `R_lad`, één positie
 per richting, 37 instrumenten; elke periode gem. > 0, PF >= 1,05, t >= 2; holdout elke periode > 0.** Gerapporteerd:
 de kern zonder POC (vergelijking), kern + `rsi <= 60`, kern + beide, en gestapeld (meerdere posities).
+
+### Uitkomst test 64: beslissende regel gehaald - met een voorbehoud
+`R_lad`, één positie per richting. 37: 1274 trades (61 per jaar, 1,2 per week), **+0,12 / +0,07 / +0,17R, PF 1,17 /
+1,10 / 1,24, t 2,30**. Holdout: 992 trades (47 per jaar), **+0,06 / +0,27 / +0,12R** (PF 1,08 / 1,36 / 1,16, t 2,08).
+Dit is de eerste regel die de hele lat haalt (elke periode > 0, PF >= 1,05, t >= 2 op de 37 en elke periode > 0 op de
+holdout). Ter vergelijking: de kern zonder POC +0,11 / +0,03 / +0,14R (PF 1,04 in 2015-20, t 2,14); kern met instap
+vóór de POC: 37 +0,06 / -0,09 / +0,02R, holdout +0,08 / -0,32 / -0,09R. Kern + POC + RSI <= 60: 53 per jaar, 37
++0,16 / +0,12 / +0,22R (t 2,81), holdout +0,05 / +0,28 / +0,20R (achteraf, niet beslissend). Gestapeld (meerdere
+posities): 37 75 per jaar +0,13 / +0,06 / +0,23R (t 2,84); holdout 61 per jaar +0,05 / +0,30 / +0,01R.
+Voorbehoud: de POC-filter is gevonden in de indicatorstudie op beide sets (ook de holdout), dus de holdout is hier
+niet echt onbekend; de periodes zijn de echte toets, en die zijn op de 37 alle drie positief. Per kalenderjaar (alle
+fills): 37 5 van 21 jaren negatief, holdout 11 van 21 - de rand is dun (±+7-10R per jaar). De krappe stop (`R_lad_t`)
+blijft verliezen. Vooruit te volgen vóór er echt geld op gaat.

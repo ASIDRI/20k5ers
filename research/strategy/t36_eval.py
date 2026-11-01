@@ -19,7 +19,7 @@ RULES = {"test 64: kern + instap op/voorbij de POC van de poot": "((ms_trend == 
          "kern + rsi <= 60": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & rsi <= 60",
          "kern + POC + rsi <= 60": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & poc_thru & rsi <= 60",
          "kern met instap vóór de POC": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & ~poc_thru",
-        "test 63: continuation + duidelijke BoS + retest van het BoS-niveau": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05",
+         "test 63: continuation + duidelijke BoS + retest van het BoS-niveau": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05",
          "test 63 + maand-setting, geen blokkade": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05 & ((ms_trend == 1) | (mt_done == -1)) & ~m_block",
          "continuation + duidelijke BoS (geen retest-eis)": "hl & bos & bos_atr >= 0.5",
          "geen continuation of zwakke BoS": "~(hl & bos & bos_atr >= 0.5)",
