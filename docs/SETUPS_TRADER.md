@@ -854,3 +854,16 @@ het risico per trade in pips groter (± 2,3 dag-ATR), dus de positie kleiner; in
 | R | +5,9 | -10,7 | +16,2 | +8,9 | +26,0 | **-17,5** | +33,0 | +2,7 | -7,1 | +43,9 |
 Totaal 942 trades, 41% T1, +101R (gem. +0,11R). De eerdere 2021-run (30%, -6,6R, oudere versie) was het slechtste jaar
 van de tien; ook met de nieuwste versie is 2021 negatief (-17,5R). 3 van de 10 jaren negatief.
+
+### 5ers 50k met de scaling van de vorige bot (`research/strategy/v2_fiveers_sim.py`)
+Model van `backtest/src/csv_mt5_simulator.py`: risico % van het saldo per trade (vorige bot 0,6%), max 7 open trades
+en 5% open risico; bij +10% op het niveau uitbetaling (80% split onder 175k) en een niveau hoger (50k, 60k, 70k, 80k,
+100k, ...); breach onder 90% van het niveau. Resultaat geboekt op de uitstapdag.
+| set | risico | uitbetaald 2016-2025 | account eind | opmerking |
+|---|---|---|---|---|
+| 37 instrumenten (942 trades) | 0,6% | **± 15.000 (± 1.500 per jaar)** | 80k | 529 trades overgeslagen (al 7 open) |
+| 37 instrumenten | 1,0% | 0 | - | **breach juni 2017** (verliesreeks 2017) |
+| alleen EURUSD (26 trades) | 0,6% | 0 | 50k (saldo 54.299) | +8,6%, nog geen +10% |
+| alleen EURUSD | 1,0% | ± 4.600 (2022) | 60k | |
+Conclusie: met deze versie en deze risico's ver van 50k per jaar; de winst per trade (± +0,1R over alle instrumenten)
+is te klein en bij 1% risico gaat de 10%-limiet eraan in een slechte periode.
