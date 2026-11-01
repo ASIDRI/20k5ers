@@ -66,3 +66,55 @@ Duur: swing high 14 juni -> instap 10 juli (18 handelsdagen wachten) -> T2 15 au
 5. Patroon: shooting star + inverted hammer, twee dagen na elkaar aan de weerstand.
 
 ---
+
+## Setup 2 - EURUSD short, oktober 2018 (vervolg op setup 1)
+Grafieken: `docs/setups_trader/02_eurusd_2018_short/01.png` ... `05.png`.
+
+### 1. Maand: niet kijken
+De prijs zit **tussen de twee maand-S/R-niveaus** (1,15542 en 1,13125) -> de maandgrafiek geeft hier geen richting;
+de week beslist.
+
+### 2. Week: structuur nog bearish, wachten op een bearish engulfing binnen de range (01.png, 02.png)
+- Wekelijkse markstructuur: **laatste swing high 1,17906** (week 9 juli) en **laatste swing low 1,13012** (week 13
+  augustus, = T2 van setup 1). Zolang er geen weekslot boven de swing high komt, blijft de structuur bearish.
+- Regel van de trader: **wacht op een wekelijkse bearish engulfing candle binnen de laatste swing high en swing low**.
+- **Week van 24 september 2018**: open 1,1746, top 1,1815 (lont boven de swing high, maar **slot 1,1603 eronder**),
+  omvat de bullish body van de week ervoor (1,1626 -> 1,1748) -> bearish engulfing. Vanaf nu deze week(en) een daily
+  short zoeken.
+
+### 3. Dag: BoS, nieuwe swing low, fib en S/R (03.png - 05.png)
+- **Daily BoS 1,16664**: de body-low van de dag-swing van 18 september; 27 september sluit eronder (1,1641).
+- Wachten op een **nieuwe dag-swing low**: 9 oktober, lont **1,14322**. Pas dan de fib trekken.
+- **Fib**: body van de swing high (20 september slot 1,17776) -> lont van de swing low (1,14322); bereik 345 pips.
+  - 0,5 = 1,1605 | 0,618 = 1,1646 | 0,66 = 1,1660 | 0,796 = 1,1707 | 1 = 1,1778
+  - **-0,2 = 1,1363** | -0,25 = 1,1346 | -0,28 = 1,1336 | **-0,6 = 1,1225** | -0,65 = 1,1208
+- **Nieuw dag-S/R-niveau 1,15936**: lontjes die er telkens op bouncen of van afwijzen (augustus-oktober, groene en rode
+  pijlen), één keer exact (11 oktober slot 1,15936). Daar ligt ook ongeveer de **0,5-fib**.
+- **Patroon**: spinning top / **shooting star op 16 oktober** (top 1,1622, slot 1,1575) aan het dag-S/R-niveau en de
+  0,5. "Doordat de daily S/R er ook ligt (belangrijk)."
+
+### 4. Trade
+| | prijs | toelichting |
+|---|---|---|
+| instap short | **1,15737** | na de shooting star; de lont tikte 0,5 + dag-S/R, de instap zelf ligt op ±0,41 in de fib |
+| stop | **1,16923** | boven het daily-BoS-niveau (1,1666) en de 0,66; risico 119 pips |
+| target 1 | **-0,2 (1,1363)** | geraakt 25 oktober (low 1,1356) |
+| target 2 | **-0,6 (1,1225)** | geraakt 12 november (low 1,1216) - "neem altijd deze als 2de target" |
+
+In R: T1 = **+1,8R**, T2 = **+2,9R**; 50/50 = +2,4R. Tussen T1 en T2 kwam de prijs terug tot 1,1500 (7 november): een
+stop in winst op de instap of achter maand-S/R 1 (1,1554) bleef staan, een stop op fib 0 (1,1432) of -0,25 niet.
+Duur: swing low 9 oktober -> instap 16 oktober -> T1 25 oktober -> T2 12 november.
+
+### 5. Notities voor de engine (nog niet verwerken)
+1. **Maand alleen als de prijs bij een maand-S/R is**; ertussen beslist de week-structuur.
+2. **Week-trigger = bearish engulfing binnen de laatste swing high/low**, slot niet voorbij de swing high (een lont
+   erboven mag). Dat is een andere week-trigger dan in de engine (`wk_trig`: engulfing + BoS); hier is de BoS al
+   eerder gebeurd (setup 1) en blijft de structuur geldig tot een weekslot voorbij de laatste swing high.
+3. **Volgorde op de dag**: week-engulfing -> daily BoS -> wachten op een nieuwe swing low -> fib -> instap op een
+   **dag-S/R-niveau met meerdere lont-rejections** dat samenvalt met een fib-niveau (hier 0,5), met een patroon.
+4. **Instap niet diep** (±0,41 op slot, lont tot ±0,55) - in tegenstelling tot setup 1 (0,83). Het S/R-niveau bepaalt
+   de instap, niet een vaste fib-zone.
+5. **Targets vast: T1 = -0,2, T2 = -0,6** (setup 1: -0,65 omdat daar de maand-S/R lag).
+6. Stop boven het daily-BoS-niveau, niet boven de swing high (kleiner risico dan bij setup 1).
+
+---
