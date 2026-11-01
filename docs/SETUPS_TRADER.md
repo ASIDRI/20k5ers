@@ -21,8 +21,10 @@ Beheer van de trader: **T1 = -0,2**, daarna stop een beetje in winst; **T2 = -0,
 | 5 | EURUSD | short | - (juli 2019) | geen pullback naar het dag-S/R | - | - | - | - | geen trade |
 | 6 | EURUSD | short | 9 aug 2019 | 0,69 | ja | ja (-0,58) | +2,6 | +3,7 | +3,2R (rest op fib 0: +2,0R) |
 | 7 | EURUSD | short | 21 nov 2019 | 0,38 (lonten 0,59) | nee | nee | - | - | **-1R** |
+| 8 | EURUSD | short | - (jan 2020) | tikt alleen de fib-start, dag-S/R net erboven, geen patroon | - | - | - | - | geen trade (uitzondering later te testen) |
+| 9 | EURUSD | short | - (feb 2020) | prijs schiet door beide dag-S/R, slot boven de swing high | - | - | - | - | geen trade |
 
-**Win rate: 4 / 6 (67%) T1 geraakt; T2 3 / 6** (setup 5: geen trade). Totaal bij 50% op T1 / 50% op T2 of stop: ± +8,2R
+**Win rate: 4 / 6 (67%) T1 geraakt; T2 3 / 6** (setup 5, 8, 9: geen trade). Totaal bij 50% op T1 / 50% op T2 of stop: ± +8,2R
 over 6 trades (± +1,4R gem.).
 
 ---
@@ -477,3 +479,32 @@ Te testen als **aparte instap-variant** met eigen statistieken:
 - (ii) zelfde, maar instap op het slot van de eerste bearish dagkaars na de tik (minder kans om overreden te worden,
   kleinere R).
 **Voorkeur van de trader: variant (i)** (limiet op de fib-start). Later testen; (ii) ter vergelijking meenemen.
+
+---
+
+## Setup 9 - EURUSD short, februari 2020 (week-engulfing van setup 8) - geen trade (prijs schiet erdoor)
+Grafieken: `docs/setups_trader/09_eurusd_2020_short/01.png` ... `04.png`.
+
+### 1. Week (01.png)
+**Week van 3 februari 2020 = bearish engulfing** (open 1,1096, slot 1,0946; omvat de bullish week ervoor) binnen de
+bearish structuur, onder de week-S/R 1,11622. Inzoomen op de dag.
+
+### 2. Dag: fib en twee dag-S/R-niveaus (02.png, 03.png)
+- Sterke daling: door maand-S/R 3 (1,08792) heen tot de swing low van 20 februari (lont **1,07780**).
+- **Fib**: body van de swing high (31 jan / 3 feb, 1,1095) -> lont swing low (1,07780); bereik 317 pips.
+  - 0,5 = 1,0936 | 0,618 = 1,0974 | 0,66 = 1,0987 | 0,796 = 1,1030 | 1 = 1,1095 | -0,2 = 1,0715
+- **Dag-S/R 1,09270** (± 0,47; steun sep 2019, groene pijlen) en, omdat de swing groot was, **nog een dag-S/R hoger:
+  1,10283** (± 0,79; reacties aug 2019 - jan 2020, rode en groene pijlen).
+
+### 3. Waarom geen trade (04.png)
+- 27 februari: dagkaars van +1,1% (1,0883 -> 1,1001) **door het eerste niveau zonder patroon**; 28 februari slot
+  1,1028 op het tweede niveau (top 1,1053), geen bearish patroon.
+- **2 maart: slot 1,1133 boven de swing high / fib-start (1,1095)** -> de bearish dagstructuur is gebroken, de setup
+  vervalt. Daarna door tot boven de week-S/R (5/6 maart top 1,1355).
+
+### 4. Notities voor de engine
+1. **Bij een grote swing meerdere dag-S/R-niveaus in de fib** (hier ± 0,47 en ± 0,79): elk niveau is een kans, maar
+   alleen met een patroon.
+2. **Ongeldig bij een dagslot boven de fib-start (swing high)**: dan geen trade meer op deze fib.
+3. Geen patroon = geen trade, ook niet op het tweede niveau (de uitzondering "tik van de fib-start" uit setup 8 zou hier
+   ook niet gelden: het dag-S/R ligt ver onder de fib-start).
