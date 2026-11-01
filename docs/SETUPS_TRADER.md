@@ -808,3 +808,28 @@ engine). Replicatie 2018-2020 blijft 6/6; nu 7/7 trades van de trader (setup 1-4
 3 na (1 dag eerder). EURUSD 2016-2025: 26 trades, 12 met T1, +14,0R. "Geen slot voorbij het niveau tijdens de test"
 blijft aan (zonder: 31 trades, +8,9R).
 Open punt: de stop van de trader in setup 11 lag achter de weekly BoS-lijn (± 0,6 in de fib), niet boven de 0,796.
+
+### Stopanalyse (eerste ronde, `research/strategy/v2_stop_study.py`)
+Zelfde instappen en targets, alleen de stop anders. "Winnaars" = trades die T1 halen met de wijdste stop (fib 1).
+Tegenbeweging vóór T1 bij de 14 EURUSD-winnaars (in de fib, 0 = extreem, 1 = fib 1): 0,43 - 0,99 (mediaan ± 0,8) - een
+stop onder fib 1 stopt dus winnaars uit.
+| stopregel | EURUSD 26 trades: T1 / winnaars uitgestopt / R | 37 instrumenten 954 trades: T1 / uitgestopt / R |
+|---|---|---|
+| fib 1 (+0,1 ATR) | 14 / 0 / +15,0 | **459 / 0 / +120** |
+| fib 0,886 | 11 / 3 / +16,9 | 408 / 51 / +113 |
+| engine nu (diep: swing high, anders max(0,796, patroon)) | 12 / 2 / +14,1 | 391 / 71 / +97 |
+| fib 0,796 | 10 / 4 / +22,1 | 357 / 102 / +93 |
+| boven het niveau + 0,5 ATR | 12 / 2 / +31,2 | 289 / 172 / +50 |
+| boven het patroon + 0,1 ATR | 10 / 4 / +19,2 | 256 / 205 / +6 |
+| boven de swing high (lont) | 14 / 0 / +8,3 | 485 / 0 / +54 |
+Op EURUSD alleen (26 trades) lijken krappe stops beter, maar over 954 trades is **fib 1 + 0,1 ATR** de beste: geen
+winnaars uitgestopt en het meeste R; krappe stops (patroon, niveau) stoppen 150-200 winnaars uit. Voorstel: stop op
+fib 1 (de body van de swing) + 0,1 ATR. Nog niet ingevoerd.
+
+### 10 jaar EURUSD op een 50k-account (engine v2, 26 trades, 2016-2025: +14,0R)
+| risico per trade | winst over 10 jaar | max drawdown |
+|---|---|---|
+| 1% (500 per R) | ± 7.000 (+14%) | 4,3% |
+| 2% (1.000 per R) | ± 14.000-15.000 (+28-30%) | 8-9% |
+Per jaar bij 1%: 2016 +665, 2017 -505, 2018 +2.110, 2019 +1.045, 2020 +275, 2021 -2.060, 2022 +4.130, 2023 -510,
+2024 -1.525, 2025 +3.390. Langste verliesreeks: 4. Met ± 2,6 trades per jaar op één paar is het rendement klein.

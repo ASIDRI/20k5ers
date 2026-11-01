@@ -345,7 +345,9 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                 exit_day=when(mres["exit_i"]), open=mres["open"],
                 R=round((mres["pnl"] - cost) / risk, 2), R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[k],
                 m_sr_next=next((q for q in sorted(mlev, key=lambda q: -q * sgn) if q * sgn < entry), None),
-                m_sr_before_t2=any(f0 - T2 * rng < q * sgn < entry for q in mlev)))
+                m_sr_before_t2=any(f0 - T2 * rng < q * sgn < entry for q in mlev),
+                _k=k, _f0=f0, _rng=rng, _entry=entry, _hi=fd["hi"], _pat=max(h[k], h[k - 1]), _level=p,
+                _band=fd.get("band"), _flip=fd.get("flip")))  # view-space fields for the stop study
             log.append((day_label(dt[k]), f"TRADE {pat} aan dag-S/R {p * sgn:.5f} ({n} reacties), instap {entry * sgn:.5f}, "
                         f"stop {sl * sgn:.5f}, diepte {depth:.2f} -> R {trades[-1]['R']:+.2f}", dirn))
             last_exit_t = dt[mres["exit_i"]] if mres["exit_i"] is not None else np.datetime64("2100-01-01")
@@ -456,7 +458,8 @@ def main():
         log, trades = [], []
         for dirn in (-1, 1):
             trades += run_view(sym, d, w, dirn, a.start, a.end, log, mn)
-        t = pd.DataFrame(trades).drop(columns="entry_t").sort_values("entry_day") if trades else pd.DataFrame()
+        t = (pd.DataFrame(trades).drop(columns=[x for x in trades[0] if x == "entry_t" or x.startswith("_")])
+             .sort_values("entry_day") if trades else pd.DataFrame())
         t.to_csv(out / f"{a.prefix}{sym}.csv", index=False)
         if a.v:
             for day, msg, dirn in sorted(log):
