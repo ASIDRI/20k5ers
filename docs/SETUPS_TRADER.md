@@ -921,3 +921,27 @@ swing en de BoS) i.p.v. de body van de swing-low-kaars (± 1,171) - verschil bli
 **Replicatie: 8/8 trades van de trader (setup 1, 2, 3, 4, 6, 7, 11, 13), 4/4 no-trades (5, 8, 9, 12); 1 extra
 engine-trade (21 mei 2020, -1R).** EURUSD 2016-2025: 27 trades, 56% T1, +18,0R. 37 instrumenten: 958 trades, +97,7R
 (gem. +0,10R, t 2,0) - gelijk aan vóór deze stap.
+
+---
+
+## Setup 14 - EURUSD long, april 2021 - T1 + T2 (engine: nog niet gevonden)
+Grafieken: `docs/setups_trader/14_eurusd_2021_long/01.png` ... `05.png`.
+- **Week**: twee nieuwe week-S/R-niveaus **1,19159** en **1,18003**; de prijs zakt in maart 2021 terug tot onder
+  1,18003 (low 1,1704) en de **week van 5 april is een bullish engulfing** (open 1,1761 = slot ervoor, slot 1,1900
+  boven de open van de rode week ervoor 1,1794). De trader ziet de weekstructuur nog **bullish**.
+- **Dag**: daily BoS **1,19326** (body van de swing high half maart), gebroken half april; fib van de **body van de
+  swing-kaars** (19 april: lont 1,19426, body-low ± 1,1973-1,1990) naar de lont van de swing high (20 april, 1,20799).
+  Dag-S/R **1,20032** ("moeilijker te vinden maar correct": weerstand 1 sep en 1 dec 2020, steun 5 feb en 1 mrt 2021).
+- **Instap meteen op de hammer van 21 april** (laag 1,19985 door het dag-S/R, slot **1,20350** = fib 0,5), stop
+  **1,19864** (onder fib 1), target op het scherm 1,21368 (-0,58 / -0,65): -0,2 en -0,58 geraakt 28-29 april (top
+  1,2150), daarna terug.
+
+### Wat de engine hier doet en waarom hij de trade (nog) niet vindt
+1. **Week**: de engine ziet in maart 2021 een **bearish week-BoS** (week van 1 maart: slot 1,1913 onder de body-low
+  1,2047 én de lont 1,1952 van de week-swing low van begin februari; de week erna bleef eronder) en zoekt daarna
+  shorts: 15 april 2021 (-1R) en 8 juni 2021 (-1R). De trader ziet geen bearish structuur.
+2. **Fib**: met de structuur bullish (test, maart-BoS weggelaten) vindt de engine de trigger (week van 5 april) en
+  een daily BoS (19 april), maar trekt de fib over de hele poot (fib 1 = 1,17158, de laagste body sinds de gebroken
+  swing) -> de zone ligt veel lager en er komt geen trade. De trader neemt de kleine laatste swing (19 -> 20 april).
+3. **Instap**: de trader stapt in op de **eerste** hammer aan het niveau; de engine vraagt nu 2 afwijzingslonten in 5
+  dagen (setup 1-4, 6, 7).
