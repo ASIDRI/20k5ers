@@ -538,3 +538,27 @@ De prijs: week van 16 maart slot 1,0696, onder maand-S/R 3.
 
 Kanttekening: criterium 3 vraagt per definitie een week geduld; in die week is de status "onbeslist". Dat moet de
 bot zo behandelen: geen nieuwe trades in de richting van de nieuwe BoS tot hij bevestigd is.
+
+### 3. Controle: had de bot met dezelfde criteria de BoS van setup 1 (mei 2018) wél als echt gezien?
+Week-BoS-lijn 1,17503 (body-low december 2017); breukweek 21 mei 2018, slot 1,16490; ATR ± 181 pips.
+| criterium | setup 1 (mei 2018) | setup 10 (maart 2020) |
+|---|---|---|
+| 1. grote swing | poot 840 pips (4,5 ATR) ✓ | 460 pips (4 ATR) ✓ |
+| 2. breuk | slot 101 pips (0,56 ATR) voorbij, body 124 pips ✓ | 107 pips (0,77 ATR), body 240 ✓ |
+| 3. acceptatie **de week erna** | week van 28 mei slot 1,16591, blijft eronder ✓ | sluit terug boven -> ✗ |
+| 3'. acceptatie **2 weken** | week van 4 juni sluit terug **erboven** (1,17690) ✗ | ✗ |
+| 4. efficiëntie 10 weken | 0,74 ✓ | 0,12 ✗ |
+| 5. "tegen de maandtrend" | ja, tegen de maand-uptrend van 2017 ✗ | ja ✗ |
+| 5'. **ruimte tot het volgende HTF-niveau bij het slot** | 95 pips (0,52 ATR) boven maand-S/R 1,15542 ✓ | 29 pips (0,2 ATR) onder maand-S/R 1,13125 ✗ |
+
+Conclusie: setup 1 wordt alleen herkend met **criterium 3 = alleen de week erna** (bij 2 weken faalt hij: de week van
+4 juni sloot 19 pips terug boven de lijn, waarna de bearish engulfing van 11 juni volgde - een retest, geen mislukking)
+en met **criterium 5' = ruimte tot het volgende HTF-niveau** in plaats van "niet tegen de maandtrend". Met die twee
+aanpassingen: setup 1 = echte BoS (alle criteria ✓), setup 10 = onbevestigd -> mislukt, setup 5 = geen BoS.
+
+**Bijgestelde criteria (hypothese, te testen):**
+1. swing uit een poot >= ± 2 ATR;
+2. slot >= ± 0,25-0,5 ATR voorbij de lijn;
+3. de week erna sluit niet terug voorbij de lijn (één week);
+4. efficiëntie over 10 weken >= ± 0,2;
+5. bij het slot >= ± 0,5 ATR ruimte tot het volgende maand- of week-S/R-niveau in de breukrichting.
