@@ -359,3 +359,40 @@ bijvoorbeeld 50% T1 / 25% T2 / 25% op 0 = **+2,7R**; 50% T1 / 50% T2 = +3,2R.
 4. Stop boven de swing high wanneer de instap er dichtbij ligt; anders boven het patroon (setup 4).
 
 ---
+
+## Setup 7 - EURUSD short, november 2019 (vervolg op setup 6) - patroon en uitkomst volgen
+Grafieken: `docs/setups_trader/07_eurusd_2019_short/01.png` ... `05.png`.
+
+### 1. Maand: niveau bijstellen naar de lont (01.png)
+De prijs kwam vlak bij maand-S/R 3: de week van 30 september zakt tot **1,08792**. De trader **verhoogt het
+maandniveau een klein beetje naar die lont**: maand-S/R 3 = **1,08792** (was 1,08739). Een S/R-niveau wordt dus
+bijgewerkt naar de nieuwste exacte reactie.
+
+### 2. Week: nieuw week-S/R met 2 + 2 exacte hits, bearish engulfing (02.png, 03.png)
+- **Week-S/R 1,11622**: 2 exacte hits als steun (eind mei 2019, groene pijlen) en 2 exacte hits als weerstand (weken
+  van 22 juli en 19 augustus; die laatste top 1,11641) - in een bearish trend.
+- De prijs stijgt in oktober terug tot dat niveau (week van 14 oktober, top 1,1172; weken 21 en 28 oktober toppen
+  1,1179 / 1,1176).
+- **Week van 4 november = bearish engulfing** aan het niveau (open 1,1169, slot 1,1019; omvat de body van de week
+  ervoor 1,1080 -> 1,1165).
+
+### 3. Dag: BoS-kaars, dag-S/R, fib (04.png, 05.png)
+- **Daily BoS candle 6 november**: **body-slot (1,1066) onder de lont van de laatste swing low** (1,1073, 25/29
+  oktober). Regel: de BoS is een slot onder de **lont** van de laatste swing low.
+- **Dag-S/R 1,10865**: soms ver terug in de tijd zoeken. Eerste bounce + body-slot erboven vrijdag 16 augustus, maar
+  **de trader telt altijd vanaf een exacte lont-bounce**: **27 augustus** (low 1,10858); **12 september** een exacte
+  rejection (top 1,10873); later nog reacties eind oktober / begin november (rode en groene pijlen).
+- **Fib**: body van de swing high (1/4 november, 1,11692) -> lont van de nieuwe swing low (14 november, 1,09891);
+  bereik 180 pips.
+  - 0,5 = 1,1079 | **dag-S/R 1,10865 = ± 0,54** | 0,618 = 1,1100 | 0,66 = 1,1108 | 0,796 = 1,1133 | 1 = 1,1169
+  - -0,2 = 1,0953 | -0,25 = 1,0944 | -0,28 = 1,0939 | **-0,58 = 1,0885 (valt vrijwel op maand-S/R 3, 1,08792)**
+- De pullback bereikt het dag-S/R-niveau op 18 november (top 1,1090). Volgende stap: wachten op een **dagelijks
+  bearish kaarspatroon** daar.
+
+### 4. Notities voor de engine (nog niet verwerken)
+1. **S/R-niveaus bijwerken** naar de nieuwste exacte lont-reactie (maand 1,08739 -> 1,08792).
+2. **Week-S/R-kwaliteit**: 2 exacte hits als steun + 2 als weerstand (sterker dan het minimum 1 + 2 / 2 + 1).
+3. **Dag-S/R telt vanaf een exacte lont-bounce**, niet vanaf een slot erdoor.
+4. **Daily BoS = body-slot onder de lont van de laatste swing low** (in setup 1-4 werd de body-low als BoS-lijn
+   gebruikt; nog af te stemmen welke het is - mogelijk: lijn = body, of lijn = lont; hier is het de lont).
+5. **T2 (-0,58) valt samen met een maand-S/R** - zelfde soort confluentie als T2 in setup 1.
