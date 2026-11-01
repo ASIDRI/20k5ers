@@ -9,8 +9,8 @@ Per setup: context, trigger, fib, instap, stop, targets, beheer, uitkomst, en wa
 notities).
 
 ## Overzicht en win rate
-Beheer van de trader: **T1 = -0,2**, daarna stop in winst; **T2 = -0,6** (bij een maand-S/R vlak erbij: daar, zoals
--0,65 in setup 1). Hoeveel op T1 gesloten wordt, ligt nog niet vast; hieronder ter vergelijking 50% op T1.
+Beheer van de trader: **T1 = -0,2**, daarna stop een beetje in winst; **T2 = -0,58** (vanaf setup 6; eerder -0,6, en
+-0,65 in setup 1 omdat daar de maand-S/R lag), daarna stop naar **fib 0**. Hoeveel op T1 gesloten wordt, ligt nog niet vast; hieronder ter vergelijking 50% op T1.
 
 | # | instrument | richting | instap | diepte | T1 | T2 | R bij T1 | R bij T2 | 50% T1, rest T2/stop |
 |---|---|---|---|---|---|---|---|---|---|
@@ -19,8 +19,10 @@ Beheer van de trader: **T1 = -0,2**, daarna stop in winst; **T2 = -0,6** (bij ee
 | 3 | EURUSD | short | 1 feb 2019 | 0,66 | ja | nee, stop in winst | +1,8 | - | ± +1,5R |
 | 4 | EURUSD | short | 2 mei 2019 | 0,31 (lont 0,796) | nee | nee | - | - | **-1R** |
 | 5 | EURUSD | short | - (juli 2019) | geen pullback naar het dag-S/R | - | - | - | - | geen trade |
+| 6 | EURUSD | short | 9 aug 2019 | 0,69 | ja | ja (-0,58) | +2,6 | +3,7 | +3,2R (rest op fib 0: +2,0R) |
 
-**Win rate: 3 / 4 (75%) T1 geraakt; T2 2 / 4** (setup 5: geen trade). Totaal bij 50% op T1: ± +6,0R over 4 trades (± +1,5R gem.).
+**Win rate: 4 / 5 (80%) T1 geraakt; T2 3 / 5** (setup 5: geen trade). Totaal bij 50% op T1 / 50% op T2 of stop: ± +9,2R
+over 5 trades (± +1,8R gem.).
 
 ---
 
@@ -312,5 +314,48 @@ Voorstel om dit objectief te maken (te testen, nog niet verwerkt):
    bereik -> setup vervalt. Gemiste moves horen erbij en tellen niet als verlies.
 2. Een **nep-BoS op de week** (zie de criteria hierboven) verandert de structuur niet; de week-triggers (doji +
    bearish engulfing aan de week-S/R) blijven gelden.
+
+---
+
+## Setup 6 - EURUSD short, augustus 2019 (vervolg op setup 5) - winst
+Grafieken: `docs/setups_trader/06_eurusd_2019_short/01.png` ... `05.png`.
+
+### 1. Context
+Zelfde week-context als setup 5 (bearish structuur, nep-BoS genegeerd, doji + bearish engulfing aan week-S/R
+1,1393). Volgend maanddoel: maand-S/R 3 = 1,08739.
+
+### 2. Dag: dezelfde swing high, nieuwe swing low, fib opnieuw (01.png)
+- Wachten op een **nieuwe dag-swing low**: 1 augustus, lont **1,10270**.
+- **Regel van de trader: omdat er van de vorige swing high geen trade kwam, blijft die eerste swing high het
+  startpunt van de fib** (body 18/19 juli, 1,12770) -> fib naar de nieuwe lont 1,10270; bereik 250 pips.
+  - 0,5 = 1,1152 | 0,618 = 1,1182 | **0,66 = 1,1192** | 0,796 = 1,1226 | 1 = 1,1277
+  - **-0,2 = 1,0977** | -0,25 = 1,0965 | -0,28 = 1,0957 | **-0,58 = 1,0882** | -0,6 = 1,0877
+- **Dag-S/R 1,12153** (± 0,75 in de nieuwe fib) en het **daily-BoS-niveau 1,11941** (± 0,67) vormen samen de zone.
+
+### 3. Trade (02.png - 05.png)
+- Pullback naar de zone (5 augustus, +1%), daarna **daily tweezer tops / shooting stars**: 6 augustus (top 1,1250,
+  slot 1,1202) en 7 augustus (top 1,1242, slot 1,1199) - **2 lonten die het dag-S/R raken en afwijzen**, en
+  **minstens 1 bearish kaars** (8 augustus 1,1199 -> 1,1180).
+
+| | prijs | toelichting |
+|---|---|---|
+| instap short | **1,11988** | in de zone (daily BoS / dag-S/R), ± 0,69 in de fib |
+| stop | **1,12839** | **boven de swing high** (1,1282), "we zitten er dicht bij" -> 85 pips risico |
+| target 1 | **-0,2 (1,0977)** | geraakt 30 augustus (low 1,0963); stop daarna **een beetje in winst** |
+| target 2 | **-0,58 (1,0882)** | geraakt 1 oktober (low 1,0879); -0,6 (1,0877) net niet. Stop daarna naar **fib 0** |
+| rest | **fib 0 (1,1027)** | geraakt 11 oktober (top 1,1063) -> trade voorbij, winst |
+
+Tussen T1 en T2 kwam de prijs terug tot 1,1110 (13 september): een stop "een beetje in winst" (onder de instap 1,1199)
+bleef staan.
+
+In R (risico 85 pips): T1 = **+2,6R**, T2 = **+3,7R**, de rest op fib 0 = **+2,0R**. Verdeling nog niet vastgelegd;
+bijvoorbeeld 50% T1 / 25% T2 / 25% op 0 = **+2,7R**; 50% T1 / 50% T2 = +3,2R.
+
+### 4. Nieuwe regels van de trader (vanaf nu)
+1. **Target 2 = -0,58** (i.p.v. -0,6): hier kwam de prijs tot -0,59, net niet -0,6.
+2. **Beheer**: na T1 de stop een beetje in winst; na T2 de stop naar fib 0.
+3. **Fib-startpunt blijft de eerste swing high zolang er van die swing geen trade kwam**; alleen het eindpunt (nieuwe
+   swing low) schuift op. (Vergelijk `--reanchor` in de engine: daar schuift fib 0 mee naar een nieuw extreem.)
+4. Stop boven de swing high wanneer de instap er dichtbij ligt; anders boven het patroon (setup 4).
 
 ---
