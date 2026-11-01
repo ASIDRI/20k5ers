@@ -476,3 +476,4 @@ Te testen als **aparte instap-variant** met eigen statistieken:
 - (i) limiet op de fib-start als het dag-S/R binnen ± 0,25 ATR (dag) erboven ligt, stop boven het S/R;
 - (ii) zelfde, maar instap op het slot van de eerste bearish dagkaars na de tik (minder kans om overreden te worden,
   kleinere R).
+**Voorkeur van de trader: variant (i)** (limiet op de fib-start). Later testen; (ii) ter vergelijking meenemen.
