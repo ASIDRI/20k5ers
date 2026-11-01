@@ -845,3 +845,12 @@ Getest, zelfde instappen en targets:
 Op EURUSD alleen (26 trades) zien de stops die meeschuiven met het niveau er goed uit, over 954 trades niet: ze stoppen
 130-200 latere winnaars uit. De winnaars trekken vóór T1 vaak diep terug (tot fib 1). Wel: met een stop op fib 1 is
 het risico per trade in pips groter (± 2,3 dag-ATR), dus de positie kleiner; in R is dat al verrekend.
+
+### 37 instrumenten per jaar, nieuwste engine (aanloop vanaf juni 2015)
+| jaar | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| trades | 62 | 101 | 92 | 102 | 109 | 97 | 95 | 90 | 105 | 89 |
+| win (T1) | 40% | 34% | 49% | 41% | 44% | **30%** | 51% | 38% | 40% | 47% |
+| R | +5,9 | -10,7 | +16,2 | +8,9 | +26,0 | **-17,5** | +33,0 | +2,7 | -7,1 | +43,9 |
+Totaal 942 trades, 41% T1, +101R (gem. +0,11R). De eerdere 2021-run (30%, -6,6R, oudere versie) was het slechtste jaar
+van de tien; ook met de nieuwste versie is 2021 negatief (-17,5R). 3 van de 10 jaren negatief.
