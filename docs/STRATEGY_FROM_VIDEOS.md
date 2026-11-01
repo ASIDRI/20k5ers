@@ -1747,3 +1747,29 @@ blokkade: 37 839 trades (40 per jaar), +0,04 / +0,13 / +0,10R (PF 1,06 / 1,20 / 
 +0,19 / +0,10 / -0,01R. Continuation met duidelijke BoS (alle dieptes) vs zonder: 37 -0,01 / -0,00 / -0,01R tegen
 -0,01 / -0,01 / -0,03R; holdout -0,01 / -0,03 / -0,05R tegen -0,06 / -0,09 / -0,04R - continuation met een duidelijke
 BoS is consequent iets beter, maar op zich niet winstgevend; de retest van het BoS-niveau voegt weinig toe.
+
+### Indicatoren bij de swing-setups: RSI, MACD, MA 50/200, point of control (beschrijvend, beide sets)
+De trader: "Kan je zelf eens prijs gaan analyseren met men setups en eventueel macd/rsi moving averages, point of
+control etc". `research/strategy/indicator_study.py` (op de test 63-runs, gestapeld: elke setup telt): de waarden van
+de dagkaars vóór de fill, in de handelsrichting: RSI(14), MACD(12, 26, 9)-histogram en de richting ervan, slot t.o.v.
+SMA 50 / SMA 200, helling van SMA 200, en de point of control van de poot (tick-volume per slot, bakjes van 0,1 ATR, van
+de start van de poot tot de fill). Volledige tabel: `docs/analyse_indicatoren_rsi_macd_ma_poc.txt`.
+- Over alle setups lijken lage RSI, MACD tegen en slot onder SMA 50 runners te geven (RSI 30-40: 15-16% runners, > 60:
+  2-3%). Dat zijn **dezelfde setups als de diepe instappen**: bij instap >= 0,66 verdwijnen die verschillen bijna
+  helemaal. RSI/MACD/MA meten hier vooral hoe diep de pullback is, en dat zit al in `entry_fib`.
+- MACD (boven/onder 0, draaiend), SMA 200 en de volgorde van de MA's: niet consistent tussen de twee sets.
+- In de kern (maand-setting, geen maand-S/R in de weg, instap >= 0,66, zonder week-trigger; 37 +0,12R / holdout +0,10R
+  gem.) zijn er twee kandidaten die op beide sets dezelfde kant op wijzen:
+  - **POC**: instap op of voorbij de POC van de poot (de pullback is door het volumeschap heen) +0,14 / +0,14R, tegen
+    instap vóór de POC (de POC ligt nog tussen instap en stop) +0,00 / +0,04R. Ook bij alle setups en bij alle diepe
+    instappen dezelfde kant op.
+  - RSI > 60 op de dag vóór de fill het zwakst (+0,02 / -0,06R); RSI 40-50 het sterkst (+0,18 / +0,18R). Niet
+    monotoon (30-40 op de holdout +0,02R).
+  Beide zijn achteraf gevonden, dus moeten ze vooraf vastgelegd getest worden.
+
+## Test 64 (vooraf vastgelegd): kern + instap op of voorbij de point of control van de poot
+`indicator_study.py --write t64 t63_ t63x_` schrijft de test 63-runs opnieuw weg met de kolommen `rsi` (RSI 14 van de kaars vóór
+de fill, in de handelsrichting) en `poc_thru` (instap ligt op of voorbij de POC van de poot, in de handelsrichting).
+**Beslissend: `((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0,66 & poc_thru`, `R_lad`, één positie
+per richting, 37 instrumenten; elke periode gem. > 0, PF >= 1,05, t >= 2; holdout elke periode > 0.** Gerapporteerd:
+de kern zonder POC (vergelijking), kern + `rsi <= 60`, kern + beide, en gestapeld (meerdere posities).

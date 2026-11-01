@@ -14,7 +14,12 @@ sys.path.insert(0, str(HERE))
 from t17_eval import one_per_dir, pf  # noqa: E402
 
 P = [("2005-14", "2005", "2015"), ("2015-20", "2015", "2021"), ("2021-25", "2021", "2026")]
-RULES = {"test 63: continuation + duidelijke BoS + retest van het BoS-niveau": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05",
+RULES = {"test 64: kern + instap op/voorbij de POC van de poot": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & poc_thru",
+         "kern zonder POC (vergelijking)": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66",
+         "kern + rsi <= 60": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & rsi <= 60",
+         "kern + POC + rsi <= 60": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & poc_thru & rsi <= 60",
+         "kern met instap vóór de POC": "((ms_trend == 1) | (mt_done == -1)) & ~m_block & entry_fib >= 0.66 & ~poc_thru",
+        "test 63: continuation + duidelijke BoS + retest van het BoS-niveau": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05",
          "test 63 + maand-setting, geen blokkade": "hl & bos & bos_atr >= 0.5 & key_fib >= 0.5 & key_fib <= 0.9 & entry_fib >= key_fib - 0.05 & ((ms_trend == 1) | (mt_done == -1)) & ~m_block",
          "continuation + duidelijke BoS (geen retest-eis)": "hl & bos & bos_atr >= 0.5",
          "geen continuation of zwakke BoS": "~(hl & bos & bos_atr >= 0.5)",
@@ -89,7 +94,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     f = pd.concat([pd.read_csv(p) for p in sorted((HERE / "out").glob(f"{a.prefix}*.csv")) if p.stat().st_size > 1])
     f = f[f.result == "gevuld"].reset_index(drop=True)
-    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr", "m_block", "m_sup", "m_flip", "m_block2", "hl"):
+    for k in ("htf_sup", "has_ob", "bos", "shift", "wk_sr", "w_rej", "origin_sr", "m_block", "m_sup", "m_flip", "m_block2", "hl", "poc_thru"):
         if k not in f:
             f[k] = False
         f[k] = f[k].astype(str).str.lower().eq("true")

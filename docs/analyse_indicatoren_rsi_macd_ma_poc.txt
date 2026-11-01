@@ -1,0 +1,129 @@
+
+#### alle setups: 37 n20642 -0.010R | holdout n17109 -0.039R
+
+## rsi_b
+  30-40            37: n 1758 +0.050R win  32% run 16.0% | hold: n 1288 -0.065R win  29% run 14.8%
+  40-50            37: n 5323 +0.020R win  41% run  9.3% | hold: n 4206 +0.006R win  41% run  9.9%
+  50-60            37: n 7353 -0.022R win  46% run  4.5% | hold: n 6128 -0.038R win  48% run  4.1%
+  <30              37: n  289 +0.028R win  25% run 15.9% | hold: n  256 -0.087R win  21% run 14.5%
+  >60              37: n 5919 -0.041R win  49% run  2.9% | hold: n 5231 -0.068R win  50% run  2.2%
+
+## macd_hist
+  boven 0 (mee)    37: n14014 -0.013R win  48% run  4.1% | hold: n11923 -0.046R win  48% run  3.5%
+  onder 0          37: n 6628 -0.004R win  36% run 11.3% | hold: n 5186 -0.023R win  37% run 11.4%
+
+## macd_draait
+  draait mee       37: n 6927 -0.022R win  50% run  3.0% | hold: n 6172 -0.062R win  51% run  2.3%
+  draait tegen     37: n13715 -0.004R win  41% run  8.2% | hold: n10937 -0.026R win  42% run  7.9%
+
+## above50
+  False            37: n 7341 +0.031R win  42% run  9.2% | hold: n 5899 -0.027R win  41% run  8.6%
+  True             37: n13301 -0.033R win  46% run  4.9% | hold: n11210 -0.045R win  47% run  4.5%
+
+## above200
+  False            37: n 8437 -0.006R win  44% run  6.6% | hold: n 6817 -0.049R win  44% run  5.9%
+  True             37: n12205 -0.013R win  44% run  6.3% | hold: n10292 -0.032R win  46% run  5.9%
+
+## s200_up
+  False            37: n 9569 -0.018R win  45% run  5.7% | hold: n 7802 -0.074R win  45% run  5.0%
+  True             37: n11073 -0.003R win  44% run  7.0% | hold: n 9307 -0.010R win  45% run  6.6%
+
+## ma_order
+  False            37: n 9694 -0.001R win  46% run  5.8% | hold: n 7942 -0.061R win  46% run  5.0%
+  True             37: n10948 -0.018R win  43% run  7.0% | hold: n 9167 -0.020R win  45% run  6.7%
+
+## poc_near
+  False            37: n14283 -0.005R win  42% run  7.8% | hold: n11571 -0.027R win  43% run  7.4%
+  True             37: n 5640 -0.014R win  50% run  3.0% | hold: n 4815 -0.059R win  50% run  2.6%
+  nan              37: n  719 -0.085R win  43% run  5.6% | hold: n  723 -0.092R win  46% run  4.7%
+
+## poc_below
+  False            37: n13341 +0.008R win  41% run  8.5% | hold: n10656 -0.018R win  42% run  8.0%
+  True             37: n 6582 -0.039R win  51% run  2.3% | hold: n 5730 -0.071R win  51% run  2.1%
+  nan              37: n  719 -0.085R win  43% run  5.6% | hold: n  723 -0.092R win  46% run  4.7%
+
+#### alleen diepe instap (fib >= 0,66): 37 n5182 +0.031R | holdout n4107 +0.028R
+
+## rsi_b
+  30-40            37: n 1268 +0.040R win  24% run 20.8% | hold: n  908 -0.019R win  24% run 20.3%
+  40-50            37: n 1916 +0.064R win  29% run 21.3% | hold: n 1562 +0.095R win  31% run 22.5%
+  50-60            37: n 1215 -0.045R win  29% run 19.6% | hold: n  967 +0.025R win  33% run 18.4%
+  <30              37: n  244 +0.082R win  23% run 17.6% | hold: n  209 +0.025R win  21% run 17.7%
+  >60              37: n  539 +0.042R win  32% run 22.1% | hold: n  461 -0.104R win  30% run 14.8%
+
+## macd_hist
+  boven 0 (mee)    37: n 1990 +0.073R win  33% run 21.5% | hold: n 1659 +0.001R win  32% run 18.0%
+  onder 0          37: n 3192 +0.005R win  25% run 20.2% | hold: n 2448 +0.046R win  28% run 21.2%
+
+## macd_draait
+  draait mee       37: n  760 +0.144R win  32% run 21.1% | hold: n  622 -0.037R win  29% run 16.6%
+  draait tegen     37: n 4422 +0.012R win  27% run 20.6% | hold: n 3485 +0.039R win  29% run 20.5%
+
+## above50
+  False            37: n 2836 +0.066R win  27% run 20.7% | hold: n 2212 +0.046R win  28% run 20.5%
+  True             37: n 2346 -0.010R win  29% run 20.7% | hold: n 1895 +0.006R win  31% run 19.3%
+
+## above200
+  False            37: n 2273 +0.039R win  29% run 20.3% | hold: n 1828 -0.014R win  29% run 18.7%
+  True             37: n 2909 +0.025R win  28% run 21.0% | hold: n 2279 +0.061R win  29% run 20.9%
+
+## s200_up
+  False            37: n 2166 +0.002R win  28% run 19.9% | hold: n 1741 -0.044R win  29% run 18.3%
+  True             37: n 3016 +0.052R win  28% run 21.3% | hold: n 2366 +0.081R win  30% run 21.1%
+
+## ma_order
+  False            37: n 2115 +0.056R win  30% run 21.0% | hold: n 1706 -0.031R win  30% run 18.3%
+  True             37: n 3067 +0.014R win  26% run 20.5% | hold: n 2401 +0.069R win  29% run 21.1%
+
+## poc_near
+  False            37: n 4327 +0.038R win  27% run 21.2% | hold: n 3404 +0.039R win  29% run 20.7%
+  True             37: n  630 +0.041R win  33% run 18.9% | hold: n  507 -0.011R win  33% run 17.4%
+  nan              37: n  225 -0.122R win  28% run 16.0% | hold: n  196 -0.067R win  34% run 14.3%
+
+## poc_below
+  False            37: n 4291 +0.043R win  27% run 21.5% | hold: n 3336 +0.049R win  29% run 21.0%
+  True             37: n  666 +0.009R win  32% run 17.3% | hold: n  575 -0.066R win  32% run 15.5%
+  nan              37: n  225 -0.122R win  28% run 16.0% | hold: n  196 -0.067R win  34% run 14.3%
+
+#### kern: maand-setting, geen blokkade, diep: 37 n1893 +0.117R | holdout n1571 +0.104R
+
+## rsi_b
+  30-40            37: n  415 +0.110R win  26% run 21.9% | hold: n  297 +0.019R win  25% run 20.9%
+  40-50            37: n  716 +0.179R win  33% run 23.2% | hold: n  606 +0.183R win  34% run 23.1%
+  50-60            37: n  470 +0.064R win  33% run 21.3% | hold: n  391 +0.092R win  35% run 18.4%
+  <30              37: n   64 +0.210R win  31% run 15.6% | hold: n   68 +0.344R win  29% run 25.0%
+  >60              37: n  228 +0.016R win  30% run 21.5% | hold: n  209 -0.060R win  31% run 16.7%
+
+## macd_hist
+  boven 0 (mee)    37: n  769 +0.116R win  34% run 21.3% | hold: n  659 +0.029R win  33% run 18.4%
+  onder 0          37: n 1124 +0.118R win  29% run 22.4% | hold: n  912 +0.158R win  30% run 22.5%
+
+## macd_draait
+  draait mee       37: n  287 +0.113R win  31% run 19.9% | hold: n  250 +0.010R win  32% run 16.8%
+  draait tegen     37: n 1606 +0.118R win  31% run 22.4% | hold: n 1321 +0.122R win  31% run 21.5%
+
+## above50
+  False            37: n  967 +0.129R win  30% run 21.3% | hold: n  779 +0.114R win  31% run 21.6%
+  True             37: n  926 +0.104R win  32% run 22.7% | hold: n  792 +0.095R win  32% run 19.9%
+
+## above200
+  False            37: n  667 +0.138R win  33% run 21.6% | hold: n  532 +0.001R win  32% run 17.7%
+  True             37: n 1226 +0.106R win  30% run 22.2% | hold: n 1039 +0.157R win  32% run 22.3%
+
+## s200_up
+  False            37: n  613 +0.127R win  33% run 21.7% | hold: n  483 -0.005R win  32% run 18.2%
+  True             37: n 1280 +0.112R win  30% run 22.1% | hold: n 1088 +0.153R win  32% run 21.9%
+
+## ma_order
+  False            37: n  645 +0.117R win  33% run 22.2% | hold: n  500 +0.038R win  34% run 18.4%
+  True             37: n 1248 +0.117R win  30% run 21.9% | hold: n 1071 +0.135R win  31% run 21.8%
+
+## poc_near
+  False            37: n 1552 +0.106R win  29% run 22.4% | hold: n 1303 +0.118R win  31% run 21.6%
+  True             37: n  251 +0.214R win  39% run 20.7% | hold: n  190 +0.138R win  37% run 19.5%
+  nan              37: n   90 +0.028R win  33% run 17.8% | hold: n   78 -0.207R win  31% run  9.0%
+
+## poc_below
+  False            37: n 1523 +0.144R win  30% run 23.0% | hold: n 1238 +0.138R win  31% run 22.6%
+  True             37: n  280 +0.001R win  33% run 17.5% | hold: n  255 +0.035R win  34% run 15.3%
+  nan              37: n   90 +0.028R win  33% run 17.8% | hold: n   78 -0.207R win  31% run  9.0%
