@@ -568,9 +568,11 @@ aanpassingen: setup 1 = echte BoS (alle criteria ✓), setup 10 = onbevestigd ->
 
 ---
 
-## Harde regel bearish engulfing (week en dag) - vastgelegd door de trader
+## Harde regel engulfing, bearish en bullish (week en dag) - vastgelegd door de trader
 - **Body over body**: open van de rode kaars >= slot van de groene kaars ervoor, en slot van de rode kaars < open van de
   groene kaars. Lonten tellen niet.
+- **Bullish engulfing omgekeerd**: open van de groene kaars <= slot van de rode kaars ervoor, en slot van de groene
+  kaars > open van de rode kaars. Lonten tellen niet.
 - Nagekeken op onze weekdata:
 | week | open rood vs slot groen | slot rood vs open groen | engulfing? |
 |---|---|---|---|
