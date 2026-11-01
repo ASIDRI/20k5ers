@@ -639,3 +639,14 @@ draaipunten) wijst het niveau van de trader niet aan (rang 4-13 van de kandidate
 week-niveau (weekly BoS-lijn / week-S/R, zoals in setup 1 en 3) is de beste kandidaat om dat te regelen.
 De parameters (zigzag 1,5 ATR, 2 lonten in 5 dagen, diepte >= 0,25) zijn afgesteld op deze 10 setups: dit is een
 replicatie, nog geen test. De echte test komt over alle instrumenten en periodes.
+
+### Data FOREXCOM vs onze data (2026-11-01)
+Prijzen van de screenshots tegen onze data: slotkoersen en swingpunten verschillen 0-1,5 pip (bv. instap setup 2
+1,15737 vs 1,15747; weekly BoS 1,17496 vs 1,17503; maand-S/R 1,08792 gelijk). Dag- en weekgrenzen zijn dezelfde (17:00
+New York). **Alleen de weekopen verschilt**: FOREXCOM opent de week op het slot van de vorige week (trader: week van 14
+januari 2019 open = slot ervoor = 1,14685; week van 24 september 2018 open 1,17492), onze data opent op de eerste koers
+na het weekendgat (1,14609 en 1,17457). Op FOREXCOM zijn de engulfings van setup 2 en 3 dus strikt geldig.
+In de engine: `WEEK_OPEN_PREV_CLOSE = True` - de open-voorwaarde van de week-engulfing wordt tegen het vorige slot
+gecontroleerd. Gevolg: ook de week van 1 juli 2019 (doji + engulfing aan week-S/R 1,1393, setup 5) wordt nu als trigger
+herkend, zoals de trader hem tekende (op onze data faalde hij met 10,7 pips). De replicatie blijft 5/6 trades en 3/3
+no-trades; setup 6 komt nu uit de juiste trigger-week.

@@ -47,6 +47,7 @@ from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
 
 W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.2, 0.05
+WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the trader's FOREXCOM charts
 D_REV = 1.5
 ZONE = (0.45, 1.0)
 SR_LB, SR_TOL, SR_MIN = 250, 0.1, 3
@@ -134,7 +135,11 @@ def weekly_triggers(o, h, l, c, a, state):
     for j in range(2, len(c)):
         if state[j] != -1 or c[j] >= o[j]:
             continue
-        if c[j - 1] > o[j - 1] and o[j] >= c[j - 1] - ENG_TOL * a[j] and c[j] < o[j - 1]:
+        # FOREXCOM opens the week at the previous close (trader 2026-11-01: week of 14 Jan 2019 open = previous close
+        # 1.14685; 24 Sep 2018 open 1.17492); our data's weekly open is the first quote after the weekend gap.
+        # So the open condition is checked against the previous close, with ENG_TOL for brokers that gap.
+        wopen = c[j - 1] if WEEK_OPEN_PREV_CLOSE else o[j]
+        if c[j - 1] > o[j - 1] and wopen >= c[j - 1] - ENG_TOL * a[j] and c[j] < o[j - 1]:
             out.append((j, "engulfing"))
         elif (ENG2 and c[j - 2] > o[j - 2] and abs(c[j - 1] - o[j - 1]) <= 0.3 * (h[j - 1] - l[j - 1])
               and c[j] < o[j - 2]):
