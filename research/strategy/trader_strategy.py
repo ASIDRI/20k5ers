@@ -51,9 +51,11 @@ WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the tr
 D_REV = 1.5
 ZONE = (0.45, 1.0)
 SR_LB, SR_TOL, SR_MIN = 250, 0.1, 3
+TOUCH_TOL = 0.1  # daily ATR: how close a wick must come to the level at entry
 STAR_WICK = 1.5
 SL_BUF, DEEP, BE = 0.1, 0.66, 0.1
 BEST_ONLY = False  # only the strongest daily S/R level inside the fib zone
+NO_CLOSE_ABOVE = True  # no daily close above the level during the test (setup 1, 26 Jun 2018)
 REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in the last REJ_BACK days (setups 1-4, 6, 7)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
 T1, T2, T3 = 0.2, 0.58, 1.618
@@ -296,9 +298,9 @@ def run_view(sym, d, w, dirn, start, end, log):
         f0, f1 = fib["f0"], fib["f1"]
         rng = f1 - f0
         if k > fib["bos"] and rng > 0:
-            tol = SR_TOL * a[k - 1]
+            tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
             zlo, zhi = f0 + ZONE[0] * rng, f0 + ZONE[1] * rng
-            inzone = [(p, n) for p, n in sr_levels(o, h, l, c, tol, k) if zlo - tol <= p <= zhi + tol]
+            inzone = [(p, n) for p, n in sr_levels(o, h, l, c, SR_TOL * a[k - 1], k) if zlo - tol <= p <= zhi + tol]
             best = inzone[:1] if BEST_ONLY else inzone  # the trader takes the one clear level of the fib
             for p, n in best:
                 if h[k] < p - tol or c[k] >= p:
@@ -309,6 +311,8 @@ def run_view(sym, d, w, dirn, start, end, log):
                 back = range(max(fib["bos"] + 1, k - REJ_BACK + 1), k + 1)
                 rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
                 if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
+                    continue
+                if NO_CLOSE_ABOVE and any(c[i] > p for i in back):  # the level must hold: bodies stay below it
                     continue
                 entry = c[k]
                 depth = (entry - f0) / rng

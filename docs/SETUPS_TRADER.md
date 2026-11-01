@@ -650,3 +650,17 @@ In de engine: `WEEK_OPEN_PREV_CLOSE = True` - de open-voorwaarde van de week-eng
 gecontroleerd. Gevolg: ook de week van 1 juli 2019 (doji + engulfing aan week-S/R 1,1393, setup 5) wordt nu als trigger
 herkend, zoals de trader hem tekende (op onze data faalde hij met 10,7 pips). De replicatie blijft 5/6 trades en 3/3
 no-trades; setup 6 komt nu uit de juiste trigger-week.
+
+### Is de engine-trade van 26 juni 2018 geldig volgens de regels? (vraag van de trader)
+Volgens alle regels in dit document: **ja**. Week bearish (BoS april/mei 2018), trigger week van 11 juni (engulfing),
+fib 1,17930 -> 1,15080 (zelfde als de trader), instap 1,16465 op ± 0,49, twee afwijzingslonten aan ± 1,1716 (25 juni top
+1,1713 slot 1,1704 eronder; 26 juni top 1,1721) + bearish engulfing; stop 1,1744. Uitkomst: laagste punt daarna 1,1527
+(28 juni), T1 1,1451 niet geraakt, 6 juli stop geraakt -> **-1R**.
+Getest of een objectieve regel hem uitsluit zonder de 5 overeenkomende trades te breken:
+- geen dagslot boven het niveau tijdens de test (nu ingebouwd, `NO_CLOSE_ABOVE`): het niveau 1,1683 valt af (25 juni
+  sloot erboven), maar 1,1716 blijft geldig;
+- exacte tikken (marge 0,03-0,07 dag-ATR i.p.v. 0,1): verandert niets (EURUSD 2017-18 heeft op bijna elke prijs
+  tikken);
+- recente reacties (laatste 60 dagen): 1,1716 had er 3 (21 mei, 1 juni, 25 juni), net als de niveaus van de trader.
+Wat de trader anders deed: zijn niveau (1,1743-1,1750) viel samen met de **weekly BoS-lijn**, en zijn instap lag dieper
+(0,83). Open vraag aan de trader: had hij deze trade ook genomen, of is er een regel die hem uitsluit?
