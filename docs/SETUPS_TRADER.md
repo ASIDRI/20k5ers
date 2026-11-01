@@ -833,3 +833,15 @@ fib 1 (de body van de swing) + 0,1 ATR. Nog niet ingevoerd.
 | 2% (1.000 per R) | ± 14.000-15.000 (+28-30%) | 8-9% |
 Per jaar bij 1%: 2016 +665, 2017 -505, 2018 +2.110, 2019 +1.045, 2020 +275, 2021 -2.060, 2022 +4.130, 2023 -510,
 2024 -1.525, 2025 +3.390. Langste verliesreeks: 4. Met ± 2,6 trades per jaar op één paar is het rendement klein.
+
+### Stop per trade afhankelijk van het dag-S/R (trader: "geen vaste SL")
+Getest, zelfde instappen en targets:
+| stopregel | EURUSD: uitgestopte winnaars / R | 37 instr.: uitgestopte winnaars / R | risico (ATR, mediaan) |
+|---|---|---|---|
+| volgend fib-niveau boven het dag-S/R (0,5 -> boven 0,618; 0,786 -> boven 0,886) | 4 / +22,7 | 192 / +16 | 0,9 |
+| twee fib-niveaus boven het dag-S/R | 2 / +18,0 | 129 / +44 | 1,3 |
+| boven het volgende dag-S/R + 0,1 ATR | 4 / +25,7 | 199 / +4 | 0,8 |
+| fib 1 + 0,1 ATR (ter vergelijking) | 0 / +15,0 | 0 / +120 | 2,3 |
+Op EURUSD alleen (26 trades) zien de stops die meeschuiven met het niveau er goed uit, over 954 trades niet: ze stoppen
+130-200 latere winnaars uit. De winnaars trekken vóór T1 vaak diep terug (tot fib 1). Wel: met een stop op fib 1 is
+het risico per trade in pips groter (± 2,3 dag-ATR), dus de positie kleiner; in R is dat al verrekend.

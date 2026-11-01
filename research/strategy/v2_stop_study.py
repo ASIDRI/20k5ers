@@ -20,7 +20,10 @@ from setup_study import load  # noqa: E402
 from test2 import cost_price  # noqa: E402
 
 
-def rules(t, h, a):
+LADDER = (0.5, 0.618, 0.66, 0.786, 0.886, 1.0, 1.13)
+
+
+def rules(t, o, h, l, c, a):
     k, f0, rng, e = t["_k"], t["_f0"], t["_rng"], t["_entry"]
     buf = T.SL_BUF * a[k]
     fib = lambda x: f0 + x * rng + buf  # noqa: E731
@@ -31,6 +34,12 @@ def rules(t, h, a):
          "boven het niveau + 0,5 ATR": t["_level"] + 0.5 * a[k],
          "fib 0,66": fib(0.66), "fib 0,796": fib(0.796), "fib 0,886": fib(0.886), "fib 1": fib(1.0),
          "boven de swing high (lont)": t["_hi"] + buf}
+    pl = (t["_level"] - f0) / rng  # where the daily S/R lies in the fib
+    nxt = [x for x in LADDER if x > pl + 0.02]
+    r["volgend fib-niveau boven het dag-S/R"] = fib(nxt[0] if nxt else 1.13)
+    r["twee fib-niveaus boven het dag-S/R"] = fib(nxt[1] if len(nxt) > 1 else 1.13)
+    above = [p for p, _ in T.sr_levels(o, h, l, c, T.SR_TOL * a[k - 1], k) if p > t["_level"] + T.TOUCH_TOL * a[k - 1]]
+    r["boven het volgende dag-S/R (+0,1 ATR)"] = (min(above) if above else f0 + rng) + buf
     if t["_band"] is not None:
         r["achter de BoS-lijn (+0,25 ATR), eerste trade"] = max(t["_band"]) + 0.25 * a[k]
     return {n: (max(v, e + 0.2 * a[k]), v < e + 0.2 * a[k]) for n, v in r.items()}  # never closer than 0.2 ATR
@@ -57,7 +66,7 @@ def main():
                 hit = next((i for i in range(k + 1, len(h)) if l[i] <= t1), None)
                 mae = (max(h[k + 1:hit + 1]) - f0) / rng if hit else np.nan  # adverse move before T1, in the fib
                 cost = cost_price(sym, abs(e))
-                for name, (sl, clamped) in rules(t, h, at).items():
+                for name, (sl, clamped) in rules(t, o, h, l, c, at).items():
                     mres = T.manage(h, l, k, e, sl, f0, rng, T.BE * at[k])
                     rows.append(dict(sym=sym, day=t["entry_day"], dir=dirn, rule=name, mae=mae,
                                      depth=(e - f0) / rng, risk_atr=(sl - e) / at[k],
