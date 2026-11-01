@@ -741,3 +741,16 @@ richting van de bestaande structuur is geen BoS-gebeurtenis (alleen een flip tel
 de week van 3 februari, met een fib vanaf de swing high van 9 maart (1,14400) - twijfelachtig in die chaos. Een
 chaos-filter op de instap (week-efficiëntie < 0,2) helpt niet: de winnaars van setup 2, 3 en 6 hadden 0,01 / 0,02 /
 0,11. Open vraag aan de trader: zou hij die short van 21 mei 2020 nemen?
+
+### Week van 1 juni 2020: weekly bullish BoS (trader) - aanpassing van de BoS-criteria
+De trader: slot 1,12920 boven de weekly BoS-lijn 1,11423 = bullish BoS. De engine zag hem een week later (breukweek 8
+juni, bevestigd 15 juni), omdat de efficiëntie-regel (>= 0,2) de week van 1 juni afkeurde (0,11). Diezelfde regel was
+nodig om de nep-BoS van juni 2019 (efficiëntie 0,08) tegen te houden - de twee zijn op efficiëntie niet te scheiden.
+Wel te scheiden: in juni 2020 sloot de week ook boven de **lont** van de swing high (1,11448), in juni 2019 niet
+(slot 1,13688 onder de lont 1,14482). Nieuwe regel: de BoS-week sluit voorbij de body-lijn + 0,25 ATR **én voorbij de
+lont van de swing**; de efficiëntie-regel vervalt; de acceptatie (de week erna niet terug) blijft (die houdt maart 2020
+tegen). Gevolg: bullish BoS breukweek 1 juni 2020, bevestigd na de week van 8 juni (zoals de trader); juni 2019 blijft
+nep; minder flips over 2015-2025 (13 i.p.v. 18). Replicatie 2018-2020 blijft 6/6. EURUSD 2016-2025: 26 trades, 14 met
+T1 (54%), +16,6R.
+De lijn zelf: engine 1,11194 (body van de swing-high-week 30 maart), trader 1,11423 (slot van de week ervoor) - de
+trader neemt de hoogste body rond de swing high; verschil 23 pips, geen gevolg voor de BoS-week.

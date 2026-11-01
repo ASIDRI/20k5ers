@@ -8,9 +8,9 @@ Everything is written for a short and mirrored for a long (the long runs on nega
 candle is used only after it has closed, a daily decision is taken at the daily close.
 
 1. Weekly structure (setup 5 / 10 criteria): major weekly swings = zigzag with a reversal of W_REV weekly ATR. Bearish
-   BoS = a weekly body close at least W_BREAK ATR below the body-low of the last major swing low, with the efficiency
-   of the last 10 weeks (net move / sum of weekly moves) >= W_ER; confirmed when the next week does not close back
-   above the line (acceptance). The structure stays bearish until a confirmed bullish BoS (mirrored).
+   BoS = a weekly body close at least W_BREAK ATR below the body-low of the last major swing low AND below that swing's
+   wick (BREAK_WICK; this replaced the efficiency filter W_ER, which could not tell the fake BoS of June 2019 from the
+   real one of 1 June 2020); confirmed when the next week does not close back above the line (acceptance). The structure stays bearish until a confirmed bullish BoS (mirrored).
 2. Weekly trigger in a bearish structure: a bearish engulfing week, body over body (open >= previous close minus
    ENG_TOL weekly ATR, close below the previous green open); or (setup 4) a close below the open of a
    green week two back after a small-bodied week (default on, --no-eng2). After a trade a new trigger week is needed,
@@ -53,7 +53,8 @@ from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
 import sr_levels as sr_mod  # noqa: E402  (the monthly S/R method of lesson 1)
 
-W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.2, 0.05
+W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.0, 0.05
+BREAK_WICK = True  # the BoS close must also be beyond the swing wick (replaces the efficiency filter, 2026-11-01)
 WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the trader's FOREXCOM charts
 D_REV = 1.5
 ZONE = (0.45, 1.0)
@@ -123,7 +124,9 @@ def weekly_structure(o, h, l, c):
                 if s == d or k is None:
                     continue
                 line = min(o[k], c[k]) if d == -1 else max(o[k], c[k])
-                if (c[i] - line) * d > W_BREAK * a[i] and er[i] >= W_ER:
+                wick = l[k] if d == -1 else h[k]
+                if ((c[i] - line) * d > W_BREAK * a[i] and er[i] >= W_ER
+                        and (not BREAK_WICK or (c[i] - wick) * d > 0)):
                     pend = (d, line, i)
                     break
         state[i] = s
