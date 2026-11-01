@@ -722,3 +722,22 @@ EURUSD 2016-2025, met aanloop vanaf januari 2016:
 | **totaal** | **23 (± 2,3 per jaar)** | **13 (57%)** | **+12,7R** |
 2021 op EURUSD: 3 longs (28 jan, 2 jun, 9 sep), alle drie -1R; EURUSD daalde dat jaar van 1,23 naar 1,12, de
 week-structuur draaide pas in mei bullish en in oktober weer bearish.
+
+### Maand-S/R in de engine (trader 2026-11-01: "vanaf er data is, om de zoveel tijd herbekijken")
+Methode van les 1 (`sr_levels.py`: lont-tikken van beide kanten, minstens 2 per kant, marge 0,15 maand-ATR, minstens
+0,75 maand-ATR uit elkaar) op ALLE gesloten maandkaarsen (onze EURUSD-data: vanaf december 2002), herberekend elke 6
+maanden (1 januari / 1 juli). Voorlopig alleen context: in het log en per trade het eerstvolgende maandniveau in de
+handelsrichting (`m_sr_next`) en of er een maandniveau vóór T2 ligt (`m_sr_before_t2`); de trades veranderen niet.
+Vergelijking met de maandniveaus van de trader (grafiek 2 maart 2020): engine 1 jan 2020 = 1,08560 / 1,12684 /
+1,15748 / 1,20750 / 1,25374 / 1,28580 / 1,32590 / 1,36920 / 1,40152 / 1,43386; trader = 1,08792 / 1,13941 (of
+1,13125) / 1,15699 / 1,26002 / 1,28643 / 1,33583 / 1,36803 / 1,40143. Binnen 30 pips: 1,15699, 1,28643, 1,36803,
+1,40143, 1,08792 (23 pips); verder af: 1,26002 (63 pips), 1,33583 (99 pips), 1,13125 (44 pips); extra bij de engine:
+1,20750 en 1,43386.
+
+### Week van 16 maart 2020: geen bearish continuation-BoS (vraag van de trader)
+De engine ziet het slot onder 1,08321 niet als nieuwe week-BoS: de structuur was al bearish, en een doorbraak in de
+richting van de bestaande structuur is geen BoS-gebeurtenis (alleen een flip telt). De efficiëntie was die weken 0,0 -
+0,3 (chaos). Wel nam de engine nog een short op **21 mei 2020** (1,09505, stop 1,12837, -1R) uit de oude trigger van
+de week van 3 februari, met een fib vanaf de swing high van 9 maart (1,14400) - twijfelachtig in die chaos. Een
+chaos-filter op de instap (week-efficiëntie < 0,2) helpt niet: de winnaars van setup 2, 3 en 6 hadden 0,01 / 0,02 /
+0,11. Open vraag aan de trader: zou hij die short van 21 mei 2020 nemen?

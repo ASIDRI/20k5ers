@@ -32,7 +32,10 @@ candle is used only after it has closed, a daily decision is taken at the daily 
    over body), or a bearish candle after a day that tested the level and closed below it (tweezer). Entry at the close.
 5. Stop: entry depth >= DEEP -> above the swing-high wick; else above max(fib 0.796, the pattern's high); plus
    SL_BUF daily ATR.
-6. Management (setup 6): T1 = fib -0.2 (50%), stop then a little in profit (entry - BE daily ATR); T2 = fib -0.58
+6. Monthly S/R (lesson 1 method, research/strategy/sr_levels.py: wick taps from both sides) from ALL monthly candles
+   closed so far, redrawn every MN_REFRESH months (1 January / 1 July). For now context only: logged, and per trade
+   the next monthly level in the trade direction (m_sr_next) and whether one lies before T2 (m_sr_before_t2).
+7. Management (setup 6): T1 = fib -0.2 (50%), stop then a little in profit (entry - BE daily ATR); T2 = fib -0.58
    (25%), stop then to fib 0; the rest runs to fib -1.618 or the stop. R_5050: 50% at T1, 50% at T2 (stop after T1 a
    little in profit). A bar that reaches the stop and a target counts as the stop. Costs from test2.cost_price.
 """
@@ -48,6 +51,7 @@ sys.path[:0] = [str(HERE), str(HERE.parents[1] / "backtest" / "src")]
 from setup_study import load  # noqa: E402
 from candle_avail import complete_times  # noqa: E402
 from test2 import cost_price  # noqa: E402
+import sr_levels as sr_mod  # noqa: E402  (the monthly S/R method of lesson 1)
 
 W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.2, 0.05
 WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the trader's FOREXCOM charts
@@ -63,6 +67,7 @@ REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in t
 FLIP_BAND = 0.35  # daily ATR around the weekly break line: the levels of the first trade after a weekly BoS (setup 1)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
 T1, T2, T3 = 0.2, 0.58, 1.618
+MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
 
@@ -213,7 +218,17 @@ def manage(h, l, k, entry, sl, f0, rng, be):
     return res
 
 
-def run_view(sym, d, w, dirn, start, end, log):
+def monthly_levels(m, mdone, t):
+    """Monthly S/R levels from every monthly candle closed by t (all history, as MT5 has it)."""
+    mm = m[mdone <= t]
+    if len(mm) < 24:
+        return []
+    c = {k: mm[k].values.astype(float) for k in ("open", "high", "low", "close")}
+    return sorted(p for p, _, _ in sr_mod.levels(c, tol_atr=MN_TOL, min_each=MN_MIN_EACH, max_levels=40,
+                                                    sep_atr=MN_SEP))
+
+
+def run_view(sym, d, w, dirn, start, end, log, m=None):
     """dirn -1: shorts on the real prices; +1: longs = shorts on negated prices."""
     sgn = -1 if dirn == 1 else 1  # price transform for this view
     def px(df):
@@ -243,6 +258,9 @@ def run_view(sym, d, w, dirn, start, end, log):
     k1 = int(np.searchsorted(dt, np.datetime64(pd.Timestamp(end).tz_localize(None)), "left"))
     k0 = max(k0, 30)
 
+    mdone = complete_times(m["time"], "MN", d["time"]).values if m is not None else None
+    mlev, next_refresh = [], None
+
     def week_of(k):  # last completed week at the close of day k
         return int(np.searchsorted(wdone, ddone[k], "right")) - 1
 
@@ -271,6 +289,13 @@ def run_view(sym, d, w, dirn, start, end, log):
         return best
 
     for k in range(k0, min(k1, len(c))):
+        if m is not None and (next_refresh is None or pd.Timestamp(ddone[k]) >= next_refresh):
+            mlev = monthly_levels(m, mdone, ddone[k])  # redrawn every MN_REFRESH months (1 Jan / 1 Jul)
+            t = pd.Timestamp(ddone[k])
+            mo = ((t.month - 1) // MN_REFRESH + 1) * MN_REFRESH + 1
+            next_refresh = pd.Timestamp(year=t.year + (mo > 12), month=(mo - 1) % 12 + 1, day=1, tz=t.tz)
+            if dirn == -1:
+                log.append((day_label(dt[k]), "maand-S/R (her)tekend: " + ", ".join(f"{q:.5f}" for q in mlev), 0))
         wi = week_of(k)
         if wi < 0:
             continue
@@ -340,7 +365,7 @@ def run_view(sym, d, w, dirn, start, end, log):
                 sl = (fib["hi"] if depth >= DEEP else max(f0 + 0.796 * rng, h[k], h[k - 1])) + SL_BUF * a[k]
                 if sl <= entry:
                     continue
-                m = manage(h, l, k, entry, sl, f0, rng, BE * a[k])
+                mres = manage(h, l, k, entry, sl, f0, rng, BE * a[k])
                 risk = sl - entry
                 cost = cost_price(sym, abs(entry))
                 when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
@@ -351,12 +376,14 @@ def run_view(sym, d, w, dirn, start, end, log):
                     sym=sym, dir=dirn, trigger_week=week_label(wstart[armed]), bos=day_label(dt[fib["bos"]]),
                     fib1=f1 * sgn, fib0=f0 * sgn, level=p * sgn, entry_day=day_label(dt[k]),
                     entry=entry * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
-                    depth=round(depth, 2), pattern=pat, t1_day=when(m["t1_i"]), t2_day=when(m["t2_i"]),
-                    exit_day=when(m["exit_i"]), open=m["open"],
-                    R=round((m["pnl"] - cost) / risk, 2), R_5050=round((m["pnl5"] - cost) / risk, 2), entry_t=dt[k]))
+                    depth=round(depth, 2), pattern=pat, t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]),
+                    exit_day=when(mres["exit_i"]), open=mres["open"],
+                    R=round((mres["pnl"] - cost) / risk, 2), R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[k],
+                    m_sr_next=next((q for q in sorted(mlev, key=lambda q: -q * sgn) if q * sgn < entry), None),
+                    m_sr_before_t2=any(f0 - T2 * rng < q * sgn < entry for q in mlev)))
                 log.append((day_label(dt[k]), f"TRADE {pat} aan dag-S/R {p * sgn:.5f} ({n} reacties), instap {entry * sgn:.5f}, "
                             f"stop {sl * sgn:.5f}, diepte {depth:.2f} -> R {trades[-1]['R']:+.2f}", dirn))
-                last_exit_t = dt[m["exit_i"]] if m["exit_i"] is not None else np.datetime64("2100-01-01")
+                last_exit_t = dt[mres["exit_i"]] if mres["exit_i"] is not None else np.datetime64("2100-01-01")
                 armed, fib = None, None
                 break
             if fib is None:
@@ -385,10 +412,10 @@ def main():
     out = HERE / "out"
     out.mkdir(exist_ok=True)
     for sym in a.syms:
-        d, w = load(sym, "D1"), load(sym, "W1")
+        d, w, mn = load(sym, "D1"), load(sym, "W1"), load(sym, "MN")
         log, trades = [], []
         for dirn in (-1, 1):
-            trades += run_view(sym, d, w, dirn, a.start, a.end, log)
+            trades += run_view(sym, d, w, dirn, a.start, a.end, log, mn)
         t = pd.DataFrame(trades).drop(columns="entry_t").sort_values("entry_day") if trades else pd.DataFrame()
         t.to_csv(out / f"{a.prefix}{sym}.csv", index=False)
         if a.v:
