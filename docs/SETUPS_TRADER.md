@@ -450,3 +450,29 @@ structuur**:
 Wachten op (a) geeft hier pas in de week van 3 februari een trigger, 4 weken later en ± 170 pips onder het
 niveau. Of (b) even goed werkt als (a), moet
 de backtest uitwijzen (beide varianten apart meten), niet deze ene trade.
+
+### 3. Dag (variant b: inzoomen na shooting star + slot onder de week-S/R) (03.png - 06.png)
+- **Daily BoS 1,10763**: body-low van 20 december 2019 (slot 1,10765); 23 januari 2020 sluit eronder (1,1056).
+- **Dag-S/R 1,11087**: meerdere lont-reacties okt 2019 - jan 2020 (rode en groene pijlen).
+- **Fib**: body swing high (21/22 januari, 1,10936) -> lont swing low (29 januari, 1,09924); bereik 101 pips. Het
+  dag-S/R-niveau ligt **net boven de fib-start (± 1,15)**.
+  - 0,5 = 1,1043 | 0,618 = 1,1055 | 0,66 = 1,1059 | 0,796 = 1,1073 | **1 = 1,1094**
+  - **-0,2 = 1,0972** | **-0,58 = 1,0934**
+- 31 januari: sterke bullish dagkaars tot **1,10956 = tikt de fib-start** (± 13 pips onder het dag-S/R) en sluit op
+  1,1095. Geen dagpatroon -> volgens de regels **geen trade**.
+- Daarna meteen omlaag: 3 februari bearish (slot 1,1061), T1 (1,0972) op 6 februari, T2 (1,0934) op 10 februari.
+
+### 4. Vraag van de trader: als het dag-S/R vlak boven de fib-start ligt, meteen short op de tik van de fib-start?
+Zonder patroon, als uitzondering. Wat het hier had opgeleverd (stop net boven het dag-S/R, ± 1,1115):
+| instap | risico | T1 | T2 |
+|---|---|---|---|
+| limiet op de fib-start 1,1094 (31 jan) | ± 21 pips | +5,8R | +7,6R |
+| slot van de eerste bearish dag erna 1,1061 (3 feb) | ± 54 pips | +1,6R | +2,3R |
+
+Beoordeling: één voorbeeld, achteraf gekozen - te weinig om er een regel van te maken. Het risico van een limiet
+zonder bevestiging: de prijs loopt door tot het S/R-niveau en erboven (dan is het een nieuwe swing high en wordt de fib
+opnieuw getrokken). Omdat het risico zo klein is, hoeft de win rate niet hoog te zijn; dat moet de backtest uitmaken.
+Te testen als **aparte instap-variant** met eigen statistieken:
+- (i) limiet op de fib-start als het dag-S/R binnen ± 0,25 ATR (dag) erboven ligt, stop boven het S/R;
+- (ii) zelfde, maar instap op het slot van de eerste bearish dagkaars na de tik (minder kans om overreden te worden,
+  kleinere R).
