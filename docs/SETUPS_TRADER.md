@@ -664,3 +664,26 @@ Getest of een objectieve regel hem uitsluit zonder de 5 overeenkomende trades te
 - recente reacties (laatste 60 dagen): 1,1716 had er 3 (21 mei, 1 juni, 25 juni), net als de niveaus van de trader.
 Wat de trader anders deed: zijn niveau (1,1743-1,1750) viel samen met de **weekly BoS-lijn**, en zijn instap lag dieper
 (0,83). Open vraag aan de trader: had hij deze trade ook genomen, of is er een regel die hem uitsluit?
+
+### Replicatie na de regel "niveaus van de week-breuk" (trader 2026-11-01): 6/6 trades, 3/3 no-trades
+De trader: bij de eerste short na een week-BoS zijn de dag-S/R-niveaus die bij de breuk horen de sleutel (1,17273 en
+1,17492 rond de weekly BoS-lijn); de trade ligt binnen die twee. In de engine: voor de eerste trigger na een week-BoS
+tellen alleen de week-breuklijn die de triggerweek opnieuw test (body-low van de laatste gebroken week-fractal-low:
+week van 11 dec 2017, 1,17503) en dag-S/R binnen 0,35 dag-ATR ervan (`FLIP_BAND`). Het niveau 1,1704 (26 juni) valt
+daarbuiten.
+
+| # | trader | engine |
+|---|---|---|
+| 1 | 10 jul 2018, 1,1743, stop 1,18589; T1 10 aug, T2 15 aug | **10 jul 2018, 1,17444, stop 1,18604, diepte 0,83; T1 10 aug, T2 14 aug, rest 21 aug -> +2,6R** |
+| 2 | 16 okt 2018, 1,15737 | 16 okt 2018, 1,15747; T1 25 okt, T2 12 nov -> +1,6R |
+| 3 | 1 feb 2019, 1,14548; T1, stop in winst | 31 jan 2019, 1,14474; T1 15 feb -> +1,4R |
+| 4 | 2 mei 2019, 1,11722; verlies | 1 mei 2019, 1,11949 -> -1R |
+| 5 | geen trade | geen trade |
+| 6 | 9 aug 2019, 1,11988; T1, T2, rest fib 0 | 6 aug 2019, 1,12018; T1 30 aug, T2 1 okt, rest 10 okt -> +2,7R |
+| 7 | 21 nov 2019, 1,10578; verlies | 20 nov 2019, 1,10724 -> -1R |
+| 8, 9 | geen trade | geen trade |
+
+Geen extra trades meer in 1 mei 2018 - 1 april 2020 (de extra trade van 23 aug 2018 viel weg: de engine zat toen in
+trade 1, net als de trader). Totaal 6 trades, 4 winnaars (T1), +6,3R (50/25/25) of +7,4R (50/50).
+Nog steeds: de parameters zijn op deze setups afgesteld; replicatie, geen test.
+Daarna (april 2020 - 2025) vindt de engine op EURUSD nog 6 trades (+4,2R): ± 1 per jaar - weinig.

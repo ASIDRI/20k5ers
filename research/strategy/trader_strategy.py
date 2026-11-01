@@ -15,7 +15,9 @@ candle is used only after it has closed, a daily decision is taken at the daily 
    ENG_TOL weekly ATR, close below the previous green open); or (setup 4) a close below the open of a
    green week two back after a small-bodied week (default on, --no-eng2). After a trade a new trigger week is needed,
    starting after the trade has closed; a trigger stays armed until it gives a trade. The first trigger after a weekly
-   BoS needs no daily BoS: its fib starts at the highest body of the trigger week (setup 1).
+   BoS needs no daily BoS: its fib starts at the highest body of the trigger week, and only the weekly BoS line it
+   retests (body-low of the last weekly fractal swing low broken before the trigger week) and the daily S/R levels
+   within FLIP_BAND daily ATR of it count (setup 1: 1.17503 and 1.17273).
 3. Daily: daily swings = zigzag with a reversal of D_REV daily ATR. Daily BoS = the first daily close below the
    body-low of the last daily swing low, from the start of the trigger week on. Fib 1 = the highest body between that
    swing low and the BoS candle; fib 0 = the lowest low since (moves down with new lows; fib 1 is kept while no
@@ -23,7 +25,8 @@ candle is used only after it has closed, a daily decision is taken at the daily 
 4. Entry: a daily S/R level inside fib ZONE (wick reactions in the last SR_LB days within SR_TOL daily ATR: a sell =
    a high at the level with the body below, a bounce = a low at the level with the body above; >= SR_MIN reactions,
    at least one of each). At least REJ_N rejection wicks at the level in the last REJ_BACK days (high at or above the
-   level, close below, upper wick >= the tolerance) with at least one bearish candle; entry close >= MIN_DEPTH deep.
+   level, close below, upper wick >= the tolerance) with at least one bearish candle, and no daily close above the
+   level (plus the tolerance) in that window; entry close >= MIN_DEPTH deep.
    The day's high reaches the level, the close is below it, and a bearish pattern: shooting
    star / doji / inverted hammer (upper wick >= STAR_WICK x body and >= 40% of the range), a bearish engulfing (body
    over body), or a bearish candle after a day that tested the level and closed below it (tweezer). Entry at the close.
@@ -57,6 +60,7 @@ SL_BUF, DEEP, BE = 0.1, 0.66, 0.1
 BEST_ONLY = False  # only the strongest daily S/R level inside the fib zone
 NO_CLOSE_ABOVE = True  # no daily close above the level during the test (setup 1, 26 Jun 2018)
 REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in the last REJ_BACK days (setups 1-4, 6, 7)
+FLIP_BAND = 0.35  # daily ATR around the weekly break line: the levels of the first trade after a weekly BoS (setup 1)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
 T1, T2, T3 = 0.2, 0.58, 1.618
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
@@ -242,6 +246,17 @@ def run_view(sym, d, w, dirn, start, end, log):
     def week_of(k):  # last completed week at the close of day k
         return int(np.searchsorted(wdone, ddone[k], "right")) - 1
 
+    wlow = [i for i in range(2, len(wl) - 2) if wl[i] == min(wl[i - 2:i + 3])]  # weekly fractal swing lows
+
+    def weekly_break_line(j):
+        """The weekly BoS line the trigger week retests: body-low of the last weekly fractal swing low that a weekly
+        close broke BEFORE week j, and that week j's high reached again (setup 1: Dec 2017, 1.17503)."""
+        for i in reversed([i for i in wlow if i + 2 < j]):
+            line = min(wo[i], wc[i])
+            if np.any(wc[i + 1:j] < line) and wh[j] >= line:
+                return float(line)
+        return None
+
     def find_bos(ka, kb):
         """Latest first close below the body-low of the last confirmed daily swing low, ka <= day <= kb."""
         best = None
@@ -281,9 +296,10 @@ def run_view(sym, d, w, dirn, start, end, log):
                     kb = int(np.searchsorted(dt, wdone[armed], "left")) - 1
                     top = ka + int(np.argmax(np.maximum(o[ka:kb + 1], c[ka:kb + 1])))
                     fib = dict(bos=kb, f1=float(max(o[top], c[top])), hi=float(np.max(h[ka:kb + 1])),
-                               f0=float(np.min(l[top:k + 1])), line=None)
+                               f0=float(np.min(l[top:k + 1])), line=None, flip=weekly_break_line(armed))
                     log.append((day_label(dt[k]), f"eerste trigger na de week-BoS: fib 1 = body swing high van de "
-                                f"triggerweek {fib['f1'] * sgn:.5f}", dirn))
+                                f"triggerweek {fib['f1'] * sgn:.5f}; niveaus rond de week-breuklijn "
+                                f"{fib['flip'] * sgn if fib['flip'] else float('nan'):.5f}", dirn))
             continue
         if fib is None:
             b = find_bos(k, k)
@@ -301,6 +317,9 @@ def run_view(sym, d, w, dirn, start, end, log):
             tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
             zlo, zhi = f0 + ZONE[0] * rng, f0 + ZONE[1] * rng
             inzone = [(p, n) for p, n in sr_levels(o, h, l, c, SR_TOL * a[k - 1], k) if zlo - tol <= p <= zhi + tol]
+            if fib.get("flip"):  # first trade after a weekly BoS: only the levels that belong to the break (setup 1)
+                fl = fib["flip"]
+                inzone = [(fl, 0)] + [(p, n) for p, n in inzone if abs(p - fl) <= FLIP_BAND * a[k - 1]]
             best = inzone[:1] if BEST_ONLY else inzone  # the trader takes the one clear level of the fib
             for p, n in best:
                 if h[k] < p - tol or c[k] >= p:
@@ -312,7 +331,7 @@ def run_view(sym, d, w, dirn, start, end, log):
                 rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
                 if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
                     continue
-                if NO_CLOSE_ABOVE and any(c[i] > p for i in back):  # the level must hold: bodies stay below it
+                if NO_CLOSE_ABOVE and any(c[i] > p + tol for i in back):  # the level must hold: bodies stay below it
                     continue
                 entry = c[k]
                 depth = (entry - f0) / rng
