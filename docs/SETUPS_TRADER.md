@@ -189,3 +189,56 @@ niet. Bij 50% op T1: totaal ± +1,4 tot +1,6R.
    (-0,65) precies op de maand-S/R en werd hij wel geraakt.
 
 ---
+
+## Setup 4 - EURUSD short, mei 2019 (vervolg op setup 3) - uitkomst volgt van de trader
+Grafieken: `docs/setups_trader/04_eurusd_2019_short/01.png` ... `05.png`.
+
+### 1. Maand
+Nog steeds rond **maand-S/R 2 (1,13125)**.
+
+### 2. Week: nieuwe BoS, doji, engulfing t.o.v. een oudere up-candle (01.png, 02.png)
+- Week nog steeds in downtrend; **nieuwe weekly BoS 1,12940** (body-low van februari 2019; de week van 4 maart sluit
+  eronder op 1,1235).
+- **Week van 18 maart: doji / weekly shooting star** (open 1,1323, top 1,1448, slot 1,1301).
+- **Week van 25 maart: bearish engulfing t.o.v. de up-candle van maandag 11 maart** (die week 1,1234 -> 1,1325; de
+  week van 25 maart sluit op 1,1218, onder zijn open). Nieuwe regel van de trader: **de engulfing mag ook gelden
+  t.o.v. de week vóór de vorige week, niet alleen de week ervoor.**
+
+### 3. Dag: BoS, nieuwe swing low, fib, dag-S/R (03.png - 05.png)
+- **Daily BoS 1,11938**: body-low van de laatste dag-swing low (7 maart, slot 1,1194, lont 1,1176); 24 april sluit
+  eronder (1,1154).
+- Wachten op een **nieuwe dag-swing low**: 26 april, lont **1,11115**.
+- **Fib**: body van de laatste swing high (15 april, 1,13046) -> lont swing low (1,11115); bereik 193 pips.
+  - **0,5 = 1,1208** | 0,618 = 1,1231 | 0,66 = 1,1239 | **0,796 = 1,1265** | 1 = 1,1305
+  - **-0,2 = 1,1073** | -0,25 = 1,1063 | -0,28 = 1,1057 | **-0,6 = 1,0996** | -0,65 = 1,0986
+- **Dag-S/R 1,12342** (tussen 0,618 en 0,66): steun 15 februari, rejections begin april (rode pijlen, toppen
+  1,1246-1,1255), steun 10 en 18 april (groene pijlen; 18 april low 1,1229).
+- Eis van de trader voor een dag-S/R-niveau: **minstens 2 bounces + 2 sells, of 1 bounce + 2 sells, of 2 sells + 1
+  bounce; liefst één lont die het niveau exact raakt.**
+- **Patroon**: **daily shooting star op 1 mei** (open 1,1215, top 1,1265 = tot de 0,796, slot 1,1195), de dag erna
+  (2 mei) een **bearish engulfing t.o.v. de groene kaars van de dag vóór de shooting star** (30 april 1,1185 ->
+  1,1215; 2 mei sluit op 1,1173).
+
+### 4. Trade (05.png)
+| | prijs | toelichting |
+|---|---|---|
+| instap short | **1,11722** | slot van de bearish engulfing (2 mei); ± 0,31 in de fib (de lont van de shooting star kwam tot 0,796) |
+| stop | **1,12796** | "een beetje boven het short-patroon" (top shooting star 1,1265); risico 107 pips |
+| target op de grafiek | **1,09845 (-0,65)** | T1 -0,2 = 1,1073, T2 -0,6 = 1,0996 |
+| uitkomst | *volgt van de trader* | zie hieronder |
+
+Op onze data (vooruitkijkend, ter controle): de laagste punten na de instap zijn 1,1107 (23 mei) en 1,1116 (30 mei) -
+**T1 (1,1073) mist met ± 34 pips**; op 5 juni komt de prijs tot 1,1307 -> **stop (1,1280) geraakt, -1R**. Broker-data
+verschillen een paar pips; de trader bevestigt de uitkomst.
+
+### 5. Notities voor de engine (nog niet verwerken)
+1. Week-engulfing ruimer: **slot onder de open van een up-candle van 1 of 2 weken terug**, ook na een doji.
+2. Dag-S/R-niveau objectief te maken: **>= 3 lont-reacties met minstens 1 bounce en 1 sell (2+2, 1+2, 2+1)**, liefst
+   één exacte tik.
+3. Patroon: shooting star + de dag erna een bearish engulfing (t.o.v. de laatste groene kaars); instap op het slot.
+4. **Stop boven het patroon**, niet boven de swing high -> kleiner risico (107 pips; setup 1: 116 met stop boven de
+   swing high).
+5. Instap weer ondiep (0,31 op slot), het patroon raakte de 0,796 met de lont. Diepte op slot is dus geen goede maat
+   voor de trader; **de lont-tik van het patroon in de zone + het S/R-niveau** is wat telt.
+
+---
