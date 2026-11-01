@@ -700,3 +700,25 @@ break-even (37: iets negatief, holdout: iets positief). De 67% van de EURUSD-rep
 niet. Eén jaar en ± 60 trades per set is een kleine steekproef (onzekerheid op de win rate ± 6 procentpunt).
 Starten op 1 januari 2021 zonder aanloop geeft een opstart-piek (22 trades in januari, oude triggers); daarom de
 aanloop vanaf 2019.
+
+### Alleen EURUSD (trader: "je moest gewoon zoeken op EURUSD")
+De trader stuurde **6 trades over mei 2018 - maart 2020 (± 1 jaar en 11 maanden) = ± 3 trades per jaar** op EURUSD.
+Correctie in de engine: de week-breuklijn van de eerste trade na een week-BoS beperkt de niveaus alleen als die lijn
+binnen de fib ligt (in maart 2021 koos de engine een lijn op 1,0823 bij een prijs rond 1,19, waardoor er niets kon).
+Patronen van longs krijgen nu hun echte naam (hammer, bullish engulfing). De replicatie 2018-2020 blijft 6/6.
+EURUSD 2016-2025, met aanloop vanaf januari 2016:
+| jaar | trades | T1 geraakt | R |
+|---|---|---|---|
+| 2016 | 4 | 3 | +2,9 |
+| 2017 | 2 | 0 | -2,0 |
+| 2018 | 2 | 2 | +4,2 |
+| 2019 | 4 | 2 | +2,1 |
+| 2020 | 2 | 1 | +1,9 |
+| 2021 | 3 | 0 | -3,1 |
+| 2022 | 0 | - | - |
+| 2023 | 1 | 0 | -1,0 |
+| 2024 | 2 | 2 | +2,3 |
+| 2025 | 3 | 3 | +5,5 |
+| **totaal** | **23 (± 2,3 per jaar)** | **13 (57%)** | **+12,7R** |
+2021 op EURUSD: 3 longs (28 jan, 2 jun, 9 sep), alle drie -1R; EURUSD daalde dat jaar van 1,23 naar 1,12, de
+week-structuur draaide pas in mei bullish en in oktober weer bearish.

@@ -317,8 +317,8 @@ def run_view(sym, d, w, dirn, start, end, log):
             tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
             zlo, zhi = f0 + ZONE[0] * rng, f0 + ZONE[1] * rng
             inzone = [(p, n) for p, n in sr_levels(o, h, l, c, SR_TOL * a[k - 1], k) if zlo - tol <= p <= zhi + tol]
-            if fib.get("flip"):  # first trade after a weekly BoS: only the levels that belong to the break (setup 1)
-                fl = fib["flip"]
+            if fib.get("flip") and f0 <= fib["flip"] <= f1:  # first trade after a weekly BoS: only the levels that
+                fl = fib["flip"]  # belong to the break (setup 1); a break line outside the fib does not restrict
                 inzone = [(fl, 0)] + [(p, n) for p, n in inzone if abs(p - fl) <= FLIP_BAND * a[k - 1]]
             best = inzone[:1] if BEST_ONLY else inzone  # the trader takes the one clear level of the fib
             for p, n in best:
@@ -344,6 +344,9 @@ def run_view(sym, d, w, dirn, start, end, log):
                 risk = sl - entry
                 cost = cost_price(sym, abs(entry))
                 when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
+                if dirn == 1:  # the long runs on negated prices: name the pattern as it looks on the real chart
+                    pat = {"shooting star / doji": "hammer / doji", "bearish engulfing": "bullish engulfing",
+                           "tweezer / bearish na test": "tweezer / bullish na test"}[pat]
                 trades.append(dict(
                     sym=sym, dir=dirn, trigger_week=week_label(wstart[armed]), bos=day_label(dt[fib["bos"]]),
                     fib1=f1 * sgn, fib0=f0 * sgn, level=p * sgn, entry_day=day_label(dt[k]),
