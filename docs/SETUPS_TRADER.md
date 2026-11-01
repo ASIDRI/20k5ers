@@ -118,3 +118,51 @@ Duur: swing low 9 oktober -> instap 16 oktober -> T1 25 oktober -> T2 12 novembe
 6. Stop boven het daily-BoS-niveau, niet boven de swing high (kleiner risico dan bij setup 1).
 
 ---
+
+## Setup 3 - EURUSD short, februari 2019 (vervolg op setup 2) - uitkomst volgt
+Grafieken: `docs/setups_trader/03_eurusd_2019_short/01.png` ... `05.png`.
+
+### 1. Maand: rond maand-S/R 2 (01.png)
+De prijs zit rond **maand-S/R 2 (1,13125)**. Lezing: "het kan wat trager gaan" - maand-steun remt, maar beslist niet.
+
+### 2. Week: nieuwe BoS, terug naar een week-S/R, bearish engulfing (01.png - 03.png)
+- Nog geen bullish weekstructuur, wel een **nieuwe weekly BoS op 1,13929** (de body-low van de week van 13 augustus
+  2018, doorbroken eind oktober / begin november: weekslot 1,1338 op 9 november). Verwachting: nog lager.
+- Werkwijze: **zoek een week-S/R-niveau waar de prijs naar terugkeert, en wacht daar op een bearish weekkaars.** Er is
+  er maar één die als steun én weerstand getest is: **week-S/R 1,15000** (steun begin oktober 2018, groene pijlen;
+  weerstand week van 5 november, top 1,1500, rode pijl).
+- De prijs gaat er naartoe (week van 7 januari 2019, top 1,1570, lont door 1,1500 tot vlak bij maand-S/R 1) en de
+  **week van 14 januari is een bearish engulfing** (open 1,1461, slot 1,1362; omvat de body 1,1397 -> 1,1469).
+
+### 3. Dag: BoS, fib, retest van de week-S/R (04.png, 05.png)
+- **Daily BoS 1,13440**: de body-low van de swing low van 2 januari (slot 1,13447). **24 januari = bearish BoS
+  candle** (slot 1,1305, lont 1,12894).
+- **Fib**: body van de dag-swing high (9/10 januari, 1,15426) -> lont van de swing low (24 januari, 1,12894); bereik
+  253 pips.
+  - 0,5 = 1,1416 (valt op de **weekly BoS 1,1413**) | 0,618 = 1,1446 | **0,66 = 1,1457** | 0,786 = 1,1488 | 1 = 1,1543
+  - -0,2 = 1,1239 | -0,25 = 1,1226 | **-0,28 = 1,1219** | -0,6 = 1,1138
+- Pullback helemaal terug naar de **week-S/R 1,1500** (± 0,79-0,83 in de fib; de trader: "aan de 0,786"):
+  - **2 dag-lonten tikken het niveau** (30 januari top 1,1502, 31 januari top 1,1514) -> rejection;
+  - 31 januari sluit bearish (1,1480 -> 1,1447);
+  - 1 februari **doji / shooting star** (top 1,1488, slot 1,1456).
+- Regel van de trader (nog te bekijken): **minstens 1 bearish kaars tussen de rejection en de instap, daarna een doji
+  / hammer / shooting star op de dag.**
+
+### 4. Trade (uit 05.png)
+| | prijs | toelichting |
+|---|---|---|
+| instap short | **1,14548** | na de doji / shooting star, ± 0,66 in de fib |
+| stop | **1,15743** | boven de swing high (1,1570) en maand-S/R 1 (1,15542); risico 119 pips |
+| target (op de grafiek) | **1,12159 (-0,28)** | |
+| uitkomst | *volgt* | |
+
+### 5. Notities voor de engine (nog niet verwerken)
+1. **Week-S/R als terugkeerniveau**: de trader kiest het (enige) week-niveau dat als steun én weerstand getest is, en
+   wacht dáár op de bearish weekkaars. In setup 1 en 2 was dat het weekly-BoS-niveau; hier een apart week-S/R-niveau.
+2. Volgorde opnieuw: week-engulfing -> daily BoS (bearish BoS candle) -> fib -> pullback tot een S/R-niveau ->
+   lont-rejections -> **minstens één bearish kaars** -> doji/hammer/shooting star -> instap.
+3. Fib-confluentie: 0,5 op de weekly BoS, de instapzone tussen 0,66 en het week-S/R-niveau (± 0,8).
+4. Stop boven de swing high én de maand-S/R; target -0,28 op de grafiek (T1 -0,2 zoals altijd; T2 -0,6 volgens setup
+   2 - na te gaan met de uitkomst).
+
+---
