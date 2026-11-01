@@ -602,3 +602,40 @@ aanpassingen: setup 1 = echte BoS (alle criteria ✓), setup 10 = onbevestigd ->
 | setup 4-vorm (groene week 2 weken terug) | - | voorlopig **niet** als trigger: enige voorbeeld was een verliezer |
 Elke uitbreiding geeft meer trades én meer verliezers; alleen houden wat in de backtest (37 + holdout, per periode)
 de verwachting per trade niet verlaagt.
+
+---
+
+## Strategie v2 in de engine: `research/strategy/trader_strategy.py` - replicatie EURUSD vanaf 1 mei 2018
+De vorige strategie is gearchiveerd (`docs/STRATEGY_V1_ARCHIVE.md`). De nieuwe engine volgt de regels van dit document
+(zie de docstring bovenaan het bestand):
+week-structuur (zigzag 1,5 week-ATR, BoS-criteria 2-4 van setup 5/10) -> week-trigger (engulfing body over body met
+0,05 ATR tolerantie op de open, of de setup-4-vorm) -> daily BoS (zigzag 1,5 dag-ATR, body-low) -> fib (hoogste body
+tussen de gebroken swing low en de BoS -> laagste low; fib 1 blijft staan zolang er geen trade kwam; slot boven fib 1 =
+vervalt) -> dag-S/R in fib 0,45-1 -> minstens 2 afwijzingslonten aan het niveau in 5 dagen + minstens 1 bearish kaars
++ patroon, instap op het slot (>= 0,25 diep) -> stop (diep >= 0,66: boven de swing high, anders boven max(0,796,
+patroon)) -> T1 -0,2 (50%, stop iets in winst), T2 -0,58 (25%, stop naar fib 0), rest tot -1,618.
+Een nieuwe week-trigger telt pas na het sluiten van de vorige trade.
+
+    python research/strategy/trader_strategy.py EURUSD --from 2018-05-01 --to 2020-04-01 -v
+
+| trader | engine | overeen? |
+|---|---|---|
+| 1: short 10 jul 2018, 1,1743 (fib 1,17916 -> 1,15080), T1 + T2 | short **26 jun 2018**, 1,16465, zelfde fib (1,17930 -> 1,15080), bearish engulfing aan dag-S/R 1,1683 -> -1R | **nee**: andere instap (eerder, lager niveau) |
+| - | short 23 aug 2018 (trigger week 23 jul) -> -1R | extra (gevolg van 1: de trader zat toen nog in trade 1) |
+| 2: short 16 okt 2018, 1,15737, T1 + T2 | short **16 okt 2018, 1,15747**, zelfde fib, T1 25 okt, T2 12 nov -> +1,6R | **ja** |
+| 3: short 1 feb 2019, 1,14548 aan week-S/R 1,1500, T1, stop in winst | short **31 jan 2019, 1,14474** aan dag-S/R 1,1502, zelfde fib, T1 15 feb -> +1,4R | **ja** (1 dag eerder) |
+| 4: short 2 mei 2019, 1,11722, verlies | short **1 mei 2019, 1,11949**, trigger week 25 mrt, fib 1 1,13046 (exact) -> -1R | **ja** (1 dag eerder) |
+| 5: geen trade (geen pullback) | geen trade | **ja** |
+| 6: short 9 aug 2019, 1,11988, T1 + T2, rest op fib 0 | short **6 aug 2019, 1,12018**, zelfde fib, T1 30 aug, T2 1 okt, rest fib 0 10 okt -> +2,7R | **ja** |
+| 7: short 21 nov 2019, 1,10578, verlies | short **20 nov 2019, 1,10724**, zelfde fib -> -1R | **ja** (1 dag eerder) |
+| 8: geen trade (alleen tik fib-start) | geen trade | **ja** |
+| 9: geen trade (prijs schiet erdoor) | geen trade | **ja** |
+| (10: maart 2020, nog geen dagbeelden) | short 31 mrt 2020 -> -1R | nog te bekijken |
+
+**Resultaat: 5 van de 6 trades en alle 3 de no-trades komen overeen.** Afwijking: setup 1 - de engine neemt op 26 juni
+2018 een bearish engulfing aan een lager dag-niveau (1,1683, ± 0,6 in de fib); de trader wachtte op het niveau van de
+weekly BoS / dag-S/R 1,1743-1,1750. Een objectieve keuze "het sterkste niveau" (meeste lont-reacties, ook alleen op
+draaipunten) wijst het niveau van de trader niet aan (rang 4-13 van de kandidaten in de zone); de samenval met een
+week-niveau (weekly BoS-lijn / week-S/R, zoals in setup 1 en 3) is de beste kandidaat om dat te regelen.
+De parameters (zigzag 1,5 ATR, 2 lonten in 5 dagen, diepte >= 0,25) zijn afgesteld op deze 10 setups: dit is een
+replicatie, nog geen test. De echte test komt over alle instrumenten en periodes.
