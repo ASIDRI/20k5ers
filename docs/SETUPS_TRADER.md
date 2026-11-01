@@ -797,3 +797,14 @@ fib 1 of na de eerste trade.
 Resultaat juni 2020: **long 17 juni 2020** (hammer aan dag-S/R 1,12313, instap 1,12436, stop 1,09940 = boven de
 0,796) -> T1 gehaald, +1,75R. De trader: 22 juni (engulfing aan 1,12121, instap 1,12609, stop 1,11088). Zelfde trade,
 3 handelsdagen eerder; de engine-stop ligt verder (0,796-regel), dus minder R. Replicatie 2018-2020 blijft 6/6.
+
+### Regel: de lont van de instapkaars bereikt de zone (>= 0,45 in de fib)
+De engine ging in juni 2020 al op 17 juni long (hammer, lont tot 0,41 in de fib). Bij alle trades van de trader kwam
+de lont van de instapkaars minstens tot 0,48: setup 1 0,99 | 2 0,55 | 3 0,79 | 4 0,79 | 6 0,89 | 7 0,60 | 11 0,48. In
+het gewone pad dwong de zone (niveau in 0,45-1) dat al af, in het BoS-pad niet. Nieuw: de lont van de instapkaars moet
+tot minstens 0,45 komen. Resultaat: **long 22 juni 2020, bullish engulfing, instap 1,12616** (trader 1,12609) -> T1,
++1,56R (stop engine 1,09936 boven de 0,796; trader 1,11088, onder de weekly BoS-lijn 1,11423 - daardoor minder R bij de
+engine). Replicatie 2018-2020 blijft 6/6; nu 7/7 trades van de trader (setup 1-4, 6, 7, 11) met dezelfde instapdag op
+3 na (1 dag eerder). EURUSD 2016-2025: 26 trades, 12 met T1, +14,0R. "Geen slot voorbij het niveau tijdens de test"
+blijft aan (zonder: 31 trades, +8,9R).
+Open punt: de stop van de trader in setup 11 lag achter de weekly BoS-lijn (± 0,6 in de fib), niet boven de 0,796.

@@ -325,8 +325,8 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                 continue
             entry = c[k]
             depth = (entry - f0) / rng
-            if depth < MIN_DEPTH:
-                continue
+            if depth < MIN_DEPTH or (h[k] - f0) / rng < ZONE[0]:  # the entry candle's wick reaches the zone (>= 0.45;
+                continue  # the trader's entries: 0.48 - 0.99; the engine's 17 Jun 2020 entry reached only 0.41)
             sl = (fd["hi"] if depth >= DEEP else max(f0 + 0.796 * rng, h[k], h[k - 1])) + SL_BUF * a[k]
             if sl <= entry:
                 continue
