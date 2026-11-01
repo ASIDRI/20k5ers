@@ -36,7 +36,7 @@ candle is used only after it has closed, a daily decision is taken at the daily 
    closed so far, redrawn every MN_REFRESH months (1 January / 1 July). For now context only: logged, and per trade
    the next monthly level in the trade direction (m_sr_next) and whether one lies before T2 (m_sr_before_t2).
 7. Management (setup 6): T1 = fib -0.2 (50%), stop then a little in profit (entry - BE daily ATR); T2 = fib -0.58
-   (25%), stop then to fib 0; the rest runs to fib -1 (T3, setup 11) or the stop. R_5050: 50% at T1, 50% at T2 (stop after T1 a
+   (20%), stop then to fib 0; T3 = fib -1 (15%), stop then to -0.5; T4 = fib -1.618 (15%) (setup 13). R_5050: 50% at T1, 50% at T2 (stop after T1 a
    little in profit). A bar that reaches the stop and a target counts as the stop. Costs from test2.cost_price.
 """
 import argparse
@@ -65,10 +65,16 @@ SL_BUF, DEEP, BE = 0.1, 0.66, 0.1
 BEST_ONLY = False  # only the strongest daily S/R level inside the fib zone
 NO_CLOSE_ABOVE = True  # no daily close above the level during the test (setup 1, 26 Jun 2018)
 REJ_N, REJ_BACK = 2, 5  # at least REJ_N daily rejection wicks at the level in the last REJ_BACK days (setups 1-4, 6, 7)
+BOS_CLUSTER = "confirm"  # daily BoS: "confirm" (breaks count from the swing's confirmation), "cluster", "old"
+REARM = True  # a newer weekly trigger replaces an armed one that has no active fib
 BOS_TRIGGER = True  # the confirmed weekly BoS arms the first trade itself (setup 11)
 FLIP_BAND = 0.35  # daily ATR around the weekly break line: the levels of the first trade after a weekly BoS (setup 1)
 MIN_DEPTH = 0.25  # entry close at least this deep in the fib (the trader's entries: 0.31 - 0.83)
-T1, T2, T3 = 0.2, 0.58, 1.0  # T3: the trader closes everything at fib -1 (setup 11)
+T1, T2, T3 = 0.2, 0.58, 1.0
+# (fib extension, part closed there, stop afterwards: "be" = a little in profit, or a fib level) - the trader:
+# 50% at -0.2 (stop a little in profit), a part at -0.58 (stop to fib 0), a part at -1 (stop to -0.5, setup 13),
+# the rest at -1.618 (TP4, setup 13)
+TARGETS = ((T1, 0.5, "be"), (T2, 0.2, 0.0), (T3, 0.15, 0.5), (1.618, 0.15, 0.5))
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
@@ -192,31 +198,36 @@ def pattern(o, h, l, c, k, p, tol, etol):
 
 
 def manage(h, l, k, entry, sl, f0, rng, be):
-    """Exits from the day after the entry. Returns dict with R parts (in price units) and the dates' indices."""
-    t1, t2, t3 = f0 - T1 * rng, f0 - T2 * rng, f0 - T3 * rng
+    """Exits from the day after the entry (in the short view). Ladder TARGETS: (fib extension, part closed, where the
+    stop goes after it). A bar that reaches the stop and a target counts as the stop. Also the 50/50 variant
+    (50% at T1, 50% at T2, stop a little in profit after T1). Returns R parts in price units and the indices."""
     res = {"t1_i": None, "t2_i": None, "exit_i": None}
-    stop, got1, got2, pnl = sl, False, False, 0.0
-    stop5, open5, pnl5 = sl, True, 0.0  # 50 / 50 variant
+    stop, left, pnl, step = sl, 1.0, 0.0, 0
+    t1, t2 = f0 - T1 * rng, f0 - T2 * rng
+    stop5, open5, pnl5, got1 = sl, True, 0.0, False
     for i in range(k + 1, len(h)):
         if open5:
             if h[i] >= stop5:
                 pnl5 += (0.5 if got1 else 1.0) * (entry - stop5); open5 = False
             elif got1 and l[i] <= t2:
                 pnl5 += 0.5 * (entry - t2); open5 = False
+            elif not got1 and l[i] <= t1:
+                got1, pnl5, stop5 = True, pnl5 + 0.5 * (entry - t1), entry - be
         if h[i] >= stop:
-            pnl += (1.0 if not got1 else 0.5 if not got2 else 0.25) * (entry - stop)
-            res["exit_i"] = i
+            pnl += left * (entry - stop)
+            res["exit_i"], left = i, 0.0
             break
-        if not got1 and l[i] <= t1:
-            got1, res["t1_i"] = True, i
-            pnl += 0.5 * (entry - t1); stop = entry - be
-            if open5:
-                pnl5 += 0.5 * (entry - t1); stop5 = entry - be
-        if got1 and not got2 and l[i] <= t2:
-            got2, res["t2_i"] = True, i
-            pnl += 0.25 * (entry - t2); stop = f0
-        if got2 and l[i] <= t3:
-            pnl += 0.25 * (entry - t3); res["exit_i"] = i
+        while step < len(TARGETS) and l[i] <= f0 - TARGETS[step][0] * rng:
+            ext, part, new_stop = TARGETS[step]
+            px = f0 - ext * rng
+            part = min(part, left)
+            pnl += part * (entry - px)
+            left -= part
+            stop = entry - be if new_stop == "be" else f0 - new_stop * rng
+            res[{0: "t1_i", 1: "t2_i"}.get(step, f"t{step + 1}_i")] = i
+            step += 1
+        if left <= 1e-9:
+            res["exit_i"] = i
             break
     res.update(pnl=pnl, pnl5=pnl5, open=res["exit_i"] is None, open5=open5)
     return res
@@ -229,7 +240,7 @@ def monthly_levels(m, mdone, t):
         return []
     c = {k: mm[k].values.astype(float) for k in ("open", "high", "low", "close")}
     return sorted(p for p, _, _ in sr_mod.levels(c, tol_atr=MN_TOL, min_each=MN_MIN_EACH, max_levels=40,
-                                                    sep_atr=MN_SEP))
+                                                 sep_atr=MN_SEP))
 
 
 def run_view(sym, d, w, dirn, start, end, log, m=None):
@@ -283,12 +294,22 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         """Latest first close below the body-low of the last confirmed daily swing low, ka <= day <= kb."""
         best = None
         for k in range(ka, kb + 1):
-            sl_ = [s for s, cf in lows if cf <= k - 1]
+            sl_ = [(s, cf) for s, cf in lows if cf <= k - 1]
             if not sl_:
                 continue
-            s = sl_[-1]
-            line = min(o[s], c[s])
-            if c[k] < line and not np.any(c[s + 1:k] < line):
+            s, cf = sl_[-1]
+            # the BoS line: the lowest body around the swing low (setup 13: the trader's line 1.18627 is the close two
+            # days after the swing's wick); a break counts from the moment the swing is confirmed
+            if BOS_CLUSTER == "cluster":
+                line = float(np.min(np.minimum(o[max(0, s - 2):min(s + 3, k)], c[max(0, s - 2):min(s + 3, k)])))
+                fresh = not np.any(c[cf:k] < line)
+            elif BOS_CLUSTER == "confirm":  # body of the swing candle; a close beyond it before the swing was
+                line = min(o[s], c[s])  # confirmed does not count (setup 13: 23 Oct 2020)
+                fresh = not np.any(c[cf:k] < line)
+            else:
+                line = min(o[s], c[s])
+                fresh = not np.any(c[s + 1:k] < line)
+            if c[k] < line and fresh:
                 best = (k, s, line)
         return best
 
@@ -350,7 +371,8 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                 _band=fd.get("band"), _flip=fd.get("flip")))  # view-space fields for the stop study
             log.append((day_label(dt[k]), f"TRADE {pat} aan dag-S/R {p * sgn:.5f} ({n} reacties), instap {entry * sgn:.5f}, "
                         f"stop {sl * sgn:.5f}, diepte {depth:.2f} -> R {trades[-1]['R']:+.2f}", dirn))
-            last_exit_t = dt[mres["exit_i"]] if mres["exit_i"] is not None else np.datetime64("2100-01-01")
+            free = mres.get("t3_i") if mres.get("t3_i") is not None else mres["exit_i"]  # after T3 the runner no
+            last_exit_t = dt[free] if free is not None else np.datetime64("2100-01-01")  # longer blocks new setups
             return trades[-1]
         return None
 
@@ -416,6 +438,17 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                                 f"triggerweek {fib['f1'] * sgn:.5f}; niveaus rond de week-breuklijn "
                                 f"{fib['flip'] * sgn if fib['flip'] else float('nan'):.5f}", dirn))
             continue
+        if fib is None and REARM:  # a newer trigger week replaces an armed trigger that has no fib (setup 13)
+            newer = [j for j, kind in trig if armed < j <= wi and j >= run_start[wi] and wstart[j] > last_exit_t]
+            if newer:
+                armed = newer[-1]
+                log.append((day_label(dt[k]), f"nieuwe week-trigger {dict(trig)[armed]} (week {week_label(wstart[armed])})",
+                            dirn))
+                b = find_bos(int(np.searchsorted(dt, wstart[armed], "left")), k)
+                if b:
+                    fib = start_fib(b, o, h, l, c, k)
+                    log.append((day_label(dt[b[0]]), f"daily BoS (lijn {b[2] * sgn:.5f}), fib 1 {fib['f1'] * sgn:.5f}", dirn))
+                continue
         if fib is None:
             b = find_bos(k, k)
             if b:

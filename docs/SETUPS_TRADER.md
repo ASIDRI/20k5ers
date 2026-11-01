@@ -891,3 +891,33 @@ Grafieken: `docs/setups_trader/12_eurusd_2020_long_notrade/01.png` ... `04.png`.
 - **Engine**: geen trade, zelfde reden: daily BoS 21 oktober (lijn 1,18283), fib 1 1,17073, 29 oktober slot onder fib
   1 -> fib vervalt. (De engine had nog de oudere week-trigger van de week van 24 augustus aan staan; de dag-afloop is
   dezelfde.) Volgende engine-trade: long 28 januari 2021 (-1R) - nog niet door de trader bekeken.
+
+---
+
+## Setup 13 - EURUSD long, november 2020 - winst tot -1,618
+Grafieken: `docs/setups_trader/13_eurusd_2020_long/01.png` ... `04.png`.
+- **Week**: bullish engulfing in de week van 2 november 2020 (open 1,1650 = slot ervoor, slot 1,1874 boven de open van
+  de rode week ervoor 1,1853) vanaf de week-S/R 1,16211.
+- **Dag**: daily BoS **1,18627** (trader; body rond de swing high van 21 oktober - het slot van 23 oktober is 1,18612)
+  -> 6 november sluit erboven (1,18737). Duidelijk dag-S/R **1,17814** (veel reacties aug-okt, rode en groene pijlen).
+- **Fib**: de trader neemt de fib vanaf de **swing low van de dag** (4 november, lont 1,16027, body ± 1,171) naar de
+  swing high van 9 november (1,19202). Bounce van het dag-S/R + golden pocket (0,618-0,66), instap **1,18339** (13
+  november), stop **1,17447** (onder de 0,796).
+- **Uitkomst**: -0,2 / -0,58 / -1 en zelfs **-1,618 (1,2251) op 17 december**. Nieuwe beheerregel van de trader: **na
+  -1 de stop naar -0,5, en een TP4 op -1,618**.
+
+### Engine
+Aanpassingen (de replicatie-check `research/strategy/v2_replication.py` toont na elke stap alle trades van de trader):
+1. **Nieuwere week-trigger vervangt een oude** die geen actieve fib heeft (`REARM`): de engine had nog de trigger van
+   eind augustus aan staan; nu telt de engulfing van 2 november.
+2. **Daily BoS telt pas vanaf de bevestiging van de swing** (`BOS_CLUSTER = "confirm"`): het slot van 23 oktober boven
+   de body van 21 oktober kwam vóór de swing high bevestigd was en telt niet; de BoS is 6 november. (De variant "BoS-lijn
+   = uiterste body binnen 2 kaarsen rond de swing" vond de trade ook, maar kostte over de 37 instrumenten ± 35R.)
+3. **Beheer** (`TARGETS`): 50% op -0,2 (stop iets in winst), 20% op -0,58 (stop naar fib 0), 15% op -1 (stop naar
+   -0,5), 15% op -1,618 (TP4). Na T3 blokkeert het restje geen nieuwe setups meer.
+Resultaat: **long 10 november 2020** (hammer aan dag-S/R 1,17890, instap 1,18156, stop 1,16873) - T1 30 nov, T2 2 dec,
+rest tot 18 januari -> +1,77R. De trader: 13 november. Fib 1 van de engine 1,16387 (laagste body tussen de gebroken
+swing en de BoS) i.p.v. de body van de swing-low-kaars (± 1,171) - verschil blijft open.
+**Replicatie: 8/8 trades van de trader (setup 1, 2, 3, 4, 6, 7, 11, 13), 4/4 no-trades (5, 8, 9, 12); 1 extra
+engine-trade (21 mei 2020, -1R).** EURUSD 2016-2025: 27 trades, 56% T1, +18,0R. 37 instrumenten: 958 trades, +97,7R
+(gem. +0,10R, t 2,0) - gelijk aan vóór deze stap.
