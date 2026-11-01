@@ -17,8 +17,9 @@ Beheer van de trader: **T1 = -0,2**, daarna stop in winst; **T2 = -0,6** (bij ee
 | 1 | EURUSD | short | 10 jul 2018 | 0,83 | ja | ja (-0,65) | +2,6 | +3,6 | +3,1R |
 | 2 | EURUSD | short | 16 okt 2018 | 0,41 (lont 0,55) | ja | ja (-0,6) | +1,8 | +2,9 | +2,4R |
 | 3 | EURUSD | short | 1 feb 2019 | 0,66 | ja | nee, stop in winst | +1,8 | - | ± +1,5R |
+| 4 | EURUSD | short | 2 mei 2019 | 0,31 (lont 0,796) | nee | nee | - | - | **-1R** |
 
-**Win rate: 3 / 3 (100%) T1 geraakt; T2 2 / 3.** Geen verliezers tot nu toe.
+**Win rate: 3 / 4 (75%) T1 geraakt; T2 2 / 4.** Totaal bij 50% op T1: ± +6,0R over 4 trades (± +1,5R gem.).
 
 ---
 
@@ -190,8 +191,8 @@ niet. Bij 50% op T1: totaal ± +1,4 tot +1,6R.
 
 ---
 
-## Setup 4 - EURUSD short, mei 2019 (vervolg op setup 3) - uitkomst volgt van de trader
-Grafieken: `docs/setups_trader/04_eurusd_2019_short/01.png` ... `05.png`.
+## Setup 4 - EURUSD short, mei 2019 (vervolg op setup 3) - verlies
+Grafieken: `docs/setups_trader/04_eurusd_2019_short/01.png` ... `06.png`.
 
 ### 1. Maand
 Nog steeds rond **maand-S/R 2 (1,13125)**.
@@ -225,11 +226,18 @@ Nog steeds rond **maand-S/R 2 (1,13125)**.
 | instap short | **1,11722** | slot van de bearish engulfing (2 mei); ± 0,31 in de fib (de lont van de shooting star kwam tot 0,796) |
 | stop | **1,12796** | "een beetje boven het short-patroon" (top shooting star 1,1265); risico 107 pips |
 | target op de grafiek | **1,09845 (-0,65)** | T1 -0,2 = 1,1073, T2 -0,6 = 1,0996 |
-| uitkomst | *volgt van de trader* | zie hieronder |
+| uitkomst | **verlies, -1R** (bevestigd door de trader, 06.png) | |
 
-Op onze data (vooruitkijkend, ter controle): de laagste punten na de instap zijn 1,1107 (23 mei) en 1,1116 (30 mei) -
-**T1 (1,1073) mist met ± 34 pips**; op 5 juni komt de prijs tot 1,1307 -> **stop (1,1280) geraakt, -1R**. Broker-data
-verschillen een paar pips; de trader bevestigt de uitkomst.
+De laagste punten na de instap zijn 1,1107 (23 mei) en 1,1116 (30 mei): **T1 (1,1073) mist met ± 34 pips**, de swing
+low (1,1111) wordt niet gebroken. De prijs blijft een maand zijwaarts tussen de swing low en het dag-S/R-niveau; op 5
+juni komt hij tot 1,1307 -> **stop (1,1280) geraakt, -1R**.
+
+Mogelijke oorzaken (verschil met setup 1-3; nog geen regel, eerst meer setups):
+- **Vierde short op rij rond maand-S/R 2** (1,13125): sinds november 2018 handelt de prijs er rond; de week maakte geen
+  echte nieuwe lows meer (week-lows 1,1176 maart, 1,1112 april). De neerwaartse kracht op de week was op.
+- De week-trigger was zwakker: geen engulfing van de vorige week maar van twee weken terug, na een doji.
+- De instap lag ondiep (0,31 op slot) en de stop krap boven het patroon; de prijs kwam terug tot boven de 1 (1,1305).
+- T1 lag onder de swing low (nieuwe low nodig) - bij setup 1-3 werd die telkens snel gebroken.
 
 ### 5. Notities voor de engine (nog niet verwerken)
 1. Week-engulfing ruimer: **slot onder de open van een up-candle van 1 of 2 weken terug**, ook na een doji.
