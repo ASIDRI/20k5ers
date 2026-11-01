@@ -945,3 +945,12 @@ Grafieken: `docs/setups_trader/14_eurusd_2021_long/01.png` ... `05.png`.
   swing) -> de zone ligt veel lager en er komt geen trade. De trader neemt de kleine laatste swing (19 -> 20 april).
 3. **Instap**: de trader stapt in op de **eerste** hammer aan het niveau; de engine vraagt nu 2 afwijzingslonten in 5
   dagen (setup 1-4, 6, 7).
+
+### Week-swing alleen als hij een BoS maakte (trader, setup 14)
+De trader: de low van de week van 1 februari 2021 "heeft zelf nog geen BoS gemaakt, er was ook geen higher high, dit
+is gewoon een correctie van de swing top van 4 januari"; 1,18574 (nov 2020) is geen swing low "omdat er geen bearish
+candle bij is"; zijn week-BoS-lijn is **1,16469** (rode week 26 okt 2020). In de engine als optie `STRUCT_SWINGS`: een
+week-swing low telt pas als de prijs daarna boven de vorige swing high kwam (higher high), een swing high pas na een
+lower low. Gevolg: de bearish BoS van maart 2021 verdwijnt (volgende bearish BoS oktober 2021), maar de bullish BoS van
+juni 2020 schuift naar juli 2020 (de top van 30 maart 2020 maakte geen lower low; lijn wordt de top van 9 maart,
+1,1351) -> setup 11 en 13 worden gemist. Optie staat **uit** tot de trader uitlegt waarom juni 2020 wel een BoS is.

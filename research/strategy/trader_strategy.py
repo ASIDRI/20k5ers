@@ -54,6 +54,7 @@ from test2 import cost_price  # noqa: E402
 import sr_levels as sr_mod  # noqa: E402  (the monthly S/R method of lesson 1)
 
 W_REV, W_BREAK, W_ER, ENG_TOL = 1.5, 0.25, 0.0, 0.05
+STRUCT_SWINGS = False  # a weekly swing counts for the structure only after the move from it made a BoS (setup 14)
 BREAK_WICK = True  # the BoS close must also be beyond the swing wick (replaces the efficiency filter, 2026-11-01)
 WEEK_OPEN_PREV_CLOSE = True  # weekly open = previous weekly close, as on the trader's FOREXCOM charts
 D_REV = 1.5
@@ -118,9 +119,27 @@ def weekly_structure(o, h, l, c):
     sw = zigzag(h, l, a, W_REV)
     state, s, pend, events, p = np.zeros(len(c), int), 0, None, [], 0
     last = {1: None, -1: None}
+    prev = {1: None, -1: None}  # last confirmed swing of each kind (valid or not)
+    waiting = []  # (swing index, kind, level the move from it must take out) - swings that have not made a BoS yet
     for i in range(len(c)):
         while p < len(sw) and sw[p][2] <= i:
-            last[sw[p][1]] = sw[p][0]; p += 1
+            k_, kind, _ = sw[p]; p += 1
+            if not STRUCT_SWINGS:
+                last[kind] = k_
+            else:  # the trader (setup 14): a swing low counts only once the move from it made a higher high (a BoS)
+                ref = prev[-kind]  # the previous opposite swing; a low needs a high above it, a high a low below it
+                if ref is None:
+                    last[kind] = k_
+                else:
+                    waiting.append((k_, kind, h[ref] if kind == -1 else l[ref]))
+            prev[kind] = k_
+        if STRUCT_SWINGS:
+            for item in list(waiting):
+                k_, kind, lvl = item
+                if (kind == -1 and np.max(h[k_:i + 1]) > lvl) or (kind == 1 and np.min(l[k_:i + 1]) < lvl):
+                    if last[kind] is None or k_ > last[kind]:
+                        last[kind] = k_
+                    waiting.remove(item)
         if pend is not None:
             d, line, i0 = pend
             if (c[i] - line) * d > 0:
