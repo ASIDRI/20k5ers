@@ -20,9 +20,10 @@ Beheer van de trader: **T1 = -0,2**, daarna stop een beetje in winst; **T2 = -0,
 | 4 | EURUSD | short | 2 mei 2019 | 0,31 (lont 0,796) | nee | nee | - | - | **-1R** |
 | 5 | EURUSD | short | - (juli 2019) | geen pullback naar het dag-S/R | - | - | - | - | geen trade |
 | 6 | EURUSD | short | 9 aug 2019 | 0,69 | ja | ja (-0,58) | +2,6 | +3,7 | +3,2R (rest op fib 0: +2,0R) |
+| 7 | EURUSD | short | 21 nov 2019 | 0,38 (lonten 0,59) | nee | nee | - | - | **-1R** |
 
-**Win rate: 4 / 5 (80%) T1 geraakt; T2 3 / 5** (setup 5: geen trade). Totaal bij 50% op T1 / 50% op T2 of stop: ± +9,2R
-over 5 trades (± +1,8R gem.).
+**Win rate: 4 / 6 (67%) T1 geraakt; T2 3 / 6** (setup 5: geen trade). Totaal bij 50% op T1 / 50% op T2 of stop: ± +8,2R
+over 6 trades (± +1,4R gem.).
 
 ---
 
@@ -360,8 +361,8 @@ bijvoorbeeld 50% T1 / 25% T2 / 25% op 0 = **+2,7R**; 50% T1 / 50% T2 = +3,2R.
 
 ---
 
-## Setup 7 - EURUSD short, november 2019 (vervolg op setup 6) - patroon en uitkomst volgen
-Grafieken: `docs/setups_trader/07_eurusd_2019_short/01.png` ... `05.png`.
+## Setup 7 - EURUSD short, november 2019 (vervolg op setup 6) - verlies
+Grafieken: `docs/setups_trader/07_eurusd_2019_short/01.png` ... `07.png`.
 
 ### 1. Maand: niveau bijstellen naar de lont (01.png)
 De prijs kwam vlak bij maand-S/R 3: de week van 30 september zakt tot **1,08792**. De trader **verhoogt het
@@ -396,3 +397,31 @@ bijgewerkt naar de nieuwste exacte reactie.
 4. **Daily BoS = body-slot onder de lont van de laatste swing low** (in setup 1-4 werd de body-low als BoS-lijn
    gebruikt; nog af te stemmen welke het is - mogelijk: lijn = body, of lijn = lont; hier is het de lont).
 5. **T2 (-0,58) valt samen met een maand-S/R** - zelfde soort confluentie als T2 in setup 1.
+
+### 5. Patroon, trade en uitkomst: verlies (06.png, 07.png)
+- **Lont 1 + body eronder**: 18 november (top 1,1090 tikt het dag-S/R 1,10865, slot 1,1073).
+- **Lont 2 + body eronder + bearish kaars**: 21 november (top 1,1097, slot 1,1058).
+
+| | prijs | toelichting |
+|---|---|---|
+| instap short | **1,10578** | slot van 21 november; ± 0,38 in de fib (lonten tot ± 0,59) |
+| stop | **1,11342** | ± 0,796, boven de twee lonten; risico 76 pips |
+| target 1 | -0,2 (1,0953) | **niet geraakt**: laagste punt 1,0981 (29 november), ± 28 pips te kort |
+| uitkomst | **verlies, -1R** | 11 december top 1,1145 -> stop geraakt |
+
+De prijs maakte een dubbele bodem net boven de swing low (1,0981 tegen 1,0989) en steeg daarna door tot boven de
+week-S/R (13 december top 1,1200).
+
+### 6. Vergelijking van de twee verliezers (setup 4 en 7) met de winnaars (nog geen regel)
+| | winnaars (1, 2, 3, 6) | verliezers (4, 7) |
+|---|---|---|
+| instap op slot in de fib | 0,83 / 0,41 / 0,66 / 0,69 | **0,31 / 0,38** |
+| na de instap | swing low snel gebroken | **dubbele bodem bij fib 0**, T1 ± 30 pips te kort |
+| stop | boven de swing high of een sleutelniveau (85-119 pips) | boven het patroon (107 / 76 pips) |
+| week-context | verse BoS of engulfing van de vorige week | 4e short rond maand-S/R 2 (setup 4); week-downtrend al lang bezig, maand-S/R 3 vlak onder (setup 7) |
+
+Twee verliezers is te weinig om een regel te maken; wel opvallend: **beide ondiep (< 0,4 op slot)** en **beide stopten
+precies op de swing low** (geen nieuwe low). Mogelijke filters om later te testen: instap-diepte op slot >= ± 0,5, of
+T1 pas tellen als de prijs eerst onder fib 0 sluit.
+
+---
