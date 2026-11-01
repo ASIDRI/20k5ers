@@ -8,6 +8,18 @@ eruit halen en vooraf vastleggen.
 Per setup: context, trigger, fib, instap, stop, targets, beheer, uitkomst, en wat het betekent voor de engine (alleen
 notities).
 
+## Overzicht en win rate
+Beheer van de trader: **T1 = -0,2**, daarna stop in winst; **T2 = -0,6** (bij een maand-S/R vlak erbij: daar, zoals
+-0,65 in setup 1). Hoeveel op T1 gesloten wordt, ligt nog niet vast; hieronder ter vergelijking 50% op T1.
+
+| # | instrument | richting | instap | diepte | T1 | T2 | R bij T1 | R bij T2 | 50% T1, rest T2/stop |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | EURUSD | short | 10 jul 2018 | 0,83 | ja | ja (-0,65) | +2,6 | +3,6 | +3,1R |
+| 2 | EURUSD | short | 16 okt 2018 | 0,41 (lont 0,55) | ja | ja (-0,6) | +1,8 | +2,9 | +2,4R |
+| 3 | EURUSD | short | 1 feb 2019 | 0,66 | ja | nee, stop in winst | +1,8 | - | ± +1,5R |
+
+**Win rate: 3 / 3 (100%) T1 geraakt; T2 2 / 3.** Geen verliezers tot nu toe.
+
 ---
 
 ## Setup 1 - EURUSD short, juli 2018 (start: dinsdag 1 mei 2018)
@@ -119,8 +131,8 @@ Duur: swing low 9 oktober -> instap 16 oktober -> T1 25 oktober -> T2 12 novembe
 
 ---
 
-## Setup 3 - EURUSD short, februari 2019 (vervolg op setup 2) - uitkomst volgt
-Grafieken: `docs/setups_trader/03_eurusd_2019_short/01.png` ... `05.png`.
+## Setup 3 - EURUSD short, februari 2019 (vervolg op setup 2)
+Grafieken: `docs/setups_trader/03_eurusd_2019_short/01.png` ... `06.png`.
 
 ### 1. Maand: rond maand-S/R 2 (01.png)
 De prijs zit rond **maand-S/R 2 (1,13125)**. Lezing: "het kan wat trager gaan" - maand-steun remt, maar beslist niet.
@@ -148,13 +160,22 @@ De prijs zit rond **maand-S/R 2 (1,13125)**. Lezing: "het kan wat trager gaan" -
 - Regel van de trader (nog te bekijken): **minstens 1 bearish kaars tussen de rejection en de instap, daarna een doji
   / hammer / shooting star op de dag.**
 
-### 4. Trade (uit 05.png)
+### 4. Trade (05.png, 06.png)
 | | prijs | toelichting |
 |---|---|---|
-| instap short | **1,14548** | na de doji / shooting star, ± 0,66 in de fib |
+| instap short | **1,14548** | na de doji / shooting star (1 februari), ± 0,66 in de fib |
 | stop | **1,15743** | boven de swing high (1,1570) en maand-S/R 1 (1,15542); risico 119 pips |
-| target (op de grafiek) | **1,12159 (-0,28)** | |
-| uitkomst | *volgt* | |
+| target 1 | **-0,2 (1,1239)** | geraakt 15 februari (low 1,1234) -> stop in winst |
+| target 2 | -0,6 (1,1138) | **niet geraakt** (laagste punt 1,1176 op 7 maart) |
+| uitkomst | **winst: T1, daarna stop in winst geraakt** | |
+
+In R: T1 = **+1,8R**. Waar de stop na T1 stond, gaf de trader niet aan; met onze data: na T1 steeg de prijs tot 1,1334
+(18 februari), 1,1358 (19 februari) en 1,1420 (28 februari). Stop op fib 0 (1,1289) -> geraakt 18 februari, rest
++1,4R; stop boven maand-S/R 2 (± 1,1315) -> 18 februari, rest ± +1,2R; stop boven de daily BoS (± 1,1346) -> 19
+februari, rest ± +0,9R. Op de instap (break-even) was hij pas niet geraakt (top 20 maart 1,1448), maar T2 kwam ook
+niet. Bij 50% op T1: totaal ± +1,4 tot +1,6R.
+
+(De trader noemde dit "trade 2"; in dit document is het setup 3, na de shorts van juli en oktober 2018.)
 
 ### 5. Notities voor de engine (nog niet verwerken)
 1. **Week-S/R als terugkeerniveau**: de trader kiest het (enige) week-niveau dat als steun én weerstand getest is, en
@@ -162,7 +183,9 @@ De prijs zit rond **maand-S/R 2 (1,13125)**. Lezing: "het kan wat trager gaan" -
 2. Volgorde opnieuw: week-engulfing -> daily BoS (bearish BoS candle) -> fib -> pullback tot een S/R-niveau ->
    lont-rejections -> **minstens één bearish kaars** -> doji/hammer/shooting star -> instap.
 3. Fib-confluentie: 0,5 op de weekly BoS, de instapzone tussen 0,66 en het week-S/R-niveau (± 0,8).
-4. Stop boven de swing high én de maand-S/R; target -0,28 op de grafiek (T1 -0,2 zoals altijd; T2 -0,6 volgens setup
-   2 - na te gaan met de uitkomst).
+4. Stop boven de swing high én de maand-S/R. Targets bevestigd: **T1 -0,2, T2 -0,6**. Hoeveel er op T1 gesloten
+   wordt, ligt nog niet vast; eerst de win rate goed krijgen.
+5. De maand-S/R (1,13125) stond hier tussen instap en T2: de prijs stopte erop en T2 kwam niet. Bij setup 1 lag T2
+   (-0,65) precies op de maand-S/R en werd hij wel geraakt.
 
 ---
