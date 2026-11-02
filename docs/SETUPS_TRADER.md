@@ -991,3 +991,28 @@ De instapregel van de engine (2 afwijzingslonten, een bullish candle erbij) klop
 de **fib**. In de grafiek van de trader ligt fib 1 op ± **1,1995** en fib 0 op 1,20799. In de data is 1,19950 de
 high van 16 april, de top van de consolidatie van 14-16 april vóór de impuls van 19 april. De engine heeft fib 1 op
 1,17158 en daardoor ligt het niveau maar op diepte 0,21. Vraag aan de trader: waar komt fib 1 = 1,1995 vandaan?
+
+### Setup 14 gevonden: fib vanaf de BoS-candle als die zelf de swing is, tweezer van elke kleur (aan)
+De trader: "Body start op 1,19947 en wick swing high op 1,20800". Fib 1 = begin van de body van **19 april** (de
+candle die de swing low 1,19426 zet en meteen de daily BoS maakt), fib 0 = lont 20 april.
+In onze data opent 19 april op 1,19734. Dat is de zondag-open na de gap; de feed van de trader opent op ± 1,1995.
+1. **`LAST_SWING_FIB = "bos"`**: fib 1 = body van de laatste swing als die swing **de BoS-candle zelf** is.
+   - De engine controleert dit één dag na de BoS, want dan is de swing bevestigd.
+   - De swing moet voorbij de **3 candles ervoor** gaan (`SWING_LEFT = 3`). 19 april gaat lager dan 14-16 april.
+   - In setup 2 gaat de BoS-candle (3 okt 2018) maar voorbij één candle; daar blijft de grote fib staan.
+   - Als algemene regel (altijd de laatste 3-candle swing) gemist: setup 2 en 3.
+2. **`TWEEZER_ANY = True`**: de tweede test aan het niveau mag ook een rode candle zijn, als hij een lont door het
+   niveau heeft en erboven sluit. 22 april 2021 is rood: low 1,19938, slot 1,20148, na de hammer van 21 april.
+
+Resultaat:
+- **Engine-trade setup 14**: 22 april 2021, dag-S/R 1,20042 (trader 1,20032).
+  - Instap **1,20148** (trader 1,20147), stop **1,19876** (trader 1,19872).
+  - **+3,16R**: T1 26 april, T2 29 april.
+- Replicatie: **9/9 trades, 4/4 no-trades, geen extra engine-trades tot mei 2021**.
+- EURUSD 2016-2025: **26 trades, 54% T1, +17,8R**. Ervoor: 24 trades, +19,2R.
+  - Erbij: setup 14 (+3,2R), en 10 juni 2021 (-1R) in plaats van 25 juni 2021 (-1R).
+  - In 2025: 17 juli (-1R, rode tweezer zoals 22 april 2021) en 22 september (-1R) in plaats van 27 augustus (+2,6R).
+  - Setup 2 valt nu op 15 okt 2018 (+1,61R).
+- 37 instrumenten: met beide regels 971 trades, **+83R** (gem. +0,086R, t 1,7). Zonder: 932 trades, +70R (t 1,5).
+- Ter info, opgeteld over eerdere stappen: de structuurregels (`STRUCT_SWINGS`, `VOID_SPENT`) zakten de 37 instrumenten
+  van +98R naar +70R, terwijl EURUSD beter matcht.

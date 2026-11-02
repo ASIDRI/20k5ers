@@ -80,6 +80,9 @@ TARGETS = ((T1, 0.5, "be"), (T2, 0.2, 0.0), (T3, 0.15, 0.5), (1.618, 0.15, 0.5))
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
+SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
+TWEEZER_ANY = True  # setup 14: the second test may be either colour if it has a wick through the level and closes back
+LAST_SWING_FIB = "bos"  # False / True / "bos": only when the swing is the BoS candle itself; fib 1 from the last 3-candle swing before / at the BoS candle (setup 14)
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
 
@@ -219,7 +222,7 @@ def pattern(o, h, l, c, k, p, tol, etol):
         return "shooting star / doji"
     if c[k] < o[k] and c[k - 1] > o[k - 1] and o[k] >= c[k - 1] - etol and c[k] < o[k - 1]:
         return "bearish engulfing"
-    if c[k] < o[k] and h[k - 1] >= p - tol and c[k - 1] < p:
+    if (c[k] < o[k] or (TWEEZER_ANY and up >= tol)) and h[k - 1] >= p - tol and c[k - 1] < p:
         return "tweezer / bearish na test"
     return None
 
@@ -497,6 +500,11 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                 j = fib.pop("cand")
                 fib["f1"], fib["hi"] = float(max(o[j], c[j])), float(h[j])
                 log.append((day_label(dt[k]), f"fib 1 naar nieuwste swing {day_label(dt[j])} ({fib['f1'] * sgn:.5f})", dirn))
+        if LAST_SWING_FIB and k == fib["bos"] + 1 and fib.get("s") is not None:  # a swing on the BoS candle is
+            nf = start_fib((fib["bos"], fib["s"], fib["line"]), o, h, l, c, k)  # confirmed one day later
+            if nf["f1"] != fib["f1"]:
+                fib.update(f1=nf["f1"], hi=nf["hi"])
+                log.append((day_label(dt[k]), f"fib 1 = body laatste swing {fib['f1'] * sgn:.5f}", dirn))
         tr = try_entry(k, fib, week_label(wstart[armed]))
         if tr:
             armed, fib, fibB = None, None, None
@@ -508,7 +516,13 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
 def start_fib(b, o, h, l, c, k):
     kb, s, line = b
     f1 = float(np.max(np.maximum(o[s:kb + 1], c[s:kb + 1])))
-    return dict(bos=kb, f1=f1, hi=float(np.max(h[s:kb + 1])), f0=float(np.min(l[kb:k + 1])), line=line)
+    hi = float(np.max(h[s:kb + 1]))
+    if LAST_SWING_FIB:  # setup 14: fib 1 = body of the last 3-candle swing up to the BoS candle (confirmed by day k)
+        js = [j for j in range(max(s + 1, SWING_LEFT), min(kb, k - 1) + 1)
+              if h[j] > np.max(h[j - SWING_LEFT:j]) and h[j] >= h[j + 1]]
+        if js and (LAST_SWING_FIB is True or js[-1] == kb):
+            f1, hi = float(max(o[js[-1]], c[js[-1]])), float(h[js[-1]])
+    return dict(bos=kb, f1=f1, hi=hi, f0=float(np.min(l[kb:k + 1])), line=line, s=s)
 
 
 def main():
