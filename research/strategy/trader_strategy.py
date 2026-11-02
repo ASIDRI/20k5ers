@@ -78,6 +78,8 @@ T1, T2, T3 = 0.2, 0.58, 1.0
 # the rest at -1.618 (TP4, setup 13)
 TARGETS = ((T1, 0.5, "be"), (T2, 0.2, 0.0), (T3, 0.15, 0.5), (1.618, 0.15, 0.5))
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
+VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
+FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
 
@@ -402,7 +404,7 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         return None
 
     bos_weeks = {i1: (i0, line) for i0, i1, dd, line in events if dd == -1}  # bearish (in this view) BoS confirmations
-    fibB, done_bos = None, set()
+    fibB, done_bos, spent = None, set(), set()
     for k in range(k0, min(k1, len(c))):
         if m is not None and (next_refresh is None or pd.Timestamp(ddone[k]) >= next_refresh):
             mlev = monthly_levels(m, mdone, ddone[k])  # redrawn every MN_REFRESH months (1 Jan / 1 Jul)
@@ -442,7 +444,7 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             else:
                 fibB["f0"] = min(fibB["f0"], l[k])
         if armed is None:
-            cand = [j for j, kind in trig if run_start[wi] <= j <= wi and wstart[j] > last_exit_t]
+            cand = [j for j, kind in trig if run_start[wi] <= j <= wi and wstart[j] > last_exit_t and j not in spent]
             if cand:
                 armed = cand[-1]
                 kind = dict(trig)[armed]
@@ -483,7 +485,18 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         if c[k] > fib["f1"]:
             log.append((day_label(dt[k]), f"slot boven fib 1 ({fib['f1'] * sgn:.5f}): fib vervalt", dirn))
             fib = None
+            if VOID_SPENT:
+                spent.add(armed)
+                armed = None
             continue
+        if FRACTAL_FIB:
+            j = k - 1  # a 3-candle swing (in this view a high: higher than the candle before and after), confirmed today
+            if j - 1 > fib["bos"] and h[j] > h[j - 1] and h[j] >= h[k]:
+                fib["cand"] = j
+            if fib.get("cand") is not None and l[k] < fib["f0"]:  # a new extreme after that swing: fib from the swing
+                j = fib.pop("cand")
+                fib["f1"], fib["hi"] = float(max(o[j], c[j])), float(h[j])
+                log.append((day_label(dt[k]), f"fib 1 naar nieuwste swing {day_label(dt[j])} ({fib['f1'] * sgn:.5f})", dirn))
         tr = try_entry(k, fib, week_label(wstart[armed]))
         if tr:
             armed, fib, fibB = None, None, None

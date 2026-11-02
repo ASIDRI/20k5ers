@@ -960,3 +960,34 @@ swing ervóór een equal high / equal low was (twee weken op rij binnen 0,1 week
 geen equal high (1,2310 / 1,2350, 39 pips). `STRUCT_SWINGS` staat nu **aan**: bullish BoS breukweek 1 juni 2020 blijft,
 de bearish BoS van maart 2021 verdwijnt (volgende bearish BoS oktober 2021), de shorts van april en juni 2021 vallen weg.
 Replicatie: 8/9 trades (setup 14 nog niet), 4/4 no-trades.
+
+### Engine-short 21 mei 2020: trigger is op na een vervallen fib (`VOID_SPENT`, aan)
+De trader: "Ik snap niet waarom hij hier short zou gaan?" De engine gebruikte de bearish engulfing van de **week van
+3 februari 2020**. De fib daarvan verviel op 2 maart (slot boven fib 1). Daarna nam de engine dezelfde oude trigger
+voor de daily BoS van 13 maart: fib 1,14400 -> 1,0636, instap 1,09505 op 21 mei, -1R. Ondertussen werd de markt
+bullish (BoS 1,11423, setup 11).
+Regel: als een fib vervalt (slot voorbij fib 1), is de week-trigger **op**. Voor een nieuwe trade is een nieuwe
+week-trigger nodig.
+EURUSD 2016-2025: **24 trades, 58% T1, +19,2R**. Ervoor: 26 trades, +20,1R. Weg: de short van 21 mei 2020 (-1R) en
+een winnaar van 7 juni 2016 (+1,9R). Replicatie: 8/9 trades, 4/4 no-trades, **geen extra engine-trades meer tot
+mei 2021**.
+
+### Swing low = 3 candles (hoger, lager, hoger)? Getest als algemene regel (`FRACTAL_FIB`, uit)
+De trader definieert een swing low met 3 candles: candle 1 hoger, candle 2 lager, candle 3 hoger. Bij 19 april 2021
+(1,19426) zijn de eerste twee candles echter bullish, met een veel hogere derde candle. De trader twijfelde zelf:
+"Ik weet niet of dit voordelig is voor onze bot."
+Test: na de daily BoS verschuift fib 1 naar de nieuwste 3-candle swing zodra de prijs een nieuw extreem maakt.
+- **Resultaat: slechter.** 6/9 trades: setup 1, 2 en 6 worden gemist. 39 trades, 41% T1, +7R.
+- Setup 14 wordt er nog steeds niet mee gevonden.
+De optie staat daarom uit.
+
+### Setup 14: instap op de tweede afwijzing (trader, aanvulling)
+De trader: "één hammer niet per se, maar de tweede candle heeft ook een wick en body die boven het level sluit".
+- 21 april: hammer, low 1,19985, slot 1,20349.
+- 22 april: low 1,19938, slot 1,20148.
+- Twee afwijzingen van het dag-S/R 1,20032. Instap **1,20147** = slot 22 april.
+- Stop **1,19872**, max **+4,6R** (top 1,21419).
+De instapregel van de engine (2 afwijzingslonten, een bullish candle erbij) klopt hier dus al. Het enige verschil is
+de **fib**. In de grafiek van de trader ligt fib 1 op ± **1,1995** en fib 0 op 1,20799. In de data is 1,19950 de
+high van 16 april, de top van de consolidatie van 14-16 april vóór de impuls van 19 april. De engine heeft fib 1 op
+1,17158 en daardoor ligt het niveau maar op diepte 0,21. Vraag aan de trader: waar komt fib 1 = 1,1995 vandaan?
