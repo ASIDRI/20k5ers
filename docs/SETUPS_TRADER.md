@@ -1016,3 +1016,28 @@ Resultaat:
 - 37 instrumenten: met beide regels 971 trades, **+83R** (gem. +0,086R, t 1,7). Zonder: 932 trades, +70R (t 1,5).
 - Ter info, opgeteld over eerdere stappen: de structuurregels (`STRUCT_SWINGS`, `VOID_SPENT`) zakten de 37 instrumenten
   van +98R naar +70R, terwijl EURUSD beter matcht.
+
+### Versies naast elkaar; keuze: versie C (setup-14-regels weer uit)
+De trader: "Ik heb liever dat de andere trades hetzelfde blijven en deze setup 14 er dan niet bij (moeilijke trade)".
+Alle versies zijn opnieuw gedraaid met dezelfde code, EURUSD en 37 instrumenten, 2016-2025:
+
+| versie | EURUSD trades | T1 | R | trader-trades | no-trades | extra tot mei 2021 | 37 instr. trades | R | t |
+|---|---|---|---|---|---|---|---|---|---|
+| A oud | 27 | 56% | +18,0 | 8/9 | 4/4 | 21 mei 2020, 15 apr 2021 | 969 | +93,9 | 1,90 |
+| B + weekstructuur | 26 | 58% | +20,1 | 8/9 | 4/4 | 21 mei 2020 | 950 | +82,0 | 1,75 |
+| **C + trigger op na vervallen fib** | **24** | **58%** | **+19,2** | 8/9 | 4/4 | geen | 932 | +70,4 | 1,52 |
+| D + setup-14-regels | 26 | 54% | +17,8 | 9/9 | 4/4 | geen | 971 | +83,3 | 1,74 |
+
+De eerder genoemde +98R op 37 instrumenten was versie A in een oudere codestand; nu meet die versie +94R.
+Gekozen: **C**. `TWEEZER_ANY` en `LAST_SWING_FIB` staan weer uit; setup 14 blijft gedocumenteerd als gemist.
+
+### Instrumenten weglaten?
+Per instrument (versie C) negatief in beide periodes (2016-20 en 2021-25): GBPNZD, GBPCAD, GBPJPY, USDCAD,
+NAS100USD, GBPCHF.
+- Zonder de 4 slechtste (GBPNZD, GBPCAD, GBPJPY, USDCAD): 826 trades, +113R. Dat is achteraf gekozen.
+- Test vooruit: kies op 2016-2020 en kijk naar 2021-2025.
+  - De 20 instrumenten die positief waren in 2016-20 brachten in 2021-25 samen **+20,6R**.
+  - De 17 die negatief waren brachten **+30,3R**.
+  - In versie A hetzelfde beeld: +15,6R tegen +29,2R.
+- Het backtestresultaat per instrument voorspelt dus niet welk instrument later werkt. Instrumenten weglaten op
+  basis van de backtest is curve-fitting. Beter: per instrument regels van de trader zelf, zoals nu voor EURUSD.

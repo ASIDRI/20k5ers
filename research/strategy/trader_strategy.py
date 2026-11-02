@@ -81,8 +81,8 @@ MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick 
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
-TWEEZER_ANY = True  # setup 14: the second test may be either colour if it has a wick through the level and closes back
-LAST_SWING_FIB = "bos"  # False / True / "bos": only when the swing is the BoS candle itself; fib 1 from the last 3-candle swing before / at the BoS candle (setup 14)
+TWEEZER_ANY = False  # setup 14: the second test may be either colour if it has a wick through the level and closes back
+LAST_SWING_FIB = False  # False / True / "bos": only when the swing is the BoS candle itself; fib 1 from the last 3-candle swing before / at the BoS candle (setup 14)
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
 
