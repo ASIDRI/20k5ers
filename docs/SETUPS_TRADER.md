@@ -1376,3 +1376,42 @@ picture.
 - **Other 36: the reverse.** Continuation is positive, and longs win in both contexts while counter-trend shorts lose.
   - This mostly reflects the long drift of 2020-2025 (indices, gold, crypto), not the grab itself.
 - Not built into the engine yet.
+
+### Daily LQ grab: six entry models (study, `daily_lq_study.py --entry`)
+Trader: "Mss andere instap modellen, mss extra modellen naast deze."
+Models after the grab candle:
+- `close`: at its close.
+- `red`: the first red candle.
+- `engulf`: bearish engulfing.
+- `breaklow`: sell stop under the grab low.
+- `retest`: back to the grabbed level with a wick and a red close.
+- `bosfib`: daily BoS under the low since H2, then a pullback to 0.5 with a star or engulfing.
+
+All with N 2, GAP 3, stop grab high + 0.5 ATR, target 2R / 3R; 2015-2025.
+
+| entry | tgt | group | context | n | win | R | R short | R long | 2015-19 | 2020-25 | t |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| **close** | 2 | EURUSD | continuation | 61 | 43% | +15.4 | +13.4 | +2.0 | +5.5 | +9.9 | 1.32 |
+| **close** | 2 | EURUSD | counter-trend | 55 | 44% | +15.4 | +14.1 | +1.4 | +2.4 | +13.0 | 1.39 |
+| **close** | 3 | EURUSD | continuation | 60 | 38% | +30.4 | +22.4 | +8.0 | +14.5 | +16.0 | 2.00 |
+| **close** | 3 | EURUSD | counter-trend | 51 | 35% | +19.5 | +17.2 | +2.4 | +1.4 | +18.1 | 1.42 |
+| **close** | 2 | other 36 | continuation | 2283 | 39% | +279.2 | +73.2 | +205.9 | +97.8 | +181.3 | 4.00 |
+| **close** | 3 | other 36 | continuation | 2023 | 31% | +379.9 | +124.0 | +255.8 | +125.2 | +254.7 | 4.58 |
+| close | 3 | other 36 | counter-trend | 1755 | 28% | +82.7 | -46.5 | +129.2 | +28.2 | +54.5 | 1.11 |
+| red | 2 | EURUSD | counter-trend | 33 | 48% | +14.4 | +9.7 | +4.6 | +5.8 | +8.6 | 1.64 |
+| red | 2 | other 36 | continuation | 1666 | 38% | +173.1 | +46.1 | +127.0 | +50.4 | +122.7 | 2.92 |
+| engulf | 3 | other 36 | continuation | 1107 | 30% | +145.5 | +40.0 | +105.5 | +66.0 | +79.5 | 2.43 |
+| breaklow | 3 | other 36 | continuation | 1187 | 30% | +202.8 | +79.4 | +123.4 | +93.6 | +109.2 | 3.23 |
+| retest | 2 | other 36 | counter-trend | 796 | 31% | -82.0 | -46.8 | -35.1 | -37.2 | -44.8 | -2.10 |
+| bosfib | 2 | EURUSD | both | 22 | - | -4.2 | | | | | <0 |
+
+- **Best model: entry at the close of the grab candle**, with the trend, target 3R.
+- Robustness (continuation, `close`, 3R, all 37 instruments):
+  - Every year 2015-2025 is positive (+16 to +71R a year).
+  - **30 of 37** instruments are positive.
+  - Without the top 5 instruments: +235R. The largest trade is 3R; without the 20 largest: +350R.
+  - Win rate 31% at 3R, about **+0.19R per trade**.
+- EURUSD with `close` 3R: both contexts positive. 2024 +18.5R, 2025 -7.2R.
+- Waiting models (`retest`, `bosfib`) lose: after the grab the move comes immediately.
+- Still a study with fixed R targets. Next step: build it as setup 4 in the engine, then run the no-look-ahead check
+  and test it together with setups 1 and 2.

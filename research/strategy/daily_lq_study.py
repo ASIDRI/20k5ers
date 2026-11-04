@@ -22,7 +22,7 @@ from setup_study import load  # noqa: E402
 from candle_avail import complete_times  # noqa: E402
 
 
-def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01", end="2026-01-01"):
+def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01", end="2026-01-01", ENTRY="red"):
     T.apply_profile(sym)
     d, w = load(sym, "D1"), load(sym, "W1")
     ddone, wdone = complete_times(d["time"], "D1").values, complete_times(w["time"], "W1").values
@@ -51,12 +51,12 @@ def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01
                     break
                 if not (h[g] > h[i2] and c[g] < h[i2] and h[g] < h[i1]):
                     continue
-                k = next((q for q in range(g, min(len(c), g + WAIT + 1)) if c[q] < o[q] and c[q] < h[i2]
-                          and np.max(h[g:q + 1]) < h[i1] and np.all(c[g:q + 1] < h[i2])), None)
+                k, e = entry_model(ENTRY, o, h, l, c, a, g, i1, i2, WAIT)
                 if k is None or k <= busy or not (start <= days[k] < end):
                     break
-                e = c[k]
                 sl = np.max(h[g:k + 1]) + BUF * a[k]
+                if ENTRY == "breaklow" and h[k] >= sl:  # filled and stopped the same day: count the loss
+                    pass
                 risk = sl - e
                 if risk <= 0:
                     break
@@ -76,6 +76,53 @@ def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01
                 busy = ex
                 break
     return pd.DataFrame(out)
+
+
+def entry_model(kind, o, h, l, c, a, g, i1, i2, WAIT):
+    """Entry index and price after the grab candle g (short view). Returns (None, None) if there is no entry."""
+    n = len(c)
+    ok = lambda q: np.max(h[g:q + 1]) < h[i1] and np.all(c[g:q + 1] < h[i2])  # noqa: E731  still a valid grab
+    if kind == "close":
+        return g, c[g]
+    if kind == "red":
+        q = next((q for q in range(g, min(n, g + WAIT + 1)) if c[q] < o[q] and ok(q)), None)
+        return (q, c[q]) if q is not None else (None, None)
+    if kind == "engulf":
+        q = next((q for q in range(g, min(n, g + WAIT + 1)) if c[q] < o[q] and c[q] < min(o[q - 1], c[q - 1])
+                  and ok(q)), None)
+        return (q, c[q]) if q is not None else (None, None)
+    if kind == "breaklow":  # sell stop under the grab candle's low
+        for q in range(g + 1, min(n, g + WAIT + 1)):
+            if not ok(q - 1) or h[q] >= h[i2] and c[q] > h[i2]:
+                return None, None
+            if l[q] < l[g]:
+                return q, min(l[g], o[q])
+        return None, None
+    if kind == "retest":  # back up to the grabbed level, a wick into it and a red close below
+        for q in range(g + 1, min(n, g + 10)):
+            if not ok(q):
+                return None, None
+            if h[q] >= h[i2] - 0.1 * a[q] and c[q] < o[q] and h[q] - max(o[q], c[q]) >= 0.1 * a[q]:
+                return q, c[q]
+        return None, None
+    if kind == "bosfib":  # daily BoS under the low since H2, then a pullback to 0.5-0.796 with a star / engulfing
+        L = np.min(l[i2:g + 1])
+        kb = next((q for q in range(g + 1, min(n, g + 15)) if c[q] < L), None)
+        if kb is None or not ok(kb):
+            return None, None
+        f1 = np.max(np.maximum(o[g:kb + 1], c[g:kb + 1]))
+        f0 = np.min(l[g:kb + 1])
+        for q in range(kb + 1, min(n, kb + 15)):
+            f0 = min(f0, l[q - 1])
+            rng = f1 - f0
+            if c[q] > f1 or not ok(q):
+                return None, None
+            if h[q] >= f0 + 0.5 * rng and c[q] < f0 + 0.5 * rng and c[q] < o[q]:
+                body, up = abs(c[q] - o[q]), h[q] - max(o[q], c[q])
+                if up >= 1.5 * body or c[q] < min(o[q - 1], c[q - 1]):
+                    return q, c[q]
+        return None, None
+    raise ValueError(kind)
 
 
 def summary(df, label):
