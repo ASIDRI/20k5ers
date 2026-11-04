@@ -82,7 +82,7 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # Rules per ticker (trader 2026-11-04): EURUSD stays on version C; the other instruments without the wick rule and with
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
-PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=0, REVERT_CONFIRM=None)}
+PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma")}
 DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma")
 REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
 REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):

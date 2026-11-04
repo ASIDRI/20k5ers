@@ -1222,3 +1222,6 @@ terug ongeldig gemaakt?" and "of extra bevestiging van een valse en terug switch
 - **No-look-ahead check** (`v2_lookahead_check.py`, day by day with the forming week), USDJPY 2023-09-01 to
   2024-09-01 with the new rules (undo + setup 2): 259 days, 2 backtest trades, both found live with the same entry and
   stop. No difference.
+- **Trader 2026-11-04: "week wma 10 aanzetten op alles, dewdpo niet."**
+  - The undo rule (6 weeks + weekly WMA 10) is now also on for **EURUSD**: 29 trades, +25.9R, replication 8/9 and 4/4.
+  - `DEW_FILTER` stays off.
