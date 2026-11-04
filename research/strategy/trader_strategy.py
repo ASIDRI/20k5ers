@@ -99,6 +99,8 @@ REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly D
 REVERT_TOL = 0.0  # ... by at least this many weekly ATR
 LQD = False  # setup 4: daily liquidity grab, entry at the close of the grab candle (daily_lq)
 LQD_N, LQD_GAP, LQD_LOOK, LQD_BUF, LQD_TGT, LQD_CTX = 2, 3, 60, 0.5, 3.0, "trend"
+LQD_ENTRY = "close"  # setup 4 entry: "close" / "red" / "breaklow" / "h4" (see daily_lq)
+LQD_FILTER = None  # setup 4 filter at the grab close: None / "rsi" / "wma30" / "dpo" / "wwma"
 LQD_SR = True  # setup 4 only with a daily S/R at the grabbed high (within 0.25 daily ATR)
 LQD_FIB = False  # setup 4 exits with the fib ladder (TARGETS) on the leg grab high -> low since H2
 LQD_LADDER = None  # setup 4 exits: ((R level, part, new stop in R or None), ...); None = all at LQD_TGT
@@ -682,7 +684,7 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         trades += new
         last_exit_t = saved
     if LQD:
-        trades += daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log)
+        trades += daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, wc, state, k0, k1, log)
     if FAKE_RETEST:
         trades += fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log)
         trades.sort(key=lambda t: t["entry_day"])
@@ -708,16 +710,101 @@ def lqd_features(o, h, l, c, a, g, i1, i2, ctx):
         trend20=(c[g] - c[g - 20]) / A if g >= 20 else 0.0)
 
 
-def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log):
-    """Setup 4 (trader 2026-11-04; study daily_lq_study.py): a daily swing high H1 (fractal LQD_N each side), a
-    lower daily swing high H2, at least LQD_GAP days later a daily candle trades above H2 and closes back below it
-    (the high stays below H1, no close or high above H2 in between): short at the close of that grab candle. Stop
-    above the grab high + LQD_BUF daily ATR, one target at LQD_TGT R (or the stop). LQD_CTX: "trend" only with the
-    weekly structure (bearish in this view), "both" also against it."""
+_H4 = {}
+
+
+def _h4(sym):
+    """H4 candles of sym (cached per process) and their completion times."""
+    if sym not in _H4:
+        from setup_study import load
+        try:
+            x = load(sym, "H4")
+            _H4[sym] = (x, complete_times(x["time"], "H4").values)
+        except Exception:
+            _H4[sym] = (None, None)
+    return _H4[sym]
+
+
+def _rsi(c, n=14):
+    dc = np.diff(c, prepend=c[0])
+    up = pd.Series(np.maximum(dc, 0)).ewm(alpha=1 / n).mean().values
+    dn = pd.Series(np.maximum(-dc, 0)).ewm(alpha=1 / n).mean().values
+    return 100 - 100 / (1 + up / np.maximum(dn, 1e-12))
+
+
+def _wma(c, n):
+    wts = np.arange(1, n + 1, dtype=float)
+    return np.r_[np.full(n - 1, np.nan), np.convolve(c, wts[::-1] / wts.sum(), "valid")] if len(c) >= n else np.full(len(c), np.nan)
+
+
+def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, wc, state, k0, k1, log):
+    """Setup 4 (trader 2026-11-04): a daily swing high H1 (fractal LQD_N each side), a lower daily swing high H2, at
+    least LQD_GAP days later a daily candle trades above H2 and closes back below it (the high stays below H1, no close
+    or high above H2 in between) = the grab of the lower high. Mirrored for longs.
+    LQD_CTX: "trend" (weekly structure bearish in this view), "counter" (bullish) or "both".
+    LQD_SR: a daily S/R at the grabbed high. LQD_FILTER: None / "rsi" (bearish RSI-14 divergence: grab high above H2,
+    RSI below RSI at H2) / "wma30" (close below the daily WMA 30) / "dpo" (daily DPO 20 below 0) / "wwma" (last weekly
+    close below the weekly WMA 10).
+    LQD_ENTRY: "close" (at the grab close) / "red" (first red daily close within 3 days) / "breaklow" (sell stop under
+    the grab low within 3 days) / "h4" (first H4 close below the lows of the 3 H4 candles before it, within 2 days
+    after the grab close; only H4 candles closed by the end of the daily data are used).
+    Stop above the highest high since the grab + LQD_BUF daily ATR. Exits: LQD_FIB (the fib ladder of setup 1 on grab
+    high -> low since H2), else LQD_LADDER or all at LQD_TGT R. Grabs are processed in date order of the entry."""
     out, N = [], LQD_N
     sh = [i for i in range(N, len(h) - N) if h[i] == np.max(h[i - N:i + N + 1])]  # known at i + N
     busy, cands = -1, []
     when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
+    rsi = _rsi(c) if LQD_FILTER == "rsi" else None
+    wma30 = _wma(c, 30) if LQD_FILTER == "wma30" else None
+    if LQD_FILTER == "dpo":
+        sma = pd.Series(c).rolling(20).mean().values
+        dpo = c - np.r_[np.full(11, np.nan), sma[:-11]]
+    wwma = _wma(wc, 10) if LQD_FILTER == "wwma" else None
+    h4 = None
+    if LQD_ENTRY == "h4":
+        x, xdone = _h4(sym)
+        if x is not None:
+            keep = xdone <= ddone[len(c) - 1]  # only H4 candles that the daily data already covers (point in time)
+            x, xdone = x[keep], xdone[keep]
+            ho, hh, hl, hc = (x[k_].values.astype(float) for k_ in ("open", "high", "low", "close"))
+            h4 = (ho, hh, hl, hc) if sgn == 1 else (-ho, -hl, -hh, -hc)
+            h4 = h4 + (xdone,)
+
+    def entry(g, i1, i2):
+        valid = lambda q: np.max(h[g:q + 1]) < h[i1] and np.all(c[g:q + 1] < h[i2])  # noqa: E731
+        if LQD_ENTRY == "close":
+            return g, c[g], h[g] + LQD_BUF * a[g], None
+        if LQD_ENTRY == "red":
+            for q in range(g, min(len(c), g + 4)):
+                if not valid(q):
+                    return None
+                if c[q] < o[q]:
+                    return q, c[q], np.max(h[g:q + 1]) + LQD_BUF * a[q], None
+            return None
+        if LQD_ENTRY == "breaklow":
+            for q in range(g + 1, min(len(c), g + 4)):
+                if not valid(q - 1):
+                    return None
+                if l[q] < l[g]:
+                    return q, min(l[g], o[q]), np.max(h[g:q]) + LQD_BUF * a[g], "day"
+            return None
+        if LQD_ENTRY == "h4":
+            if h4 is None:
+                return None
+            ho, hh, hl, hc, xdone = h4
+            j0 = int(np.searchsorted(xdone, ddone[g], "right"))
+            jend = int(np.searchsorted(xdone, ddone[min(g + 2, len(c) - 1)], "right"))
+            for j in range(max(j0, 3), jend):
+                if np.max(hh[j0:j + 1]) >= h[i1] or hh[j] >= h[g] + LQD_BUF * a[g]:
+                    return None
+                if hc[j] < np.min(hl[j - 3:j]):
+                    q = int(np.searchsorted(ddone, xdone[j], "left"))
+                    if q >= len(c):
+                        return None
+                    return q, hc[j], max(h[g], np.max(hh[j0:j + 1])) + LQD_BUF * a[g], ("h4", j)
+            return None
+        raise ValueError(LQD_ENTRY)
+
     for b, i2 in enumerate(sh):
         prev = [i for i in sh[:b] if 0 < i2 - i <= LQD_LOOK and h[i] > h[i2] and np.max(h[i + 1:i2]) <= h[i]]
         if not prev:
@@ -728,73 +815,84 @@ def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log
                 break
             if g - i2 < LQD_GAP or not (h[g] > h[i2] and c[g] < h[i2] and h[g] < h[i1]):
                 continue
-            if not k0 <= g < k1:
-                break
             wi = int(np.searchsorted(wdone, ddone[g], "right")) - 1
             ctx = state[wi] if wi >= 0 else 0
-            if ctx != -1 and not (LQD_CTX == "both" and ctx == 1):
+            if not ((ctx == -1 and LQD_CTX in ("trend", "both")) or (ctx == 1 and LQD_CTX in ("counter", "both"))):
                 break
             if LQD_SR and not any(abs(p_ - h[i2]) <= 0.25 * a[g] for p_, _ in sr_levels(o, h, l, c, SR_TOL * a[g - 1], g)):
-                continue  # no daily S/R at the grabbed high (EURUSD: 16% win without, 42% with)
-            cands.append((g, i1, i2, ctx))
+                continue  # no daily S/R at the grabbed high
+            if LQD_FILTER == "rsi" and not rsi[g] < rsi[i2]:
+                break
+            if LQD_FILTER == "wma30" and not c[g] < wma30[g]:
+                break
+            if LQD_FILTER == "dpo" and not dpo[g] < 0:
+                break
+            if LQD_FILTER == "wwma" and not (wi >= 0 and wc[wi] < wwma[wi]):
+                break
+            en = entry(g, i1, i2)
+            if en is not None and k0 <= en[0] < k1:
+                cands.append((en[0], g, i1, i2, ctx) + en[1:])
             break
-    # in date order: a trade blocks only grabs that come after it (2026-11-04 look-ahead check: processing per H2 let a
-    # later trade of an earlier H2 block an earlier grab)
-    for g, i1, i2, ctx in sorted(cands):
-        if g <= busy:
+    # in date order of the entry: a trade blocks only grabs whose entry comes after it (look-ahead rule)
+    for k, g, i1, i2, ctx, e, sl, intra in sorted(cands, key=lambda x: (x[0], x[1])):
+        if k <= busy:
             continue
-        e, sl = c[g], h[g] + LQD_BUF * a[g]
         risk = sl - e
-        tgt = e - LQD_TGT * risk
-        if LQD_FIB:  # exits with the fib ladder of setup 1 on the leg: fib 1 = the grab high, fib 0 = the low since H2
-            f0 = float(np.min(l[i2:g + 1]))
-            mres = manage(h, l, g, e, sl, f0, h[g] - f0, BE * a[g])
-            cost = cost_price(sym, abs(e))
-            R = round((mres["pnl"] - cost) / risk, 2)
-            ex = mres["exit_i"]
-            out.append(dict(
-                sym=sym, dir=dirn, trigger_week="", bos="", fib1=h[g] * sgn, fib0=f0 * sgn, level=h[i2] * sgn,
-                entry_day=day_label(dt[g]), entry=e * sgn, sl=sl * sgn,
-                risk_pips=risk * (100 if "JPY" in sym else 10000), depth=round((e - f0) / (h[g] - f0), 2),
-                pattern="daily LQ grab" + (" (met trend)" if ctx == -1 else " (tegen trend)"),
-                t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]), exit_day=when(ex), open=mres["open"], R=R,
-                R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[g], m_sr_next=None, m_sr_before_t2=False,
-                setup="lqd", _feat=lqd_features(o, h, l, c, a, g, i1, i2, ctx), _k=g, _f0=f0, _rng=h[g] - f0,
-                _entry=e, _hi=h[g], _pat=h[g], _level=h[i2], _band=None, _flip=None))
-            busy = ex if ex is not None else len(c)
+        if risk <= 0:
             continue
-        ladder = LQD_LADDER or ((LQD_TGT, 1.0, None),)  # (R level, part closed, new stop in R; None = keep)
-        r, ex, hit, left, stop, step = 0.0, None, None, 1.0, sl, 0
-        for q in range(g + 1, len(c)):
-            if h[q] >= stop:
-                r += left * (e - stop); ex, left = q, 0.0; break
-            while step < len(ladder) and l[q] <= e - ladder[step][0] * risk:
-                lv_, part, ns = ladder[step]
-                part = min(part, left)
-                r += part * ladder[step][0] * risk; left -= part
-                if ns is not None:
-                    stop = e - ns * risk
-                hit = q if hit is None else hit
-                step += 1
-            if left <= 1e-9:
-                ex = q; break
-        if ex is None:
-            r = None
         cost = cost_price(sym, abs(e))
-        R = round(((r if r is not None else 0.0) - cost) / risk, 2)
+        dead = False  # the rest of the entry day after an intraday fill (conservative: a touch of the stop is a loss)
+        r, ex, hit = 0.0, None, None
+        if intra == "day" and h[k] >= sl:
+            dead = True
+        elif isinstance(intra, tuple):
+            ho, hh, hl, hc, xdone = h4
+            j = intra[1] + 1
+            while j < len(hh) and xdone[j] <= ddone[k]:
+                if hh[j] >= sl:
+                    dead = True
+                    break
+                j += 1
+        f0 = float(np.min(l[i2:k + 1]))
+        if dead:
+            r, ex = -risk, k
+            R, R5, t1i, t2i, opn = round((r - cost) / risk, 2), None, None, None, False
+        elif LQD_FIB:
+            mres = manage(h, l, k, e, sl, f0, h[g] - f0 if h[g] > f0 else risk, BE * a[k])
+            R, ex, t1i, t2i, opn = round((mres["pnl"] - cost) / risk, 2), mres["exit_i"], mres["t1_i"], mres["t2_i"], mres["open"]
+            R5 = round((mres["pnl5"] - cost) / risk, 2)
+        else:
+            ladder = LQD_LADDER or ((LQD_TGT, 1.0, None),)  # (R level, part closed, new stop in R; None = keep)
+            left, stop, step = 1.0, sl, 0
+            for q in range(k + 1, len(c)):
+                if h[q] >= stop:
+                    r += left * (e - stop); ex, left = q, 0.0; break
+                while step < len(ladder) and l[q] <= e - ladder[step][0] * risk:
+                    lv_, part, ns = ladder[step]
+                    part = min(part, left)
+                    r += part * ladder[step][0] * risk; left -= part
+                    if ns is not None:
+                        stop = e - ns * risk
+                    hit = q if hit is None else hit
+                    step += 1
+                if left <= 1e-9:
+                    ex = q; break
+            opn = ex is None
+            R = round(((0.0 if opn else r) - cost) / risk, 2)
+            R5, t1i, t2i = R, hit, None
         out.append(dict(
-            sym=sym, dir=dirn, trigger_week="", bos="", fib1=h[i2] * sgn, fib0=h[i1] * sgn, level=h[i2] * sgn,
-            entry_day=day_label(dt[g]), entry=e * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
+            sym=sym, dir=dirn, trigger_week="", bos="", fib1=h[g] * sgn, fib0=f0 * sgn, level=h[i2] * sgn,
+            entry_day=day_label(dt[k]), entry=e * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
             depth=None, pattern="daily LQ grab" + (" (met trend)" if ctx == -1 else " (tegen trend)"),
-            t1_day=when(hit), t2_day="", exit_day=when(ex), open=r is None, R=R, R_5050=R, entry_t=dt[g],
-            m_sr_next=None, m_sr_before_t2=False, setup="lqd", _feat=lqd_features(o, h, l, c, a, g, i1, i2, ctx),
-            _k=g, _f0=tgt, _rng=risk, _entry=e, _hi=h[g],
+            t1_day=when(t1i), t2_day=when(t2i), exit_day=when(ex), open=opn, R=R, R_5050=R5 if R5 is not None else R,
+            entry_t=dt[k], m_sr_next=None, m_sr_before_t2=False, setup="lqd",
+            _feat=lqd_features(o, h, l, c, a, g, i1, i2, ctx), _k=k, _f0=f0, _rng=risk, _entry=e, _hi=h[g],
             _pat=h[g], _level=h[i2], _band=None, _flip=None))
-        log.append((day_label(dt[g]), f"TRADE daily LQ grab van {h[i2] * sgn:.5f} (swing highs {day_label(dt[i1])} / "
-                    f"{day_label(dt[i2])}), instap {e * sgn:.5f}, stop {sl * sgn:.5f} -> R {R:+.2f}", dirn))
+        log.append((day_label(dt[k]), f"TRADE daily LQ grab van {h[i2] * sgn:.5f} (swing highs {day_label(dt[i1])} / "
+                    f"{day_label(dt[i2])}, grab {day_label(dt[g])}), instap {e * sgn:.5f}, stop {sl * sgn:.5f} -> R "
+                    f"{R:+.2f}", dirn))
         busy = ex if ex is not None else len(c)
     return out
-
 
 def fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log):
     """Setup 2 (trader 2026-11-04, USDJPY Sep-Oct 2026): after a fake weekly BoS against the trend (the next week
