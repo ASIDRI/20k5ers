@@ -1567,3 +1567,42 @@ The trader: "Kan je ervoor zorgen dat de research backtest die fout niet meer ma
     and passes the guard.
 - **Large guard run**: all 37 instruments x 25 random cut days (925 cuts), engine copy with **all setups on
   everywhere** (setups 1, 2, 3 and 4): **GUARD OK**, no difference.
+
+### Setup 4 re-optimised in the engine (guarded): 4 entries x 5 filters, 2016-2025
+The trader: "setup 4 opnieuw optimaliseren ... continuation of tegen de trend ... andere indicatoren en mss ook 4h chart".
+Always the grab of the second, lower swing high (for longs the higher swing low). S/R filter on. EURUSD exits at 3R;
+other 36 with the fib ladder. Script: `research/strategy/lqd_grid.py`.
+
+| entry | filter | EURUSD trend | EURUSD counter | other 36 trend | other 36 counter |
+|---|---|---|---|---|---|
+| close | - | 62 tr, 35%, +24.3R (t +1.60) | 50 tr, 32%, +12.4R (t +0.93) | 2270 tr, 32%, -36.9R (t -0.42) | 1732 tr, 31%, -251.2R (t -3.59) |
+| close | rsi | 12 tr, 33%, +3.8R (t +0.55) | 14 tr, 36%, +5.6R (t +0.76) | 662 tr, 45%, -66.3R (t -2.05) | 602 tr, 42%, -79.2R (t -2.54) |
+| close | wma30 | 17 tr, 47%, +14.7R (t +1.73) | 8 tr, 12%, -4.2R (t -1.04) | 615 tr, 47%, -8.6R (t -0.28) | 428 tr, 51%, -17.1R (t -0.75) |
+| close | dpo | 29 tr, 38%, +14.3R (t +1.34) | 16 tr, 31%, +3.6R (t +0.47) | 1099 tr, 41%, +53.6R (t +1.03) | 660 tr, 41%, -63.9R (t -1.85) |
+| close | wwma | 37 tr, 38%, +18.0R (t +1.51) | 17 tr, 29%, +2.5R (t +0.32) | 1432 tr, 35%, -30.6R (t -0.48) | 834 tr, 35%, -97.2R (t -2.24) |
+| red | - | 39 tr, 33%, +12.3R (t +1.03) | 29 tr, 31%, +6.4R (t +0.63) | 1717 tr, 42%, -47.5R (t -0.78) | 1259 tr, 42%, -118.8R (t -2.47) |
+| red | rsi | 12 tr, 33%, +3.8R (t +0.56) | 12 tr, 42%, +7.8R (t +1.09) | 534 tr, 54%, -23.2R (t -0.93) | 497 tr, 51%, -28.0R (t -1.08) |
+| red | wma30 | 13 tr, 38%, +6.8R (t +0.93) | 5 tr, 20%, -1.0R (t -0.26) | 497 tr, 55%, -9.5R (t -0.41) | 349 tr, 59%, -3.8R (t -0.22) |
+| red | dpo | 21 tr, 33%, +6.6R (t +0.75) | 10 tr, 40%, +5.8R (t +0.89) | 823 tr, 52%, +23.5R (t +0.68) | 496 tr, 53%, -5.4R (t -0.21) |
+| red | wwma | 23 tr, 35%, +8.6R (t +0.92) | 10 tr, 20%, -2.2R (t -0.41) | 1045 tr, 46%, -19.2R (t -0.46) | 592 tr, 48%, -33.8R (t -1.15) |
+| breaklow | - | 31 tr, 29%, +4.5R (t +0.44) | 29 tr, 34%, +10.4R (t +1.00) | 1460 tr, 45%, -42.0R (t -0.84) | 1078 tr, 45%, -91.4R (t -2.22) |
+| breaklow | rsi | 7 tr, 29%, +0.9R (t +0.17) | 11 tr, 45%, +8.8R (t +1.27) | 442 tr, 56%, -11.3R (t -0.53) | 418 tr, 51%, -33.2R (t -1.54) |
+| breaklow | wma30 | 10 tr, 40%, +5.8R (t +0.89) | 5 tr, 20%, -1.0R (t -0.26) | 422 tr, 56%, -17.1R (t -0.86) | 301 tr, 60%, -1.4R (t -0.09) |
+| breaklow | dpo | 16 tr, 38%, +7.7R (t +0.96) | 10 tr, 40%, +5.8R (t +0.89) | 697 tr, 53%, -5.0R (t -0.18) | 422 tr, 55%, -5.0R (t -0.23) |
+| breaklow | wwma | 20 tr, 35%, +7.6R (t +0.87) | 12 tr, 33%, +3.8R (t +0.55) | 875 tr, 49%, -27.0R (t -0.79) | 478 tr, 53%, -12.4R (t -0.54) |
+| h4 | - | 43 tr, 35%, +16.2R (t +1.28) | 29 tr, 31%, +6.4R (t +0.63) | 1645 tr, 40%, -93.9R (t -1.64) | 1223 tr, 40%, -124.1R (t -2.56) |
+| h4 | rsi | 9 tr, 44%, +6.9R (t +1.08) | 10 tr, 40%, +5.8R (t +0.89) | 455 tr, 51%, -36.5R (t -1.62) | 418 tr, 48%, -54.4R (t -2.47) |
+| h4 | wma30 | 13 tr, 31%, +2.8R (t +0.40) | 5 tr, 20%, -1.1R (t -0.27) | 436 tr, 54%, -21.5R (t -1.02) | 311 tr, 56%, -23.7R (t -1.46) |
+| h4 | dpo | 23 tr, 26%, +0.6R (t +0.06) | 10 tr, 20%, -2.2R (t -0.41) | 780 tr, 49%, +6.6R (t +0.20) | 456 tr, 50%, -25.4R (t -1.07) |
+| h4 | wwma | 27 tr, 30%, +4.5R (t +0.47) | 11 tr, 27%, +0.8R (t +0.13) | 1019 tr, 43%, -61.6R (t -1.52) | 584 tr, 46%, -37.3R (t -1.25) |
+
+- **EURUSD**: the best remains entry at the grab close, no filter, **with the trend**: 62 trades, +24.3R, t 1.6.
+  Against the trend: 50 trades, +12.4R, t 0.9.
+- **Other 36: no variant has an edge**.
+  - With the trend, the best is close + DPO: +53.6R, t 1.0; close + no filter is -36.9R.
+  - Against the trend almost everything loses clearly (close: -251R, t -3.6).
+- **H4 entry** (first H4 close under the lows of the 3 H4 candles before it): not better.
+  - EURUSD trend +16.2R vs +24.3R at the daily close; other 36 -94R / -124R.
+- **RSI divergence, WMA30, DPO and weekly WMA10** raise the win rate (up to 47-59%), but cut the number of trades
+  much more than they add R. On EURUSD only 5-37 trades remain.
+- Setup 4 stays: **EURUSD on, other instruments off**.
