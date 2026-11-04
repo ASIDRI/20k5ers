@@ -1175,3 +1175,47 @@ The trader: "Dit is een goede strategie, dus voeg hem maar toe als setup bij de 
   - Setup 2 occurs only once in 10 years: 13 Sep 2021, long, -1.02R. The engine sees only 2 fake weekly BoS on
     EURUSD since 2016.
   - Too few to judge; EURUSD stays on version C without setup 2.
+
+### Undoing a confirmed weekly BoS: close back over the line + week-WMA 10 (on, not for EURUSD)
+The trader (NQ, March 2026): "was de bos geldig in maart 2026? Voor even toch? Wanneer wordt die dan volgens de bot
+terug ongeldig gemaakt?" and "of extra bevestiging van een valse en terug switchen".
+- Until now a confirmed BoS was only cancelled by an opposite BoS, often months later.
+- **New** (`REVERT_WEEKS`, `REVERT_TOL`, `REVERT_CONFIRM`): a confirmed BoS is undone when a weekly close comes back
+  over the BoS line within `REVERT_WEEKS` weeks of the confirmation.
+  - With `REVERT_CONFIRM = "wma"`, the close must also be back on the old-trend side of the weekly WMA 10.
+  - The structure then falls back to the old trend.
+  - The undo week counts as a fake BoS, so the fake-BoS trigger and setup 2 apply to it.
+- All computed on closed weekly candles only.
+
+36 instruments (without EURUSD), setup 1 + setup 2, 2016-2025:
+
+| variant | trades | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|
+| no undo (before) | 970 | +105.6 | +7.5 | +98.0 | 2.20 |
+| 2 weeks | 1016 | +94.3 | +12.3 | +82.0 | 1.95 |
+| 4 weeks | 1060 | +106.8 | +47.6 | +59.3 | 1.88 |
+| 6 weeks | 1094 | +128.7 | +71.7 | +57.0 | 2.25 |
+| 12 weeks | 1154 | +98.8 | +37.2 | +61.6 | 1.94 |
+| 6 weeks, close >= 0.25 ATR back | 1069 | +141.4 | +53.9 | +87.4 | 2.47 |
+| 4 weeks + WMA 10 | 1060 | +123.6 | +53.4 | +70.2 | 2.17 |
+| 5 weeks + WMA 10 | 1076 | +147.6 | +63.3 | +84.3 | 2.57 |
+| **6 weeks + WMA 10** | 1094 | **+150.2** | +82.3 | +67.9 | **2.61** |
+| 8 weeks + WMA 10 | 1109 | +129.9 | +44.1 | +85.8 | 2.58 |
+| 6 weeks + DPO 10 | 1031 | +103.1 | +19.0 | +84.1 | 2.11 |
+| 6 weeks + RSI 14 | 1041 | +119.2 | +25.5 | +93.7 | 2.44 |
+
+- Chosen: **6 weeks + WMA 10**. Its neighbours (4-8 weeks with WMA) are all better than no undo.
+- **All 37 instruments now** (EURUSD on version C):
+
+| | trades | T1 | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|
+| setup 1 | 998 | 41% | +129.9 | +70.2 | +59.6 | 2.33 |
+| setup 2 | 120 | 62% | +39.5 | +18.4 | +21.2 | 2.29 |
+| **together** | **1118** | 44% | **+169.4** | **+88.6** | **+80.8** | **2.90** |
+
+- **Balance**: for the first time both periods are clearly positive.
+- **Overlap**: 42 setup-2 trades open while a setup-1 trade in the same direction is open.
+- **EURUSD with this rule**: 29 trades, +25.9R (version C: 24 trades, +19.2R). Replication stays 8/9 and 4/4.
+  - The changes are only in 2016-2017 and 2023-2024.
+  - Undone BoS: Sep/Oct 2023 (1.07078) and Apr and Jun/Jul 2024 (1.0761).
+  - EURUSD stays on version C until the trader has seen them.

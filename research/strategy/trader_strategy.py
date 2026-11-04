@@ -82,8 +82,12 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # Rules per ticker (trader 2026-11-04): EURUSD stays on version C; the other instruments without the wick rule and with
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
-PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False)}
-DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True)
+PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=0, REVERT_CONFIRM=None)}
+DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma")
+REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
+REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):
+# the undo also needs this indicator to point back to the old trend
+REVERT_TOL = 0.0  # ... by at least this many weekly ATR
 FAKE_RETEST = False  # setup 2: retest of the line after a fake weekly BoS (fake_retest)
 RT_AWAY, RT_TOUCH, RT_WEEKS, RT_SL = 1.0, 0.25, 10, 1.0
 
@@ -141,6 +145,20 @@ def weekly_structure(o, h, l, c):
     er = (np.abs(c - np.r_[np.full(10, np.nan), c[:-10]]) / mv.rolling(10).sum().values)
     sw = zigzag(h, l, a, W_REV)
     state, s, pend, events, p = np.zeros(len(c), int), 0, None, [], 0
+    conf = np.zeros(len(c))  # direction the indicator of REVERT_CONFIRM points to (+1 / -1) at the close of week i
+    if REVERT_CONFIRM == "wma":
+        wts = np.arange(1, 11, dtype=float)
+        ind = c - np.r_[np.full(9, np.nan), np.convolve(c, wts[::-1] / wts.sum(), "valid")]
+        conf = np.sign(np.nan_to_num(ind))
+    elif REVERT_CONFIRM == "dpo":
+        sm = pd.Series(c).rolling(10).mean().values
+        conf = np.sign(np.nan_to_num(c - np.r_[np.full(6, np.nan), sm[:-6]]))
+    elif REVERT_CONFIRM == "rsi":
+        dc = np.diff(c, prepend=c[0])
+        up = pd.Series(np.maximum(dc, 0)).ewm(alpha=1 / 14).mean().values
+        dn = pd.Series(np.maximum(-dc, 0)).ewm(alpha=1 / 14).mean().values
+        conf = np.sign(100 - 100 / (1 + up / np.maximum(dn, 1e-12)) - 50)
+    live = None  # the last confirmed BoS while it can still be undone (REVERT_WEEKS)
     fakes = []  # (attempt week, week that closed back, direction of the attempt, line): a fake weekly BoS
     last = {1: None, -1: None}
     prev = {1: None, -1: None}  # last confirmed swing of each kind (valid or not)
@@ -169,10 +187,22 @@ def weekly_structure(o, h, l, c):
                     if last[kind] is None or k_ > last[kind]:
                         last[kind] = k_
                     waiting.remove(item)
+        if live is not None:  # a confirmed BoS closes back over its line within REVERT_WEEKS weeks: undone (NQ 2026)
+            d0, line0, i00, ic, old_s = live
+            if i - ic > REVERT_WEEKS or s != d0:
+                live = None
+            elif (line0 - c[i]) * d0 > REVERT_TOL * a[i] and (not REVERT_CONFIRM or conf[i] * old_s > 0):
+                s, live = old_s, None
+                fakes.append((i00, i, d0, line0))
+                state[i] = s
+                continue
         if pend is not None:
             d, line, i0 = pend
             if (c[i] - line) * d > 0:
+                old_s = s
                 s = d; events.append((i0, i, d, line))
+                if REVERT_WEEKS:
+                    live = (d, line, i0, i, old_s)
             else:
                 fakes.append((i0, i, d, line))
             pend = None
