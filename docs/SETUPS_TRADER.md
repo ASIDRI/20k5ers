@@ -1533,3 +1533,5 @@ backtest skipped (23 Jan and 1 Jul 2024).
   - On EURUSD a small plus remains (+36.8R, t 1.8), but it lowers the win rate.
   - The numbers in the sections "Daily LQ grab: six entry models", "Setup 4 in the engine", "Setup 4 losses" and
     "Setup 4 with the fibs" were made with the error and are no longer valid.
+- **No-look-ahead check after the fix**, EURUSD 2024 (setups 1 + 4): 259 days, 18 backtest trades, all 18 found live
+  with the same entry and stop. No difference.
