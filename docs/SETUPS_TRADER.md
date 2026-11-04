@@ -1271,3 +1271,46 @@ In the data:
   - 20 Apr 2017 (-1R) disappears.
   - 31 Jul 2024 (+1.85R) becomes 25 Jul 2024 (+2.83R).
   - Some stops are a little different.
+
+---
+
+## Setup 3 (strategy): liquidity grab of a lower weekly swing high, no weekly BoS (researched, off)
+The trader, EURUSD May-June 2021:
+- No weekly BoS. A weekly swing high (week of 4 Jan 2021, 1.23496), then a lower swing high (week of 22 Feb, 1.22431,
+  the "LQ").
+- Liquidity grab: weeks of 17, 24 and 31 May have wicks above 1.22431 (up to 1.22664) and close below.
+  "3 week tap and rejection. One down candle & tweezers."
+- Daily: BoS (3 June), fib 1.22258 (body) -> 1.21040.
+- Pullback "within 1/1, here at 0.796", **daily shooting star** on 9 June.
+- Trade: entry **1.21797**, stop 1.22559 (above the 1 June high 1.22545), target 1.20214; it ran to -2.6 (1.1771).
+- "Deze strategie moet onderzocht worden."
+
+**Engine** (`LQ_GRAB`, `lq_triggers`):
+- Weekly swing highs are 2/2 fractals. H1, then a lower H2 at least `LQ_GAP1` weeks later.
+- At least `LQ_GAP2` weeks after H2: a week above H2 that closes below it, with no weekly close above H2 in between
+  and the high below H1.
+- Then a red week within `LQ_RED` weeks (= the trigger).
+- On the daily: the normal pipeline (daily BoS from the grab week, fib, daily S/R in the zone, patterns), valid for 6
+  weeks.
+- Mirrored for longs.
+- A trade that is also a setup-1 trade counts once.
+
+| variant (37 instruments, setup 3 alone) | trades | T1 | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|
+| engine stop (fib 0.796 / pattern + 0.1 ATR) | 294 | 38% | -13.9 | +3.2 | -17.1 | -0.58 |
+| **stop above the swing-high wick** + 0.1 ATR | 285 | 53% | +5.6 | +12.1 | -6.5 | 0.32 |
+| + targets up to -2.618 | 285 | 53% | +6.2 | +12.3 | -6.1 | 0.35 |
+| gap 3 / 6 weeks | 223 | 55% | +7.9 | +15.5 | -7.6 | 0.51 |
+| gap 3 / 10 | 177 | 55% | +2.9 | +1.9 | +1.1 | 0.22 |
+| gap 6 / 3 | 271 | 52% | -1.8 | +5.0 | -6.8 | -0.11 |
+| gap 6 / 6 | 208 | 54% | +3.8 | +9.5 | -5.8 | 0.25 |
+| >= 2 grab weeks | 137 | 55% | +8.7 | +8.9 | -0.2 | 0.70 |
+| >= 3 grab weeks | 57 | 37% | -14.5 | -7.9 | -6.5 | -1.88 |
+
+- **Across instruments: no edge** in any variant (t <= 0.7).
+- **EURUSD** (stop above the swing high): 9 trades, +6.0R.
+  - All 5 shorts won: Jun 2016, Apr 2018, Jan 2020, **8 Jun 2021**, Mar 2022.
+  - Of the 4 longs, 3 lost.
+  - The trader's trade: the engine enters a day earlier, 8 June 2021, tweezer at daily S/R 1.21896, entry 1.21730,
+    stop 1.22607 -> **+1.61R**. With the engine's normal stop: -1.06R.
+- `LQ_GRAB` stays **off**. Too few EURUSD trades to judge, and no edge on the 37 instruments.

@@ -90,6 +90,11 @@ REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over
 REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):
 # the undo also needs this indicator to point back to the old trend
 REVERT_TOL = 0.0  # ... by at least this many weekly ATR
+LQ_GRAB = False  # setup 3: liquidity grab of a lower weekly swing high, no weekly BoS needed (lq_triggers)
+LQ_GAP1, LQ_GAP2, LQ_LOOK, LQ_MAXW, LQ_RED, LQ_WEEKS = 3, 3, 52, 52, 3, 6
+LQ_TAPS = 1  # weeks that trade above H2 and close below it, up to and including the red week ("3 week tap")
+LQ_STOP_HI = False  # setup 3: stop always above the swing-high wick of the fib (+ SL_BUF ATR)
+LQ_TARGETS = None  # setup 3: own target ladder (None: TARGETS)
 FAKE_RETEST = False  # setup 2: retest of the line after a fake weekly BoS (fake_retest)
 RT_AWAY, RT_TOUCH, RT_WEEKS, RT_SL = 1.0, 0.25, 10, 1.0
 
@@ -327,6 +332,34 @@ def monthly_levels(m, mdone, t):
     c = {k: mm[k].values.astype(float) for k in ("open", "high", "low", "close")}
     return sorted(p for p, _, _ in sr_mod.levels(c, tol_atr=MN_TOL, min_each=MN_MIN_EACH, max_levels=40,
                                                  sep_atr=MN_SEP))
+
+
+def lq_triggers(o, h, l, c):
+    """Setup 3 weeks (short view): a weekly swing high H1, at least LQ_GAP1 weeks later a lower swing high H2 (the
+    liquidity), at least LQ_GAP2 weeks after H2 a week that trades above H2 but closes below it (the grab; no weekly
+    close above H2 since H2, the high stays below H1), then within LQ_RED weeks a red week: the trigger.
+    Returns (trigger week, grab week, H1, H2). Swing highs are weekly fractals (2 weeks each side), known 2 weeks on."""
+    sh = [i for i in range(2, len(h) - 2) if h[i] == np.max(h[i - 2:i + 3])]
+    out, used = [], set()
+    for b_, i2 in enumerate(sh):
+        prev = [i for i in sh[:b_] if i2 - i >= LQ_GAP1 and i2 - i <= LQ_LOOK and h[i] > h[i2]
+                and np.max(h[i + 1:i2]) <= h[i]]
+        if not prev:
+            continue
+        i1 = prev[-1]
+        for g in range(i2 + max(LQ_GAP2, 3), min(len(c), i2 + LQ_MAXW)):
+            if c[g - 1] > h[i2] or h[g - 1] >= h[i1]:  # broken (a close above) or above H1: no grab any more
+                break
+            if h[g] > h[i2] and c[g] < h[i2] and h[g] < h[i1]:
+                for j in range(g, min(len(c), g + LQ_RED)):
+                    if c[j] > h[i2]:
+                        break
+                    taps = sum(1 for q in range(g, j + 1) if h[q] > h[i2] and c[q] < h[i2])
+                    if c[j] < o[j] and j not in used and taps >= LQ_TAPS:
+                        out.append((j, g, i1, i2)); used.add(j)
+                        break
+                break
+    return sorted(out)
 
 
 def run_view(sym, d, w, dirn, start, end, log, m=None):
@@ -589,6 +622,44 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         fib["f0"] = min(fib["f0"], l[k])
     for t in trades:
         t["setup"] = "fib"
+    if LQ_GRAB:  # setup 3: no weekly BoS needed (trader 2026-11-04, EURUSD May-June 2021)
+        n0, saved, last_exit_t = len(trades), last_exit_t, np.datetime64("1900-01-01")
+        keep = (DEEP, TARGETS)
+        g_ = globals()
+        if LQ_STOP_HI:  # stop above the swing high of the fib (the trader: 1.22559 above 1 June 2021)
+            g_["DEEP"] = 0.0
+        if LQ_TARGETS:
+            g_["TARGETS"] = LQ_TARGETS
+        seen = {(t["entry_day"], t["dir"]) for t in trades}
+        for j, g, i1, i2 in lq_triggers(wo, wh, wl, wc):
+            if wdone[j] < np.datetime64(pd.Timestamp(start).tz_localize(None)) or wstart[j] <= last_exit_t:
+                continue
+            kg = int(np.searchsorted(dt, wstart[g], "left"))  # the daily BoS may come from the grab week on
+            kj = int(np.searchsorted(ddone, wdone[j], "right"))  # the trigger is known after the red week closed
+            kend = min(len(c), int(np.searchsorted(ddone, wdone[min(j + LQ_WEEKS, len(wdone) - 1)], "right")), k1)
+            fb = None
+            for k in range(kj, kend):
+                if fb is None:
+                    b = find_bos(kg, k)
+                    if b:
+                        fb = start_fib(b, o, h, l, c, k)
+                        log.append((day_label(dt[k]), f"LQ-grab (swing highs week {week_label(wstart[i1])} / "
+                                    f"{week_label(wstart[i2])}, grab week {week_label(wstart[g])}): daily BoS (lijn "
+                                    f"{b[2] * sgn:.5f}), fib 1 {fb['f1'] * sgn:.5f}", dirn))
+                    continue
+                if c[k] > fb["f1"]:
+                    log.append((day_label(dt[k]), "LQ-grab: slot voorbij fib 1, vervalt", dirn))
+                    break
+                if try_entry(k, fb, "LQ " + week_label(wstart[j])):
+                    break
+                fb["f0"] = min(fb["f0"], l[k])
+        g_["DEEP"], g_["TARGETS"] = keep
+        new = [t for t in trades[n0:] if (t["entry_day"], t["dir"]) not in seen]  # not twice the same trade
+        del trades[n0:]
+        for t in new:
+            t["setup"] = "lq"
+        trades += new
+        last_exit_t = saved
     if FAKE_RETEST:
         trades += fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log)
         trades.sort(key=lambda t: t["entry_day"])
