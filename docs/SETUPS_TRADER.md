@@ -1106,3 +1106,25 @@ Should we take into account the broader monthly trend as well and how?"
   - **Much worse**: EURUSD 9 trades, 2/9 trader trades, -2.4R. 37 instruments: 510 trades, -12.1R.
   - The monthly structure turns far too late; the trader's 2018-2019 EURUSD shorts would all be blocked.
 - **Note**: the +100R on 37 instruments is almost all 2021-2025 (+99.5R). 2016-2020 is +0.5R.
+
+### Trend tools: VectorVest and DEW (WMA 30 + DPO 20) (trader 2026-11-04)
+- **VectorVest "Confirmed Up/Down"**: proprietary (based on their MTI), built for stocks; cannot be reproduced.
+- **DEW**: close above/below WMA 30 plus DPO 20 above/below 0.
+  - The DPO is computed non-centred, so no future candles: close minus the SMA 20 of 11 days ago.
+  - TradingView's "centered" DPO shifts the line back in time; that version cannot be used live.
+- **As a filter on the engine's entries** (`DEW_FILTER`, off):
+
+| filter | EURUSD trades | R | trader trades | 37 instr. | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|---|---|
+| none | 24 | +19.2 | 8/9 | 948 | +100.0 | +0.5 | +99.5 | 2.12 |
+| WMA + DPO | 14 | +5.7 | 4/9 | 550 | +34.6 | +22.9 | +11.7 | 1.08 |
+| WMA only | 14 | +5.7 | 4/9 | 630 | +28.1 | +14.6 | +13.5 | 0.82 |
+| DPO only | 20 | +14.7 | 6/9 | 676 | +50.8 | +21.9 | +29.0 | 1.38 |
+
+  - Worse: the engine enters on the rejection during the pullback, when the daily DEW still points the other way.
+- **As a separate daily trigger in the weekly trend** (`research/strategy/dew_trigger_study.py`):
+  - Rule: the first day both DEW conditions turn in the trend direction.
+  - Entry at the close; stop beyond the 10-day extreme + 0.1 ATR.
+  - Fixed **2R** exit: 1674 trades, 36% win, **+87.7R**, mean +0.05R, t 1.5 (2016-20 +13.4, 2021-25 +74.3).
+    EURUSD +1.5R, GBPJPY +13.3R.
+  - **Trend exit** (first close back across the WMA): -64.9R.

@@ -90,6 +90,8 @@ def apply_profile(sym):
     globals().update(PROFILES.get(sym, DEFAULT_PROFILE))
 
 
+DEW_FILTER = None  # None / "both" / "wma" / "dpo": daily trend at the entry close, close vs WMA 30 and DPO 20 vs 0
+DEW_WMA, DEW_DPO = 30, 20
 MONTHLY_FILTER = False  # no trade against the monthly structure (trader 2026-11-04, GBPJPY)
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
@@ -311,6 +313,12 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
     ddone = complete_times(d["time"], "D1").values
     dt = d["time"].values
     dsw = zigzag(h, l, a, D_REV)
+    if DEW_FILTER:  # in this view a trade needs a bearish daily trend: close below the WMA, DPO below 0 (non-centred,
+        wts = np.arange(1, DEW_WMA + 1, dtype=float)  # so no future candles: close minus the SMA of n/2+1 days ago)
+        wma = np.r_[np.full(DEW_WMA - 1, np.nan), np.convolve(c, wts[::-1] / wts.sum(), "valid")]
+        sma = pd.Series(c).rolling(DEW_DPO).mean().values
+        dpo = c - np.r_[np.full(DEW_DPO // 2 + 1, np.nan), sma[:-(DEW_DPO // 2 + 1)]]
+        dew_ok = {"both": (c < wma) & (dpo < 0), "wma": c < wma, "dpo": dpo < 0}[DEW_FILTER]
     lows = [(s, cf) for s, kind, cf in dsw if kind == -1]
     run_start = np.zeros(len(state), int)  # first week of the current structure state
     for i in range(1, len(state)):
@@ -378,7 +386,7 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         nonlocal last_exit_t
         f0, f1 = fd["f0"], fd["f1"]
         rng = f1 - f0
-        if k <= fd["bos"] or rng <= 0 or (MONTHLY_FILTER and against_month(k)):
+        if k <= fd["bos"] or rng <= 0 or (MONTHLY_FILTER and against_month(k)) or (DEW_FILTER and not dew_ok[k]):
             return None
         tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
         lv = sr_levels(o, h, l, c, SR_TOL * a[k - 1], k)
