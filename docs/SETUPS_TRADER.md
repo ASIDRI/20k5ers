@@ -1443,3 +1443,50 @@ All setups together, 2016-2025:
 
 - **Caveat**: about 320 trades a year over 37 instruments, often several open at once. Risk per trade and open risk
   must be capped in the 5ers sim.
+
+### Setup 4 losses: why, and how to raise the win rate (EURUSD focus)
+The trader: "focussen op win-rate & R ... kijken naar de losses waarom deze losses zijn bij setup 4."
+Features at the grab close (`lqd_features`): context, direction, candle shape, gaps, sizes in ATR, daily WMA30 / DPO,
+and a daily S/R at the grabbed high.
+
+EURUSD, 105 setup-4 trades:
+- **Daily S/R at the grabbed high (within 0.25 ATR)**:
+
+| | trades | win | R |
+|---|---|---|---|
+| with S/R | 86 | 42% | +55.6 |
+| without S/R | 19 | 16% | -7.5 |
+
+- Shorts 44% win (+38.6R), longs 30% (+9.5R). EURUSD fell for most of 2015-2025.
+- Weaker trades:
+  - Second swing high within 8 days of the first: 29% win.
+  - Short upper wick (< 0.3 of the range): 31%.
+  - Small stop (< 0.84 ATR): 31%.
+  - Grab candle range 0.95-1.24 ATR: 26%.
+
+Filters checked on the other 36 instruments:
+
+| filter | EURUSD tr | win | R | other 36 tr | win | R | mean R |
+|---|---|---|---|---|---|---|---|
+| none | 105 | 37% | +48.1 | 1990 | 30% | +291.0 | +0.146 |
+| **S/R at H2** | 86 | 42% | **+55.6** | 1799 | 30% | **+292.5** | **+0.163** |
+| H1-H2 > 8 days | 67 | 42% | +43.1 | 1268 | 28% | +120.2 | +0.095 |
+| wick >= 0.3 | 68 | 41% | +42.2 | 1324 | 30% | +220.8 | +0.167 |
+| S/R + H1-H2 > 8 + wick | 37 | 51% | +38.0 | 787 | 28% | +75.5 | +0.096 |
+
+- Only **S/R at H2** helps everywhere, so it is now on (`LQD_SR = True`). The other filters help only on EURUSD,
+  likely by chance.
+
+Management of setup 4 (with the S/R filter):
+
+| exits | EURUSD tr | win | R | other 36 win | R |
+|---|---|---|---|---|---|
+| **all at 3R (now)** | 95 | 40% | **+54.4** | 29% | **+250.1** |
+| all at 2R | 99 | 46% | +36.3 | 38% | +182.6 |
+| 50% at 1.5R + BE, rest 3R | 100 | 50% | +40.2 | 44% | +166.2 |
+| 50% at 1R + BE, rest 3R | 107 | 57% | +28.0 | 54% | +143.1 |
+| 33% at 1R / 2R / 3R, BE after 1R | 107 | 57% | +27.5 | 54% | +139.3 |
+
+- A higher win rate costs R: from 40% to 57% halves the R. The choice is the trader's (`LQD_LADDER`).
+- **EURUSD now** (setups 1 + 4, S/R filter on): 123 trades, **46%** T1, **+84.7R** (was 133 trades, 44%, +78.4R).
+  Replication 9/9, 4/4.

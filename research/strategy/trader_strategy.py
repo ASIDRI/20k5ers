@@ -92,6 +92,8 @@ REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly D
 REVERT_TOL = 0.0  # ... by at least this many weekly ATR
 LQD = False  # setup 4: daily liquidity grab, entry at the close of the grab candle (daily_lq)
 LQD_N, LQD_GAP, LQD_LOOK, LQD_BUF, LQD_TGT, LQD_CTX = 2, 3, 60, 0.5, 3.0, "trend"
+LQD_SR = True  # setup 4 only with a daily S/R at the grabbed high (within 0.25 daily ATR)
+LQD_LADDER = None  # setup 4 exits: ((R level, part, new stop in R or None), ...); None = all at LQD_TGT
 LQ_GRAB = False  # setup 3: liquidity grab of a lower weekly swing high, no weekly BoS needed (lq_triggers)
 LQ_GAP1, LQ_GAP2, LQ_LOOK, LQ_MAXW, LQ_RED, LQ_WEEKS = 3, 3, 52, 52, 3, 6
 LQ_ENTRY_LEVEL = None  # setup 3 exact: entry candle wicks to >= this fib depth and closes below it, star / engulfing,
@@ -679,6 +681,25 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
     return trades
 
 
+def lqd_features(o, h, l, c, a, g, i1, i2, ctx):
+    """Setup-4 trade features at the close of the grab candle g (short view), for the loss study."""
+    A = a[g]
+    wts = np.arange(1, 31, dtype=float)
+    wma30 = float(np.dot(c[g - 29:g + 1], wts) / wts.sum()) if g >= 29 else np.nan
+    sma20 = float(np.mean(c[g - 30:g - 10])) if g >= 30 else np.nan
+    rg = h[g] - l[g]
+    lv = sr_levels(o, h, l, c, SR_TOL * a[g - 1], g)
+    return dict(
+        ctx="met trend" if ctx == -1 else "tegen trend",
+        grab_atr=(h[g] - h[i2]) / A, back_atr=(h[i2] - c[g]) / A, red=bool(c[g] < o[g]),
+        wick=(h[g] - max(o[g], c[g])) / rg if rg > 0 else 0.0, close_pos=(c[g] - l[g]) / rg if rg > 0 else 0.5,
+        gap=g - i2, h12_gap=i2 - i1, h12_atr=(h[i1] - h[i2]) / A, risk_atr=(h[g] + LQD_BUF * A - c[g]) / A,
+        range_atr=rg / A, below_wma30=bool(c[g] < wma30), dpo_neg=bool(c[g] - sma20 < 0),
+        sr_at_h2=any(abs(p_ - h[i2]) <= 0.25 * A for p_, _ in lv),
+        run_atr=(h[i2] - np.min(l[i2:g + 1])) / A,  # how far price fell from H2 before the grab
+        trend20=(c[g] - c[g - 20]) / A if g >= 20 else 0.0)
+
+
 def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log):
     """Setup 4 (trader 2026-11-04; study daily_lq_study.py): a daily swing high H1 (fractal LQD_N each side), a
     lower daily swing high H2, at least LQD_GAP days later a daily candle trades above H2 and closes back below it
@@ -705,15 +726,28 @@ def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log
             ctx = state[wi] if wi >= 0 else 0
             if ctx != -1 and not (LQD_CTX == "both" and ctx == 1):
                 break
+            if LQD_SR and not any(abs(p_ - h[i2]) <= 0.25 * a[g] for p_, _ in sr_levels(o, h, l, c, SR_TOL * a[g - 1], g)):
+                continue  # no daily S/R at the grabbed high (EURUSD: 16% win without, 42% with)
             e, sl = c[g], h[g] + LQD_BUF * a[g]
             risk = sl - e
             tgt = e - LQD_TGT * risk
-            r, ex, hit = None, None, None
+            ladder = LQD_LADDER or ((LQD_TGT, 1.0, None),)  # (R level, part closed, new stop in R; None = keep)
+            r, ex, hit, left, stop, step = 0.0, None, None, 1.0, sl, 0
             for q in range(g + 1, len(c)):
-                if h[q] >= sl:
-                    r, ex = -risk, q; break
-                if l[q] <= tgt:
-                    r, ex, hit = LQD_TGT * risk, q, q; break
+                if h[q] >= stop:
+                    r += left * (e - stop); ex, left = q, 0.0; break
+                while step < len(ladder) and l[q] <= e - ladder[step][0] * risk:
+                    lv_, part, ns = ladder[step]
+                    part = min(part, left)
+                    r += part * ladder[step][0] * risk; left -= part
+                    if ns is not None:
+                        stop = e - ns * risk
+                    hit = q if hit is None else hit
+                    step += 1
+                if left <= 1e-9:
+                    ex = q; break
+            if ex is None:
+                r = None
             cost = cost_price(sym, abs(e))
             R = round(((r if r is not None else 0.0) - cost) / risk, 2)
             out.append(dict(
@@ -721,7 +755,8 @@ def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log
                 entry_day=day_label(dt[g]), entry=e * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
                 depth=None, pattern="daily LQ grab" + (" (met trend)" if ctx == -1 else " (tegen trend)"),
                 t1_day=when(hit), t2_day="", exit_day=when(ex), open=r is None, R=R, R_5050=R, entry_t=dt[g],
-                m_sr_next=None, m_sr_before_t2=False, setup="lqd", _k=g, _f0=tgt, _rng=risk, _entry=e, _hi=h[g],
+                m_sr_next=None, m_sr_before_t2=False, setup="lqd", _feat=lqd_features(o, h, l, c, a, g, i1, i2, ctx),
+                _k=g, _f0=tgt, _rng=risk, _entry=e, _hi=h[g],
                 _pat=h[g], _level=h[i2], _band=None, _flip=None))
             log.append((day_label(dt[g]), f"TRADE daily LQ grab van {h[i2] * sgn:.5f} (swing highs {day_label(dt[i1])} / "
                         f"{day_label(dt[i2])}), instap {e * sgn:.5f}, stop {sl * sgn:.5f} -> R {R:+.2f}", dirn))
