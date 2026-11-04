@@ -1041,3 +1041,26 @@ NAS100USD, GBPCHF.
   - In versie A hetzelfde beeld: +15,6R tegen +29,2R.
 - Het backtestresultaat per instrument voorspelt dus niet welk instrument later werkt. Instrumenten weglaten op
   basis van de backtest is curve-fitting. Beter: per instrument regels van de trader zelf, zoals nu voor EURUSD.
+
+### Wick-regel bij de weekly BoS en een trigger na een valse BoS (getest, nog uit)
+De trader: "Dit hoefde toch niet: niet onder de wick van de swing". Klopt. `BREAK_WICK` was een eigen toevoeging om
+setup 5 (juli 2019) te filteren.
+Voorstel van de trader: "Mss ook een regel wanneer het dus een fake BoS geweest is, kijken voor een continuation
+setup terug met daily BoS?"
+In de engine: `FAKE_TRIGGER`. Een poging tot week-BoS tegen de trend in, waarbij de week erna terug sluit, maakt van
+die terugsluitweek een week-trigger voor de trend.
+
+| wick-regel | valse-BoS-trigger | EURUSD trades | T1 | R | trader-trades | fout | 37 instr. | R | t |
+|---|---|---|---|---|---|---|---|---|---|
+| aan | uit (versie C) | 24 | 58% | +19,2 | 8/9 | s14 | 932 | +70,4 | 1,52 |
+| aan | aan | 26 | 54% | +17,2 | 8/9 | s14, extra 21 mei 2020 | 937 | +70,4 | 1,51 |
+| uit | uit | 26 | 62% | +19,8 | 7/9 | s5, s6, s14, extra 19 jul + 16 sep 2019 | 947 | +87,3 | 1,87 |
+| uit | aan | 28 | 57% | +17,8 | 7/9 | s5, s6, s14, extra 2019 + 21 mei 2020 | 952 | **+98,5** | **2,09** |
+
+- **Valse BoS'en die de engine ziet op EURUSD sinds 2016**:
+  - Bullish poging week 2 maart 2020 (lijn 1,11773), week 9 maart sluit terug.
+  - Bearish poging week 16 aug 2021 (lijn 1,17602), week 23 aug sluit terug.
+- Met de valse-BoS-trigger komt de short van **21 mei 2020** terug. Daarvan zei de trader: "Ik snap niet waarom hij
+  hier short zou gaan".
+- Op 37 instrumenten is "wick-regel uit + valse-BoS-trigger aan" de beste versie tot nu toe: +98,5R, t 2,1.
+- Beide opties staan uit voor EURUSD. Kandidaat voor de andere instrumenten.

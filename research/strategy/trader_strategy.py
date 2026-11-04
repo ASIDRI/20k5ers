@@ -78,6 +78,7 @@ T1, T2, T3 = 0.2, 0.58, 1.0
 # the rest at -1.618 (TP4, setup 13)
 TARGETS = ((T1, 0.5, "be"), (T2, 0.2, 0.0), (T3, 0.15, 0.5), (1.618, 0.15, 0.5))
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
+FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend weekly BoS is a trigger (trader 2026-11-04)
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
@@ -124,6 +125,7 @@ def weekly_structure(o, h, l, c):
     er = (np.abs(c - np.r_[np.full(10, np.nan), c[:-10]]) / mv.rolling(10).sum().values)
     sw = zigzag(h, l, a, W_REV)
     state, s, pend, events, p = np.zeros(len(c), int), 0, None, [], 0
+    fakes = []  # (attempt week, week that closed back, direction of the attempt, line): a fake weekly BoS
     last = {1: None, -1: None}
     prev = {1: None, -1: None}  # last confirmed swing of each kind (valid or not)
     waiting = []  # (swing index, kind, level the move from it must take out) - swings that have not made a BoS yet
@@ -155,6 +157,8 @@ def weekly_structure(o, h, l, c):
             d, line, i0 = pend
             if (c[i] - line) * d > 0:
                 s = d; events.append((i0, i, d, line))
+            else:
+                fakes.append((i0, i, d, line))
             pend = None
         else:
             for d, k in ((-1, last[-1]), (1, last[1])):
@@ -167,7 +171,7 @@ def weekly_structure(o, h, l, c):
                     pend = (d, line, i)
                     break
         state[i] = s
-    return state, events, a
+    return state, events, a, fakes
 
 
 def day_label(t):
@@ -280,8 +284,12 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         o, h, l, c = (df[k].values.astype(float) for k in ("open", "high", "low", "close"))
         return (o, h, l, c) if sgn == 1 else (-o, -l, -h, -c)
     wo, wh, wl, wc = px(w)
-    state, events, wa = weekly_structure(wo, wh, wl, wc)
+    state, events, wa, fakes = weekly_structure(wo, wh, wl, wc)
     trig = weekly_triggers(wo, wh, wl, wc, wa, state)
+    if FAKE_TRIGGER:  # a fake counter-trend weekly BoS (the next week closed back) is a trigger for the trend (setup 6)
+        have = {j for j, _ in trig}
+        trig = sorted(trig + [(i1, "valse BoS") for i0, i1, dd, line in fakes
+                              if dd == 1 and state[i1] == -1 and i1 not in have])
     wdone = complete_times(w["time"], "W1").values
     wstart = w["time"].values
     o, h, l, c = px(d)
