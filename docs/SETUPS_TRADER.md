@@ -1343,3 +1343,36 @@ The trader, EURUSD May-June 2021:
   - The shorts are positive in all three variants (5-6 trades, +3.3 to +6.1R).
   - The longs are negative in all three.
   - This is a very small sample. The setup stays off; a possible next step is EURUSD shorts only.
+
+### Daily liquidity grabs: continuation versus counter-trend (study, `daily_lq_study.py`)
+The trader: "doorzoek toch wat meer naar liquidity continuation grabs dan voor eurusd eerst op daily."
+
+Rules (daily, mirrored for longs):
+- A daily swing high H1 (fractal N left/right), then a lower swing high H2.
+- At least GAP days later, a candle above H2 that closes back below it, with the high below H1.
+- Entry at the close of the first red candle (grab day or up to 3 days later); stop above the grab high + BUF ATR.
+- Exit at a fixed R target or the stop.
+- Split by the weekly structure at entry: **continuation** = with the weekly trend; **counter-trend** = against it,
+  like the trader's May 2021 setup.
+
+EURUSD 2015-2025, shown for one variant. The grid (N 2/3, GAP 3/10, BUF 0.1/0.5, target 2R/3R) gives the same
+picture.
+
+| variant N2 GAP3 BUF0.5 2R | trades | win | R | 2015-19 | 2020-25 | t |
+|---|---|---|---|---|---|---|
+| EURUSD continuation shorts | 22 | 36% | +1.6 | +0.8 | +0.8 | 0.23 |
+| EURUSD continuation longs | 25 | 32% | -1.4 | +1.9 | -3.3 | -0.20 |
+| **EURUSD counter-trend shorts** | 17 | 53% | **+9.7** | +2.9 | +6.8 | 1.53 |
+| **EURUSD counter-trend longs** | 16 | 44% | **+4.6** | +2.9 | +1.8 | 0.76 |
+| other 36 continuation shorts | 777 | 37% | +46.1 | +43.2 | +2.9 | 1.15 |
+| other 36 continuation longs | 889 | 39% | +127.0 | +7.2 | +119.8 | 2.92 |
+| other 36 counter-trend shorts | 645 | 33% | -22.7 | +2.4 | -25.1 | -0.63 |
+| other 36 counter-trend longs | 689 | 37% | +56.2 | +19.4 | +36.8 | 1.48 |
+
+- **EURUSD: counter-trend grabs are positive in almost every variant** and in both periods; both directions together
+  are about +12 to +17R over 33-39 trades.
+  - Continuation grabs on EURUSD lose with a tight stop (0.1 ATR) and are roughly flat with 0.5 ATR.
+  - EURUSD ranged a lot in 2015-2025, so reversals at lower highs / higher lows work.
+- **Other 36: the reverse.** Continuation is positive, and longs win in both contexts while counter-trend shorts lose.
+  - This mostly reflects the long drift of 2020-2025 (indices, gold, crypto), not the grab itself.
+- Not built into the engine yet.
