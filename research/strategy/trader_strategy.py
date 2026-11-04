@@ -90,6 +90,7 @@ def apply_profile(sym):
     globals().update(PROFILES.get(sym, DEFAULT_PROFILE))
 
 
+MONTHLY_FILTER = False  # no trade against the monthly structure (trader 2026-11-04, GBPJPY)
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
@@ -325,6 +326,13 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
     k0 = max(k0, 30)
 
     mdone = complete_times(m["time"], "MN", d["time"]).values if m is not None else None
+    mstate = weekly_structure(*px(m))[0] if (m is not None and MONTHLY_FILTER) else None  # monthly structure
+
+    def against_month(k):  # the last completed month says the trend is the other way (GBPJPY 2024: weekly bearish
+        if mstate is None:  # BoS inside a bullish monthly trend)
+            return False
+        mi = int(np.searchsorted(mdone, ddone[k], "right")) - 1
+        return mi >= 0 and mstate[mi] == 1
     mlev, next_refresh = [], None
 
     def week_of(k):  # last completed week at the close of day k
@@ -370,7 +378,7 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
         nonlocal last_exit_t
         f0, f1 = fd["f0"], fd["f1"]
         rng = f1 - f0
-        if k <= fd["bos"] or rng <= 0:
+        if k <= fd["bos"] or rng <= 0 or (MONTHLY_FILTER and against_month(k)):
             return None
         tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
         lv = sr_levels(o, h, l, c, SR_TOL * a[k - 1], k)

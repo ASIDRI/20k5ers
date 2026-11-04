@@ -1092,3 +1092,17 @@ Onze data loopt tot december 2025.
     van maart 2026 (± 1,802).
   - Een slot ruim boven die body (mei/juni 2026, uiterlijk de grote week eind juni, ± 1,896) is de volgende
     **bullish weekly BoS**.
+
+### GBPJPY 2024-2025 and a monthly-trend filter (trader 2026-11-04; `MONTHLY_FILTER`, off)
+The trader: "We would have only traded shorts in the red box correct? But we would miss the whole run higher ...
+Should we take into account the broader monthly trend as well and how?"
+- **Engine, bearish weekly BoS**: break week 29 Jul 2024, line **191.907**. The trader's line is 199.400.
+  - No short in the red box (Oct 2024 - Jan 2025).
+  - Shorts: 13 Feb 2025 (-1R) and 10 Apr 2025 (-1R).
+- **Engine, bullish weekly BoS**: break week 2 Jun 2025, line **193.920**. The trader's line is 193.919.
+  - Longs: 3 Jul 2025 (+0.32R), 23 Sep 2025 (-1.05R), 5 Nov 2025 (+1.26R).
+  - Our data ends Dec 2025; 2026 is not tested.
+- **Test**: no trade against the monthly structure, i.e. the weekly structure logic on monthly candles.
+  - **Much worse**: EURUSD 9 trades, 2/9 trader trades, -2.4R. 37 instruments: 510 trades, -12.1R.
+  - The monthly structure turns far too late; the trader's 2018-2019 EURUSD shorts would all be blocked.
+- **Note**: the +100R on 37 instruments is almost all 2021-2025 (+99.5R). 2016-2020 is +0.5R.
