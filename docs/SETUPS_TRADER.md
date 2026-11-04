@@ -1219,3 +1219,6 @@ terug ongeldig gemaakt?" and "of extra bevestiging van een valse en terug switch
   - The changes are only in 2016-2017 and 2023-2024.
   - Undone BoS: Sep/Oct 2023 (1.07078) and Apr and Jun/Jul 2024 (1.0761).
   - EURUSD stays on version C until the trader has seen them.
+- **No-look-ahead check** (`v2_lookahead_check.py`, day by day with the forming week), USDJPY 2023-09-01 to
+  2024-09-01 with the new rules (undo + setup 2): 259 days, 2 backtest trades, both found live with the same entry and
+  stop. No difference.
