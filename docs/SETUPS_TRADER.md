@@ -1128,3 +1128,27 @@ Should we take into account the broader monthly trend as well and how?"
   - Fixed **2R** exit: 1674 trades, 36% win, **+87.7R**, mean +0.05R, t 1.5 (2016-20 +13.4, 2021-25 +74.3).
     EURUSD +1.5R, GBPJPY +13.3R.
   - **Trend exit** (first close back across the WMA): -64.9R.
+
+### Setup after a fake weekly BoS: retest of the line (trader 2026-11-04, USDJPY)
+The trader shows USDJPY Sep-Oct 2026:
+- Fake bearish weekly BoS at 156.685; the daily closes back above the line and price moves higher.
+- Small pullback with daily wicks on the line, then long.
+- Trade on the chart: entry 156.677, stop 155.167, target 163.252 (4.35R).
+
+Study: `research/strategy/fake_bos_retest_study.py`, 37 instruments, 2016-2025. Rules:
+- An attempt against the trend; the next week closes back.
+- Price first moves >= 1 daily ATR away from the line, within 10 weeks.
+- Then a daily candle whose wick comes within 0.25 ATR of the line (or through it) and closes back on the trend side.
+- Entry at that close.
+- The setup is off after a daily close beyond the line.
+
+| stop | trades | engine ladder: win | R | t | fixed 2R: win | R | t |
+|---|---|---|---|---|---|---|---|
+| pullback extreme + 0.1 ATR | 47 | 30% | -15.3 | -1.75 | 40% | +6.6 | 0.65 |
+| + 0.5 ATR | 47 | 45% | +16.3 | 0.89 | 40% | +8.1 | 0.79 |
+| **+ 1.0 ATR** | 47 | **62%** | **+23.8** | 1.84 | 49% | +20.8 | 2.00 |
+
+- With 1 ATR: 2016-20 +13.3R, 2021-25 +10.5R. Without the largest winner (+10R): +13.8R.
+- The trader's stop on USDJPY (~0.8 yen below the wick) is close to 1 daily ATR.
+- Caveats: a small sample (47 trades in 10 years), and the best of three stop variants was chosen. Not yet built into
+  the engine.
