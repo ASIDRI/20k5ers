@@ -1565,3 +1565,5 @@ The trader: "Kan je ervoor zorgen dat de research backtest die fout niet meer ma
   - Every setup decides in date order.
   - Results of study scripts outside the engine are not reported as results until the setup is built into the engine
     and passes the guard.
+- **Large guard run**: all 37 instruments x 25 random cut days (925 cuts), engine copy with **all setups on
+  everywhere** (setups 1, 2, 3 and 4): **GUARD OK**, no difference.
