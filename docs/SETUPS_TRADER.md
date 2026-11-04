@@ -1606,3 +1606,13 @@ other 36 with the fib ladder. Script: `research/strategy/lqd_grid.py`.
 - **RSI divergence, WMA30, DPO and weekly WMA10** raise the win rate (up to 47-59%), but cut the number of trades
   much more than they add R. On EURUSD only 5-37 trades remain.
 - Setup 4 stays: **EURUSD on, other instruments off**.
+
+### Choice EURUSD: setup 1 only (trader 2026-11-04)
+"We houden het bij setup 1 dan voor nu best."
+- Setup 4 is off for EURUSD too (`LQD=False` in the profile). The code and options stay for later.
+- **EURUSD now**: 28 trades, **68% T1, +30.3R** (mean +1.08R), 2016-2025.
+- Replication: 9/9 trader trades, 4/4 no-trades, no extra trades up to May 2021.
+- Guard on EURUSD, 30 cut days: OK.
+- Other instruments, unchanged:
+  - setup 1 without the wick rule, with the fake-BoS trigger, the undo rule and setup 2;
+  - setup 3 and setup 4 off.

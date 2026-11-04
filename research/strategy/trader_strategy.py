@@ -90,7 +90,7 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
 PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
-                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8, LQD=True, LQD_CTX="both", LQD_FIB=False)}
+                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8, LQD=False, LQD_CTX="both", LQD_FIB=False)}
 DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
                        PULLBACK_FIB=False, LQD=False, LQD_CTX="trend", LQD_FIB=True)
 REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
