@@ -32,6 +32,8 @@ def main():
         tr += T.run_view("EURUSD", d, w, dirn, "2016-01-01", "2026-01-01", [], m)
     e = pd.DataFrame(tr).sort_values("entry_day")
     e = e[(e.entry_day >= "2018-05-01") & (e.entry_day <= END)]
+    lqd = e[e.setup == "lqd"]  # setup 4 (daily LQ grab) is a separate model: not compared with the trader's trades
+    e = e[e.setup != "lqd"]
     used, ok = set(), 0
     print("trader                      | engine")
     for sid, day, dirn, px in TRADER:
@@ -52,6 +54,8 @@ def main():
     print(f"\n{ok}/{len(TRADER)} trades gevonden; extra engine-trades tot {END}:")
     for _, r in extra.iterrows():
         print(f"   {r.entry_day} {'L' if r.dir == 1 else 'S'} {r.entry:.5f} {r.pattern}, R {r.R:+.2f}")
+    if len(lqd):
+        print(f"(setup 4, daily LQ grab, apart: {len(lqd)} trades, R {lqd.R.sum():+.1f})")
 
 
 if __name__ == "__main__":

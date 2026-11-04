@@ -1415,3 +1415,31 @@ All with N 2, GAP 3, stop grab high + 0.5 ATR, target 2R / 3R; 2015-2025.
 - Waiting models (`retest`, `bosfib`) lose: after the grab the move comes immediately.
 - Still a study with fixed R targets. Next step: build it as setup 4 in the engine, then run the no-look-ahead check
   and test it together with setups 1 and 2.
+
+### Setup 4 in the engine: daily LQ grab, entry at the close of the grab candle (on)
+The trader: "Zet hem in de engine, dit is duidelijk een mooie extra he."
+- **Code**: `daily_lq` in `trader_strategy.py`. Switches: `LQD`, `LQD_N 2`, `LQD_GAP 3`, `LQD_LOOK 60`,
+  `LQD_BUF 0.5`, `LQD_TGT 3.0`, `LQD_CTX`.
+- **Rule**: a daily swing high (2/2 fractal), a lower swing high H2, and at least 3 days later a daily candle above H2
+  that closes back below it (the high stays below the first swing high).
+- **Trade**: short at that close; stop grab high + 0.5 daily ATR; one target at 3R. Mirrored for longs.
+- **Profiles**:
+  - EURUSD: with and against the weekly trend (`LQD_CTX = "both"`).
+  - Other instruments: only with the weekly trend (`"trend"`).
+- **Replication**: setup 4 is a separate model and is not compared with the trader's trades. Setups 1 and 2 stay
+  9/9 and 4/4.
+
+All setups together, 2016-2025:
+
+| group | setup | trades | T1 / win | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|---|
+| EURUSD | 1 fib | 28 | 68% | +30.3 | +12.7 | +17.6 | 3.23 |
+| EURUSD | 4 daily LQ grab | 105 | 37% | +48.1 | +16.8 | +31.3 | 2.42 |
+| EURUSD | **together** | 133 | 44% | **+78.4** | +29.6 | +48.8 | 3.54 |
+| other 36 | 1 fib | 974 | 41% | +110.6 | +63.9 | +46.7 | 2.02 |
+| other 36 | 2 fake-BoS retest | 120 | 62% | +39.5 | +18.4 | +21.2 | 2.29 |
+| other 36 | 4 daily LQ grab | 1990 | 30% | +291.0 | +110.1 | +180.9 | 3.57 |
+| **all 37** | **together** | **3217** | 35% | **+519.6** | +222.0 | +297.6 | **5.08** |
+
+- **Caveat**: about 320 trades a year over 37 instruments, often several open at once. Risk per trade and open risk
+  must be capped in the 5ers sim.

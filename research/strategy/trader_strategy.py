@@ -83,13 +83,15 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
 PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
-                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8)}
+                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8, LQD=True, LQD_CTX="both")}
 DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
-                       PULLBACK_FIB=False)
+                       PULLBACK_FIB=False, LQD=True, LQD_CTX="trend")
 REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
 REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):
 # the undo also needs this indicator to point back to the old trend
 REVERT_TOL = 0.0  # ... by at least this many weekly ATR
+LQD = False  # setup 4: daily liquidity grab, entry at the close of the grab candle (daily_lq)
+LQD_N, LQD_GAP, LQD_LOOK, LQD_BUF, LQD_TGT, LQD_CTX = 2, 3, 60, 0.5, 3.0, "trend"
 LQ_GRAB = False  # setup 3: liquidity grab of a lower weekly swing high, no weekly BoS needed (lq_triggers)
 LQ_GAP1, LQ_GAP2, LQ_LOOK, LQ_MAXW, LQ_RED, LQ_WEEKS = 3, 3, 52, 52, 3, 6
 LQ_ENTRY_LEVEL = None  # setup 3 exact: entry candle wicks to >= this fib depth and closes below it, star / engulfing,
@@ -669,10 +671,63 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             t["setup"] = "lq"
         trades += new
         last_exit_t = saved
+    if LQD:
+        trades += daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log)
     if FAKE_RETEST:
         trades += fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log)
         trades.sort(key=lambda t: t["entry_day"])
     return trades
+
+
+def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log):
+    """Setup 4 (trader 2026-11-04; study daily_lq_study.py): a daily swing high H1 (fractal LQD_N each side), a
+    lower daily swing high H2, at least LQD_GAP days later a daily candle trades above H2 and closes back below it
+    (the high stays below H1, no close or high above H2 in between): short at the close of that grab candle. Stop
+    above the grab high + LQD_BUF daily ATR, one target at LQD_TGT R (or the stop). LQD_CTX: "trend" only with the
+    weekly structure (bearish in this view), "both" also against it."""
+    out, N = [], LQD_N
+    sh = [i for i in range(N, len(h) - N) if h[i] == np.max(h[i - N:i + N + 1])]  # known at i + N
+    busy = -1
+    when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
+    for b, i2 in enumerate(sh):
+        prev = [i for i in sh[:b] if 0 < i2 - i <= LQD_LOOK and h[i] > h[i2] and np.max(h[i + 1:i2]) <= h[i]]
+        if not prev:
+            continue
+        i1 = prev[-1]
+        for g in range(i2 + N + 1, min(len(c), i2 + LQD_LOOK)):
+            if c[g - 1] > h[i2] or np.max(h[i2 + 1:g]) > h[i2]:
+                break
+            if g - i2 < LQD_GAP or not (h[g] > h[i2] and c[g] < h[i2] and h[g] < h[i1]):
+                continue
+            if g <= busy or not k0 <= g < k1:
+                break
+            wi = int(np.searchsorted(wdone, ddone[g], "right")) - 1
+            ctx = state[wi] if wi >= 0 else 0
+            if ctx != -1 and not (LQD_CTX == "both" and ctx == 1):
+                break
+            e, sl = c[g], h[g] + LQD_BUF * a[g]
+            risk = sl - e
+            tgt = e - LQD_TGT * risk
+            r, ex, hit = None, None, None
+            for q in range(g + 1, len(c)):
+                if h[q] >= sl:
+                    r, ex = -risk, q; break
+                if l[q] <= tgt:
+                    r, ex, hit = LQD_TGT * risk, q, q; break
+            cost = cost_price(sym, abs(e))
+            R = round(((r if r is not None else 0.0) - cost) / risk, 2)
+            out.append(dict(
+                sym=sym, dir=dirn, trigger_week="", bos="", fib1=h[i2] * sgn, fib0=h[i1] * sgn, level=h[i2] * sgn,
+                entry_day=day_label(dt[g]), entry=e * sgn, sl=sl * sgn, risk_pips=risk * (100 if "JPY" in sym else 10000),
+                depth=None, pattern="daily LQ grab" + (" (met trend)" if ctx == -1 else " (tegen trend)"),
+                t1_day=when(hit), t2_day="", exit_day=when(ex), open=r is None, R=R, R_5050=R, entry_t=dt[g],
+                m_sr_next=None, m_sr_before_t2=False, setup="lqd", _k=g, _f0=tgt, _rng=risk, _entry=e, _hi=h[g],
+                _pat=h[g], _level=h[i2], _band=None, _flip=None))
+            log.append((day_label(dt[g]), f"TRADE daily LQ grab van {h[i2] * sgn:.5f} (swing highs {day_label(dt[i1])} / "
+                        f"{day_label(dt[i2])}), instap {e * sgn:.5f}, stop {sl * sgn:.5f} -> R {R:+.2f}", dirn))
+            busy = ex if ex is not None else len(c)
+            break
+    return out
 
 
 def fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log):
