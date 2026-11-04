@@ -82,8 +82,10 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # Rules per ticker (trader 2026-11-04): EURUSD stays on version C; the other instruments without the wick rule and with
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
-PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False)}
-DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True)
+PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False)}
+DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True)
+FAKE_RETEST = False  # setup 2: retest of the line after a fake weekly BoS (fake_retest)
+RT_AWAY, RT_TOUCH, RT_WEEKS, RT_SL = 1.0, 0.25, 10, 1.0
 
 
 def apply_profile(sym):
@@ -547,7 +549,58 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             armed, fib, fibB = None, None, None
             continue
         fib["f0"] = min(fib["f0"], l[k])
+    for t in trades:
+        t["setup"] = "fib"
+    if FAKE_RETEST:
+        trades += fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log)
+        trades.sort(key=lambda t: t["entry_day"])
     return trades
+
+
+def fake_retest(sym, dirn, sgn, o, h, l, c, a, ddone, dt, w, wdone, state, fakes, k0, k1, log):
+    """Setup 2 (trader 2026-11-04, USDJPY Sep-Oct 2026): after a fake weekly BoS against the trend (the next week
+    closed back), price first moves >= RT_AWAY daily ATR away from the line; then a daily candle tests the line with a
+    wick (within RT_TOUCH ATR or through it) and closes back on the trend side: entry at that close. Stop beyond the
+    extreme of the last 5 days + RT_SL daily ATR; the TARGETS ladder on f1 = the line, f0 = the extreme since the
+    reclaim. Off after a daily close beyond the line or RT_WEEKS weeks. Study: fake_bos_retest_study.py."""
+    out = []
+    when = lambda i: day_label(dt[i]) if i is not None else ""  # noqa: E731
+    for i0, i1, dd, line in fakes:
+        if dd != 1 or state[i1] != -1:
+            continue
+        ka = int(np.searchsorted(ddone, wdone[i1], "right"))
+        kb = min(len(c), int(np.searchsorted(ddone, wdone[min(i1 + RT_WEEKS, len(wdone) - 1)], "right")))
+        away = False
+        for k in range(ka, kb):
+            if c[k] > line:
+                break
+            if not away:
+                away = line - np.min(l[ka:k + 1]) >= RT_AWAY * a[k]
+                continue
+            if not (h[k] >= line - RT_TOUCH * a[k - 1] and c[k] < line and h[k] - max(o[k], c[k]) >= 0.1 * a[k - 1]):
+                continue
+            if not k0 <= k < k1:
+                break
+            e, wick = c[k], float(np.max(h[k - 4:k + 1]))
+            sl = wick + RT_SL * a[k]
+            f0 = float(np.min(l[ka:k + 1]))
+            rng, risk = line - f0, sl - e
+            mres = manage(h, l, k, e, sl, f0, rng, BE * a[k])
+            cost = cost_price(sym, abs(e))
+            out.append(dict(
+                sym=sym, dir=dirn, trigger_week=week_label(w["time"].iloc[i0]), bos="", fib1=line * sgn, fib0=f0 * sgn,
+                level=line * sgn, entry_day=day_label(dt[k]), entry=e * sgn, sl=sl * sgn,
+                risk_pips=risk * (100 if "JPY" in sym else 10000), depth=round((e - f0) / rng, 2),
+                pattern="valse-BoS retest", t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]),
+                exit_day=when(mres["exit_i"]), open=mres["open"], R=round((mres["pnl"] - cost) / risk, 2),
+                R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[k], m_sr_next=None, m_sr_before_t2=False,
+                setup="retest", _k=k, _f0=f0, _rng=rng, _entry=e, _hi=wick, _pat=wick, _level=line, _band=None,
+                _flip=None))
+            log.append((day_label(dt[k]), f"TRADE valse-BoS retest van de week-lijn {line * sgn:.5f} (valse BoS week "
+                        f"{week_label(w['time'].iloc[i0])}), instap {e * sgn:.5f}, stop {sl * sgn:.5f} -> R "
+                        f"{out[-1]['R']:+.2f}", dirn))
+            break
+    return out
 
 
 def start_fib(b, o, h, l, c, k):

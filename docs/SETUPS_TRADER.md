@@ -1152,3 +1152,26 @@ Study: `research/strategy/fake_bos_retest_study.py`, 37 instruments, 2016-2025. 
 - The trader's stop on USDJPY (~0.8 yen below the wick) is close to 1 daily ATR.
 - Caveats: a small sample (47 trades in 10 years), and the best of three stop variants was chosen. Not yet built into
   the engine.
+
+### Setup 2 in the engine: retest after a fake weekly BoS (on, not for EURUSD)
+The trader: "Dit is een goede strategie, dus voeg hem maar toe als setup bij de andere instrumenten."
+- **Code**: `fake_retest` in `trader_strategy.py`. The switch is `FAKE_RETEST`, set per profile:
+  - EURUSD: off.
+  - Other instruments: on.
+  - Parameters: `RT_AWAY 1.0, RT_TOUCH 0.25, RT_WEEKS 10, RT_SL 1.0` ATR.
+- **Labels**: each trade carries `setup` = `fib` (setup 1) or `retest` (setup 2).
+
+37 instruments, 2016-2025:
+
+| | trades | T1 | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|
+| setup 1 (fib) | 948 | 41% | +100.0 | +0.5 | +99.5 | 2.12 |
+| setup 2 (fake-BoS retest) | 46 | 63% | +24.8 | +13.3 | +11.5 | 1.94 |
+| **together** | 994 | 42% | **+124.8** | +13.8 | +111.0 | **2.55** |
+
+- **Overlap**: 16 of the 46 setup-2 trades open while a setup-1 trade in the same direction is still open on the same
+  instrument. That matters for open risk on the 5ers account.
+- **EURUSD**:
+  - Setup 2 occurs only once in 10 years: 13 Sep 2021, long, -1.02R. The engine sees only 2 fake weekly BoS on
+    EURUSD since 2016.
+  - Too few to judge; EURUSD stays on version C without setup 2.
