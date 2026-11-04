@@ -79,6 +79,17 @@ T1, T2, T3 = 0.2, 0.58, 1.0
 TARGETS = ((T1, 0.5, "be"), (T2, 0.2, 0.0), (T3, 0.15, 0.5), (1.618, 0.15, 0.5))
 MN_TOL, MN_MIN_EACH, MN_SEP, MN_REFRESH = 0.15, 2, 0.75, 6  # monthly S/R (wick taps both sides), redrawn every 6 months
 FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend weekly BoS is a trigger (trader 2026-11-04)
+# Rules per ticker (trader 2026-11-04): EURUSD stays on version C; the other instruments without the wick rule and with
+# the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
+USE_PROFILES = True
+PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False)}
+DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True)
+
+
+def apply_profile(sym):
+    globals().update(PROFILES.get(sym, DEFAULT_PROFILE))
+
+
 VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) is used up (engine short 21 May 2020)
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
@@ -279,6 +290,8 @@ def monthly_levels(m, mdone, t):
 
 def run_view(sym, d, w, dirn, start, end, log, m=None):
     """dirn -1: shorts on the real prices; +1: longs = shorts on negated prices."""
+    if USE_PROFILES:  # the rules of this ticker
+        apply_profile(sym)
     sgn = -1 if dirn == 1 else 1  # price transform for this view
     def px(df):
         o, h, l, c = (df[k].values.astype(float) for k in ("open", "high", "low", "close"))

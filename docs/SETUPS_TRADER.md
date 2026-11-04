@@ -1064,3 +1064,31 @@ die terugsluitweek een week-trigger voor de trend.
   hier short zou gaan".
 - Op 37 instrumenten is "wick-regel uit + valse-BoS-trigger aan" de beste versie tot nu toe: +98,5R, t 2,1.
 - Beide opties staan uit voor EURUSD. Kandidaat voor de andere instrumenten.
+
+### Regels per ticker (aan)
+De trader: "Laat het voor EURUSD nu even op versie C. Maar voor de andere op de laatste versie."
+In de engine: `PROFILES` / `DEFAULT_PROFILE`. `run_view` zet de regels van het symbool.
+- **EURUSD**: versie C, met wick-regel en zonder valse-BoS-trigger.
+- **Andere instrumenten**: zonder wick-regel, met valse-BoS-trigger.
+
+Resultaat 2016-2025:
+- **37 instrumenten: 948 trades, 41% T1, +100,0R, t 2,1.**
+- EURUSD: +19,2R, de replicatie blijft 8/9 en 4/4.
+- GBPCAD: -12,1R. Dit blijft een van de zwakste.
+
+### GBPCAD week (vraag trader 2026-11-04)
+Onze data loopt tot december 2025.
+- **Bearish weekly BoS**:
+  - BoS-lijn **1,85396** = body-low van de swing-low week van 1 sep 2025 (lont 1,84049).
+  - Week van 27 okt 2025 sluit op 1,84229, 117 pips onder de lijn; 0,25 week-ATR is ± 55 pips.
+  - Week van 3 nov sluit op 1,84902 en blijft onder de lijn: bevestigd op 7 nov 2025.
+  - Met de wick-regel (EURUSD-regels) zou dit géén BoS zijn: het slot ligt niet onder de lont 1,84049.
+- **Valse bearish BoS juli 2025**:
+  - Week van 28 jul sluit op 1,83088 onder de lijn 1,84356.
+  - Week van 4 aug sluit terug op 1,85038.
+  - Dat geeft een long-trigger voor de bullish trend.
+- **2026, afgelezen van de grafiek van de trader (geen data)**:
+  - Na de bearish BoS werd de top van januari 2026 (± 1,881, body ± 1,87) een geldige swing high, door de lower low
+    van maart 2026 (± 1,802).
+  - Een slot ruim boven die body (mei/juni 2026, uiterlijk de grote week eind juni, ± 1,896) is de volgende
+    **bullish weekly BoS**.
