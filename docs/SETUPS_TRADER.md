@@ -1535,3 +1535,33 @@ backtest skipped (23 Jan and 1 Jul 2024).
     "Setup 4 with the fibs" were made with the error and are no longer valid.
 - **No-look-ahead check after the fix**, EURUSD 2024 (setups 1 + 4): 259 days, 18 backtest trades, all 18 found live
   with the same entry and stop. No difference.
+
+### How the setup-4 error went from +291R to -51R, and the guard against it (2026-11-04)
+The trader: "Kan je ervoor zorgen dat de research backtest die fout niet meer maakt? Ik snap niet goed hoe die van
++200 naar -30 kan gaan."
+- **Old vs corrected engine**, setup 4 on all 37 instruments:
+
+| | trades | R |
+|---|---|---|
+| with the error | 1973 | +383.9 |
+| corrected | 2455 | -14.2 |
+| in both versions | 1709 | +401.5 |
+| **skipped by the error** | **746** | **-415.8 (18% win)** |
+| only in the old version (shifted by the wrong blocking) | 264 | -17.7 |
+
+- **Why almost only losers were skipped**:
+  - A trade was blocked when a grab of a HIGHER, earlier swing high came LATER.
+  - Such a later grab means price first went higher than the blocked short's entry, and usually through its stop.
+  - So the backtest dropped exactly the shorts it "knew" would lose. That is look-ahead through the blocking.
+- **Guard**: `research/strategy/v2_guard.py`.
+  - It cuts the data at random days (daily candles up to that close, closed weeks plus the forming week, closed
+    months) and compares with the full run.
+  - Every trade up to the cut day must be identical: direction, day, entry, stop, setup. Exit code 1 on any difference.
+  - Proof: on the old engine (`--engine`) it finds 4 skipped setup-4 trades in 48 cut days (4 instruments).
+  - On the current engine, and on a copy with all setups on everywhere (including setup 3), it finds no difference:
+    8 instruments, 120 cut days.
+- **Working rule** (also in the engine header):
+  - Run the guard after every engine change, and `--all` before reporting a result.
+  - Every setup decides in date order.
+  - Results of study scripts outside the engine are not reported as results until the setup is built into the engine
+    and passes the guard.

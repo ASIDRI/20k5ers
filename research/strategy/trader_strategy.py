@@ -4,6 +4,13 @@
 
 The previous engine (swing setups, tests 36-64) is archived in research/strategy/archive/strategy_v1_test36b.py.
 
+LOOK-AHEAD RULE (after the setup-4 error of 2026-11-04): after EVERY change run
+    python research/strategy/v2_guard.py            (and --all before a result is reported)
+It cuts the data at random days and checks that every trade is known on its entry day and that no trade is skipped
+because of later data. Every setup must decide in date order: a trade may only block trades that come AFTER it
+(collect candidates first, sort by entry day, then apply the blocking). Results of study scripts that do not run
+through this engine are not reported as results until the setup is built here and the guard passes.
+
 Everything is written for a short and mirrored for a long (the long runs on negated prices). Point in time: a weekly
 candle is used only after it has closed, a daily decision is taken at the daily close.
 
