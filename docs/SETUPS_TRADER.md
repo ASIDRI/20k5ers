@@ -1490,3 +1490,19 @@ Management of setup 4 (with the S/R filter):
 - A higher win rate costs R: from 40% to 57% halves the R. The choice is the trader's (`LQD_LADDER`).
 - **EURUSD now** (setups 1 + 4, S/R filter on): 123 trades, **46%** T1, **+84.7R** (was 133 trades, 44%, +78.4R).
   Replication 9/9, 4/4.
+
+### Setup 4 with the fibs (trader: "Gebruik jij de fibs niet meer hiervoor?")
+- **Entry with a fib** (`bosfib`: wait for a BoS and a pullback to 0.5) was tested earlier and was poor: after the grab
+  the move comes at once.
+- **Targets with the fib ladder of setup 1** (`LQD_FIB`):
+  - Fib 1 = the grab high, fib 0 = the low since H2.
+  - Targets -0.2 / -0.58 / -1 / -1.618 with the same stop moves.
+  - The grab close sits deep in that fib: median 0.83, three quarters above 0.72.
+
+| exits (S/R filter on) | EURUSD tr | win | R | t | other 36 tr | win | R | t |
+|---|---|---|---|---|---|---|---|---|
+| all at 3R | 95 | 40% | **+54.4** | 2.83 | 1870 | 29% | +250.1 | 3.18 |
+| fib ladder | 91 | **44%** | +42.3 | 2.19 | 1878 | **36%** | **+329.5** | **3.77** |
+
+- On the other 36 the fib ladder is better on both win rate and R, so it is on there (profile).
+- On EURUSD it raises the win rate by 4 points but costs 12R. EURUSD stays on 3R for now; the trader decides.

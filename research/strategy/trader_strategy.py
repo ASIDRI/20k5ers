@@ -83,9 +83,9 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
 PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
-                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8, LQD=True, LQD_CTX="both")}
+                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8, LQD=True, LQD_CTX="both", LQD_FIB=False)}
 DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
-                       PULLBACK_FIB=False, LQD=True, LQD_CTX="trend")
+                       PULLBACK_FIB=False, LQD=True, LQD_CTX="trend", LQD_FIB=True)
 REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
 REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):
 # the undo also needs this indicator to point back to the old trend
@@ -93,6 +93,7 @@ REVERT_TOL = 0.0  # ... by at least this many weekly ATR
 LQD = False  # setup 4: daily liquidity grab, entry at the close of the grab candle (daily_lq)
 LQD_N, LQD_GAP, LQD_LOOK, LQD_BUF, LQD_TGT, LQD_CTX = 2, 3, 60, 0.5, 3.0, "trend"
 LQD_SR = True  # setup 4 only with a daily S/R at the grabbed high (within 0.25 daily ATR)
+LQD_FIB = False  # setup 4 exits with the fib ladder (TARGETS) on the leg grab high -> low since H2
 LQD_LADDER = None  # setup 4 exits: ((R level, part, new stop in R or None), ...); None = all at LQD_TGT
 LQ_GRAB = False  # setup 3: liquidity grab of a lower weekly swing high, no weekly BoS needed (lq_triggers)
 LQ_GAP1, LQ_GAP2, LQ_LOOK, LQ_MAXW, LQ_RED, LQ_WEEKS = 3, 3, 52, 52, 3, 6
@@ -731,6 +732,23 @@ def daily_lq(sym, dirn, sgn, o, h, l, c, a, ddone, dt, wdone, state, k0, k1, log
             e, sl = c[g], h[g] + LQD_BUF * a[g]
             risk = sl - e
             tgt = e - LQD_TGT * risk
+            if LQD_FIB:  # exits with the fib ladder of setup 1 on the leg: fib 1 = the grab high, fib 0 = the low since H2
+                f0 = float(np.min(l[i2:g + 1]))
+                mres = manage(h, l, g, e, sl, f0, h[g] - f0, BE * a[g])
+                cost = cost_price(sym, abs(e))
+                R = round((mres["pnl"] - cost) / risk, 2)
+                ex = mres["exit_i"]
+                out.append(dict(
+                    sym=sym, dir=dirn, trigger_week="", bos="", fib1=h[g] * sgn, fib0=f0 * sgn, level=h[i2] * sgn,
+                    entry_day=day_label(dt[g]), entry=e * sgn, sl=sl * sgn,
+                    risk_pips=risk * (100 if "JPY" in sym else 10000), depth=round((e - f0) / (h[g] - f0), 2),
+                    pattern="daily LQ grab" + (" (met trend)" if ctx == -1 else " (tegen trend)"),
+                    t1_day=when(mres["t1_i"]), t2_day=when(mres["t2_i"]), exit_day=when(ex), open=mres["open"], R=R,
+                    R_5050=round((mres["pnl5"] - cost) / risk, 2), entry_t=dt[g], m_sr_next=None, m_sr_before_t2=False,
+                    setup="lqd", _feat=lqd_features(o, h, l, c, a, g, i1, i2, ctx), _k=g, _f0=f0, _rng=h[g] - f0,
+                    _entry=e, _hi=h[g], _pat=h[g], _level=h[i2], _band=None, _flip=None))
+                busy = ex if ex is not None else len(c)
+                break
             ladder = LQD_LADDER or ((LQD_TGT, 1.0, None),)  # (R level, part closed, new stop in R; None = keep)
             r, ex, hit, left, stop, step = 0.0, None, None, 1.0, sl, 0
             for q in range(g + 1, len(c)):
