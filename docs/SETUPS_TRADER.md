@@ -1506,3 +1506,30 @@ Management of setup 4 (with the S/R filter):
 
 - On the other 36 the fib ladder is better on both win rate and R, so it is on there (profile).
 - On EURUSD it raises the win rate by 4 points but costs 12R. EURUSD stays on 3R for now; the trader decides.
+
+### CORRECTION: the setup-4 results above were too good (look-ahead error), 2026-11-04
+The no-look-ahead check (`v2_lookahead_check.py` EURUSD 2024) found 2 setup-4 trades that the bot takes live but the
+backtest skipped (23 Jan and 1 Jul 2024).
+- **Cause**: `daily_lq` (and `daily_lq_study.py`) walked through the grabs per lower swing high H2. A trade of an
+  earlier H2 whose grab came **later** set `busy` and blocked an earlier grab of a later H2.
+  - The backtest thus used future trades to skip trades. In practice it mostly skipped losers.
+- **Fix**: first collect all grabs, then process them in date order. A trade now only blocks grabs that come after it.
+- **Corrected engine results 2016-2025** (S/R filter on):
+
+| | trades | T1 | R | 2016-20 | 2021-25 | t |
+|---|---|---|---|---|---|---|
+| EURUSD setup 4 (3R) | 112 | 34% | +36.8 | +14.6 | +22.2 | 1.83 |
+| EURUSD setup 1 + 4 | 140 | 41% | +67.1 | +27.3 | +39.8 | 2.99 |
+| EURUSD setup 4 with fib ladder | 104 | 38% | +26.4 | +7.8 | +18.6 | 1.33 |
+| other 36 setup 4 (fib ladder) | 2343 | 32% | **-51.0** | -66.9 | +15.9 | -0.57 |
+| other 36 setup 4 without S/R filter | 2519 | 32% | -90.2 | -104.0 | +13.8 | -0.99 |
+
+- **Corrected study** (2015-2025, 3R):
+  - `close`: EURUSD continuation +20.1R, counter-trend +9.1R (t ~1); other 36 continuation **-104.3R**,
+    counter-trend -233.5R.
+  - `breaklow`: other 36 continuation +91.6R (t 1.4); EURUSD +2.4 / +11.4R.
+- **Conclusion**: the strong edge on the 37 instruments (+380R, t 4.6) was the error.
+  - Setup 4 is now **off for the other instruments**.
+  - On EURUSD a small plus remains (+36.8R, t 1.8), but it lowers the win rate.
+  - The numbers in the sections "Daily LQ grab: six entry models", "Setup 4 in the engine", "Setup 4 losses" and
+    "Setup 4 with the fibs" were made with the error and are no longer valid.

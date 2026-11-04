@@ -38,7 +38,7 @@ def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01
         o, h, l, c = px(d)
         a = T.atr(h, l, c)
         sh = [i for i in range(N, len(h) - N) if h[i] == np.max(h[i - N:i + N + 1])]  # known at i + N
-        busy = -1
+        busy, cand = -1, []
         for b, i2 in enumerate(sh):
             prev = [i for i in sh[:b] if 0 < i2 - i <= LOOK and h[i] > h[i2] and np.max(h[i + 1:i2]) <= h[i]]
             if not prev:
@@ -52,14 +52,20 @@ def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01
                 if not (h[g] > h[i2] and c[g] < h[i2] and h[g] < h[i1]):
                     continue
                 k, e = entry_model(ENTRY, o, h, l, c, a, g, i1, i2, WAIT)
-                if k is None or k <= busy or not (start <= days[k] < end):
-                    break
+                if k is not None and start <= days[k] < end:
+                    cand.append((k, e, g, i1, i2))
+                break
+        # in date order (2026-11-04: per H2 a later trade blocked an earlier grab, which used future data)
+        for k, e, g, i1, i2 in sorted(cand):
+            if k <= busy:
+                continue
+            if True:
                 sl = np.max(h[g:k + 1]) + BUF * a[k]
                 if ENTRY == "breaklow" and h[k] >= sl:  # filled and stopped the same day: count the loss
                     pass
                 risk = sl - e
                 if risk <= 0:
-                    break
+                    continue
                 wi = int(np.searchsorted(wdone, ddone[k], "right")) - 1
                 ctx = "continuation" if st[wi] == -1 else ("tegen trend" if st[wi] == 1 else "geen")
                 r, ex = None, None
@@ -74,7 +80,6 @@ def trades(sym, N=2, GAP=3, WAIT=3, BUF=0.1, TGT=2.0, LOOK=60, start="2015-01-01
                 out.append(dict(sym=sym, dir=dirn, day=days[k], ctx=ctx, entry=e * sg, sl=sl * sg,
                                 H1=h[i1] * sg, H2=h[i2] * sg, R=round(r, 2)))
                 busy = ex
-                break
     return pd.DataFrame(out)
 
 
