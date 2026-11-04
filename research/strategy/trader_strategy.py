@@ -92,6 +92,8 @@ REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly D
 REVERT_TOL = 0.0  # ... by at least this many weekly ATR
 LQ_GRAB = False  # setup 3: liquidity grab of a lower weekly swing high, no weekly BoS needed (lq_triggers)
 LQ_GAP1, LQ_GAP2, LQ_LOOK, LQ_MAXW, LQ_RED, LQ_WEEKS = 3, 3, 52, 52, 3, 6
+LQ_ENTRY_LEVEL = None  # setup 3 exact: entry candle wicks to >= this fib depth and closes below it, star / engulfing,
+# no daily S/R needed (None: the normal daily-S/R entry)
 LQ_TAPS = 1  # weeks that trade above H2 and close below it, up to and including the red week ("3 week tap")
 LQ_STOP_HI = False  # setup 3: stop always above the swing-high wick of the fib (+ SL_BUF ATR)
 LQ_TARGETS = None  # setup 3: own target ladder (None: TARGETS)
@@ -463,7 +465,9 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             return None
         tol = TOUCH_TOL * a[k - 1]  # the wick test at entry
         lv = sr_levels(o, h, l, c, SR_TOL * a[k - 1], k)
-        if band is not None:  # first trade after a weekly BoS: daily S/R between the BoS line and the BoS-week close
+        if fd.get("virtual") is not None:  # setup 3 exact: a level at this fib depth instead of a daily S/R
+            inzone = [(f0 + fd["virtual"] * rng, 0)]
+        elif band is not None:  # first trade after a weekly BoS: daily S/R between the BoS line and the BoS-week close
             blo, bhi = min(band), max(band)
             inzone = [(p, n) for p, n in lv if blo - tol <= p <= bhi + tol and f0 < p < f1]
         else:
@@ -479,10 +483,13 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
             if not pat:
                 continue
             back = range(max(fd["bos"] + 1, k - REJ_BACK + 1), k + 1)
-            rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
-            if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
-                continue
-            if NO_CLOSE_ABOVE and any(c[i] > p + tol for i in back):  # the level must hold: bodies stay below it
+            if fd.get("virtual") is None:
+                rej = [i for i in back if h[i] >= p - tol and c[i] < p and h[i] - max(o[i], c[i]) >= tol]
+                if len(rej) < REJ_N or not any(c[i] < o[i] for i in back if h[i] >= p - tol):
+                    continue
+                if NO_CLOSE_ABOVE and any(c[i] > p + tol for i in back):  # the level must hold: bodies stay below
+                    continue
+            elif pat.startswith("tweezer"):  # setup 3 exact: one candle, shooting star or engulfing
                 continue
             entry = c[k]
             depth = (entry - f0) / rng
@@ -643,6 +650,8 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
                     b = find_bos(kg, k)
                     if b:
                         fb = start_fib(b, o, h, l, c, k)
+                        if LQ_ENTRY_LEVEL is not None:
+                            fb["virtual"] = LQ_ENTRY_LEVEL
                         log.append((day_label(dt[k]), f"LQ-grab (swing highs week {week_label(wstart[i1])} / "
                                     f"{week_label(wstart[i2])}, grab week {week_label(wstart[g])}): daily BoS (lijn "
                                     f"{b[2] * sgn:.5f}), fib 1 {fb['f1'] * sgn:.5f}", dirn))

@@ -1314,3 +1314,32 @@ The trader, EURUSD May-June 2021:
   - The trader's trade: the engine enters a day earlier, 8 June 2021, tweezer at daily S/R 1.21896, entry 1.21730,
     stop 1.22607 -> **+1.61R**. With the engine's normal stop: -1.06R.
 - `LQ_GRAB` stays **off**. Too few EURUSD trades to judge, and no edge on the 37 instruments.
+
+### Setup 3 as exact as possible, 2015-2025, shorts and longs apart (trader 2026-11-04)
+"Het mag inderdaad nooit van de eerste swing high zijn. Maar wel als er een lower high is."
+- New entry mode `LQ_ENTRY_LEVEL`: the entry candle's wick reaches >= this fib depth and closes below it, as a
+  shooting star or engulfing. No daily S/R and no 2 rejection wicks (the trader: shooting star at 0.796).
+- Stop above the swing-high wick (`LQ_STOP_HI`).
+- The trader's trade exactly: 9 June 2021, shooting star, entry **1.21794** (trader 1.21797), stop **1.22606**
+  (trader 1.22559), **+1.82R**.
+
+| entry | group | direction | trades | T1 | R | 2015-19 | 2020-25 | t |
+|---|---|---|---|---|---|---|---|---|
+| exact, wick >= 0.66 | EURUSD | shorts | 5 | 60% | +3.3 | +0.5 | +2.8 | 0.91 |
+| | EURUSD | longs | 5 | 20% | -3.7 | -3.0 | -0.7 | -2.64 |
+| | other 36 | shorts | 121 | 57% | +9.4 | +9.2 | +0.1 | 0.83 |
+| | other 36 | longs | 125 | 49% | +5.4 | +11.0 | -5.5 | 0.42 |
+| exact, wick >= 0.796 | EURUSD | shorts | 5 | 80% | +5.9 | +4.1 | +1.8 | 1.97 |
+| | EURUSD | longs | 5 | 20% | -2.4 | -2.0 | -0.3 | -0.85 |
+| | other 36 | shorts | 85 | 42% | -8.1 | -1.4 | -6.8 | -0.73 |
+| | other 36 | longs | 91 | 46% | +12.9 | +2.4 | +10.5 | 0.96 |
+| engine (daily S/R) | EURUSD | shorts | 6 | 83% | +6.1 | +2.3 | +3.8 | 2.38 |
+| | EURUSD | longs | 4 | 25% | -1.2 | -2.0 | +0.9 | -0.41 |
+| | other 36 | shorts | 154 | 54% | +1.4 | +7.0 | -5.6 | 0.11 |
+| | other 36 | longs | 153 | 48% | -9.7 | -5.1 | -4.6 | -0.74 |
+
+- **Other 36: no edge.** Long and short swap sign between the variants, so it is noise.
+- **EURUSD**:
+  - The shorts are positive in all three variants (5-6 trades, +3.3 to +6.1R).
+  - The longs are negative in all three.
+  - This is a very small sample. The setup stays off; a possible next step is EURUSD shorts only.
