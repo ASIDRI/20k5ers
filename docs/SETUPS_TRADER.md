@@ -1225,3 +1225,49 @@ terug ongeldig gemaakt?" and "of extra bevestiging van een valse en terug switch
 - **Trader 2026-11-04: "week wma 10 aanzetten op alles, dewdpo niet."**
   - The undo rule (6 weeks + weekly WMA 10) is now also on for **EURUSD**: 29 trades, +25.9R, replication 8/9 and 4/4.
   - `DEW_FILTER` stays off.
+
+---
+
+## Setup 15 - EURUSD long, May 2021 - found (`PULLBACK_FIB`, EURUSD only)
+The trader:
+- Week: still a weekly uptrend; price hits weekly S/R 1.17698. Bullish weekly engulfing (week of 5 April 2021).
+- Day:
+  - Daily BoS 1.19326. The fib runs from the equal lows **1.18672** (7-9 April).
+  - First swing high after the BoS (20 April) with no pullback; then new swing highs, the fib is redrawn each time.
+  - "The start of the fib stays the same when we move up to a new swing high, because the pullbacks never reached at
+    least the 0.5."
+  - Then the pullback to fib 0.5 at daily S/R **1.19937**, a daily wick off the level and a bullish **daily
+    engulfing**.
+- Trade: entry **1.20648**, stop 1.19776, target 1.22290 (-0.2 / -0.28 on fib 1.18672 -> 1.2150), 1.88R.
+
+In the data:
+- 6 May 2021: open 1.20038, close 1.20653, engulfing the red 5 May candle.
+- Lows on the level: 5 May 1.19860, 6 May 1.19932.
+- Fib 1 in our data: the body of 8 April (open 1.18670).
+- This replaces setup 14 (22 April 2021) in the replication list. The trader dropped that one as too hard.
+
+**Engine rule `PULLBACK_FIB`**:
+- Fib 1 = the body of the last swing after the extreme of the leg, before the BoS: the higher low from which the
+  breaking move started.
+- It must be a real pullback: >= `PB_MIN` = **0.8 daily ATR** from the low of the leg after the extreme (`PB_LEFT` 1).
+  - April 2021: the pullback 1.19149 -> 1.18608 is ~0.85 ATR.
+  - January 2019 (setup 3): the small swings are <= 0.72 ATR, so the big fib stays (as the trader drew it).
+  - Without a minimum size, setup 3 is lost.
+- The threshold is tuned on just these two cases.
+
+| variant | EURUSD trades | T1 | R | trader trades | no-trades | extra to May 2021 | other 36 R |
+|---|---|---|---|---|---|---|---|
+| without (setup 15 missed) | 29 | 62% | +25.9 | 8/9 | 4/4 | none | +150.2 |
+| PULLBACK_FIB, no minimum | 28 | - | +19.8 | 8/9 (s3 lost) | 4/4 | 20 Feb 2019, 28 Jan 2021 | +98.4 |
+| **PB_MIN 0.8 ATR** | **28** | **68%** | **+30.3** | **9/9** | **4/4** | **none** | +90.9 |
+
+- On the other 36 instruments the rule is clearly worse, so it is on for **EURUSD only** (profile).
+- **Engine trade setup 15**: 6 May 2021, bullish engulfing at daily S/R 1.19938.
+  - Fib 1.18670 -> 1.2150, entry **1.20653**, stop 1.19180, **+0.49R** (T1 18 May, then the stop in profit).
+  - The trader's stop 1.19776 sits under the S/R / fib 0.618. The engine stop is under fib 0.796 (+0.1 ATR).
+  - The stop rule is still to be decided.
+- Also changed on EURUSD:
+  - 25 Jun 2021 (-1R) disappears.
+  - 20 Apr 2017 (-1R) disappears.
+  - 31 Jul 2024 (+1.85R) becomes 25 Jul 2024 (+2.83R).
+  - Some stops are a little different.

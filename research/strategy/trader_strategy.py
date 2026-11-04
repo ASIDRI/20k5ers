@@ -82,8 +82,10 @@ FAKE_TRIGGER = False  # the week that closes back after a fake counter-trend wee
 # Rules per ticker (trader 2026-11-04): EURUSD stays on version C; the other instruments without the wick rule and with
 # the fake-BoS trigger (37 instruments: +98.5R, t 2.1). run_view applies the profile of its symbol.
 USE_PROFILES = True
-PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma")}
-DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma")
+PROFILES = {"EURUSD": dict(BREAK_WICK=True, FAKE_TRIGGER=False, FAKE_RETEST=False, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
+                       PULLBACK_FIB=True, PB_LEFT=1, PB_MIN=0.8)}
+DEFAULT_PROFILE = dict(BREAK_WICK=False, FAKE_TRIGGER=True, FAKE_RETEST=True, REVERT_WEEKS=6, REVERT_CONFIRM="wma",
+                       PULLBACK_FIB=False)
 REVERT_WEEKS = 0  # a confirmed weekly BoS is undone by a weekly close back over its line within this many weeks (0: off)
 REVERT_CONFIRM = None  # None / "wma" (close vs weekly WMA 10) / "dpo" (weekly DPO 10) / "rsi" (weekly RSI 14 vs 50):
 # the undo also needs this indicator to point back to the old trend
@@ -103,6 +105,10 @@ VOID_SPENT = True  # a weekly trigger whose fib was voided (close beyond fib 1) 
 FRACTAL_FIB = False  # tested, worse (6/9 trades, +7R): fib 1 moves to the newest 3-candle swing after the daily BoS once price makes a new extreme (setup 14)
 SWING_LEFT = 3  # the swing on the BoS candle goes beyond the previous SWING_LEFT candles (setup 14: 3 days; setup 2: 1)
 TWEEZER_ANY = False  # setup 14: the second test may be either colour if it has a wick through the level and closes back
+PULLBACK_FIB = False  # fib 1 from the last swing (higher low) after the extreme of the leg, before the BoS (setup 15)
+ATR_REF = None  # daily ATR of the current view (set by run_view, used by start_fib)
+PB_MIN = 0.0  # minimum size of that pullback in daily ATR
+PB_LEFT = 1  # that swing is at least as extreme as the PB_LEFT candles before it
 LAST_SWING_FIB = False  # False / True / "bos": only when the swing is the BoS candle itself; fib 1 from the last 3-candle swing before / at the BoS candle (setup 14)
 ENG2 = True  # --no-eng2 to switch off (setup 4: close below the open of a green week two back, after a small week)
 
@@ -342,6 +348,8 @@ def run_view(sym, d, w, dirn, start, end, log, m=None):
     wstart = w["time"].values
     o, h, l, c = px(d)
     a = atr(h, l, c)
+    global ATR_REF
+    ATR_REF = a
     ddone = complete_times(d["time"], "D1").values
     dt = d["time"].values
     dsw = zigzag(h, l, a, D_REV)
@@ -637,6 +645,13 @@ def start_fib(b, o, h, l, c, k):
     kb, s, line = b
     f1 = float(np.max(np.maximum(o[s:kb + 1], c[s:kb + 1])))
     hi = float(np.max(h[s:kb + 1]))
+    if PULLBACK_FIB:  # setup 15: fib 1 = body of the last swing after the extreme of the leg, before the BoS (the
+        t = s + int(np.argmax(np.maximum(o[s:kb + 1], c[s:kb + 1])))  # higher low the breaking move started from)
+        js = [j for j in range(t + 1, min(kb, k - 1)) if h[j] >= np.max(h[j - PB_LEFT:j]) and h[j] > h[j + 1]
+              and j - t >= 2 and h[j] - np.min(l[t + 1:j]) >= PB_MIN * ATR_REF[j]]  # a real pullback: >= PB_MIN ATR
+        # from the low of the leg after the extreme
+        if js:
+            f1, hi = float(max(o[js[-1]], c[js[-1]])), float(h[js[-1]])
     if LAST_SWING_FIB:  # setup 14: fib 1 = body of the last 3-candle swing up to the BoS candle (confirmed by day k)
         js = [j for j in range(max(s + 1, SWING_LEFT), min(kb, k - 1) + 1)
               if h[j] > np.max(h[j - SWING_LEFT:j]) and h[j] >= h[j + 1]]
