@@ -1616,3 +1616,39 @@ other 36 with the fib ladder. Script: `research/strategy/lqd_grid.py`.
 - Other instruments, unchanged:
   - setup 1 without the wick rule, with the fake-BoS trigger, the undo rule and setup 2;
   - setup 3 and setup 4 off.
+
+---
+
+## Per-pair optimisation with walk-forward (trader 2026-11-26: "optimaliseren per pair ... naar de 60% win rate")
+Script `research/strategy/pair_optimize.py`: 96 combinations per instrument of the rules from the trader's setups:
+- wick rule on/off;
+- fake BoS off / trigger / trigger + retest;
+- undo rule 0/6 weeks;
+- pullback fib on/off;
+- 1 or 2 rejection wicks;
+- zone from 0.45 or 0.55.
+
+Per pair, the choice is the combination with the most R in **2016-2020** (>= 6 trades, T1 >= 55%). The score that
+counts is **2021-2025**, which is not used for the choice.
+
+| | trades | T1 | R |
+|---|---|---|---|
+| choice period 2016-2020 (15 of 37 pairs qualify) | 184 | ~62% | +150.2 |
+| **test period 2021-2025, the same per-pair choices** | 213 | **39%** | **+11.9** (t 0.55) |
+| test period, 1 setting for all pairs (the best on 2016-2020) | 571 | 44% | +79.3 |
+| test period, current profiles | 568 | 45% | **+85.4** |
+
+- **Per-pair optimisation is overfitting.**
+  - The choice period shows 62% win and +150R, but in the next five years it falls to 39% and +12R. That is worse
+    than one setting for everyone.
+  - The high win rates per pair came from chance in 2016-2020.
+- Other selection rules give the same picture in 2021-2025:
+  - no minimum win: +40.5R, 41%;
+  - >= 10 trades: +18.8R, 41%;
+  - >= 65% win: 6 pairs, +12.1R, 46%.
+- **Exception, EURUSD**: chosen setting 78% T1 in 2016-2020 and **78% in 2021-2025** (+11.2R on 9 trades).
+  - Note: the EURUSD rules come from the trader's own 2018-2021 trades, so 2021 is not fully clean.
+- **Conclusion**:
+  - Keep the current profiles: EURUSD with its own rules (derived from the trader), one shared setting for the rest.
+  - Rules per pair only from the trader's own setups per pair, as with EURUSD; not from fitting statistics.
+  - 60% win per pair is not robust on the other instruments with these rules (in 2021-2025 it falls back to ~40-45%).
